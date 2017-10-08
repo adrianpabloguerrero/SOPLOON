@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="TeachingAssistant.toolbar"
+               label="Ayudante Virtual">
+            <command
+                  commandId="TeachingAssistant.update"
+                  icon="icons/update.png"
+                  style="push"
+                  tooltip="Actualizar Ayudante">
+            </command>
+            <command
+                  commandId="TeachingAssistant.check"
+                  icon="icons/lupa.png"
+                  style="push"
+                  tooltip="Corregir Código">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="teachingassistant.handlers.CheckHandler"
+            id="TeachingAssistant.check"
+            name="CheckCommand">
+      </command>
+      <command
+            defaultHandler="teachingassistant.handlers.UpdateHandler"
+            id="TeachingAssistant.update"
+            name="UpdateCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="TeachingAssistant.category"
+            name="Teaching Assistant">
+      </category>
+      <view
+            category="TeachingAssistant.category"
+            class="teachingassistant.views.CorrectionsView"
+            icon="icons/icon.png"
+            id="TeachingAssistant.corrections"
+            name="Correcciones">
+      </view>
+   </extension>
+
+
+</plugin>
