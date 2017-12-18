@@ -90,7 +90,6 @@ public class PrologAnalyzer {
 		} catch (InvalidTheoryException e) {
 			return false;
 		}
-
 	}
 
 	private String readFile(String path) {
