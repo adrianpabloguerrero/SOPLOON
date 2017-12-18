@@ -2,33 +2,20 @@ package teachingassistant.teacher;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -40,7 +27,6 @@ import teachingassistant.analyzer.PrologAnalyzer;
 import teachingassistant.analyzer.bugs.Bug;
 import teachingassistant.modeler.ModelGenerator;
 import teachingassistant.parser.CodeParser;
-import teachingassistant.uploader.Uploader;
 import teachingassistant.views.CorrectionsView;
 
 public class Teacher {
@@ -89,11 +75,6 @@ public class Teacher {
 			CheckRunnable runner = new CheckRunnable(project, code_parser, prolog_analyzer, model_generator, id);
 			dialog.run(true, true, runner);
 
-			if (zipFolder(project, id)) {
-				Thread thread = new Thread(new Uploader());
-				thread.start();
-			} 
-			
 			int result = runner.getResult();
 			if (result == 0)
 				view.setBugs(runner.getBugs());
@@ -238,36 +219,5 @@ public class Teacher {
 
 	}
 
-	private boolean zipFolder(IJavaProject project, long id) {
-		try {
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			File workspaceDirectory = workspace.getRoot().getLocation().toFile();
-
-			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(Paths.get(LOG_PATH + id + ".zip").toFile()));
-
-			for (IPackageFragmentRoot pack : project.getPackageFragmentRoots()) {
-				if (pack.getKind() == IPackageFragmentRoot.K_SOURCE) {
-					Path src = Paths.get(workspaceDirectory.getAbsolutePath() + pack.getPath().toString());
-					Files.walkFileTree(src, new SimpleFileVisitor<Path>() {
-						public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-							zos.putNextEntry(new ZipEntry(src.relativize(file).toString()));
-							Files.copy(file, zos);
-							zos.closeEntry();
-							return FileVisitResult.CONTINUE;
-						}
-					});
-				}
-			}
-			zos.putNextEntry(new ZipEntry("plugin_log.log"));
-			Path logpath = new File(LOG_PATH + id + ".log").toPath();
-			Files.copy(logpath, zos);
-			zos.closeEntry();
-			zos.close();
-			return true;
-		} catch (JavaModelException | IOException e) {
-			return false;
-		}
-
-	}
 
 }

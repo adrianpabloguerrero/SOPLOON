@@ -9,13 +9,7 @@
          <toolbar
                id="TeachingAssistant.toolbar"
                label="Ayudante Virtual">
-            <command
-                  commandId="TeachingAssistant.update"
-                  icon="icons/update.png"
-                  style="push"
-                  tooltip="Actualizar Ayudante">
-            </command>
-            <command
+                 <command
                   commandId="TeachingAssistant.check"
                   icon="icons/lupa.png"
                   style="push"
@@ -30,11 +24,6 @@
             defaultHandler="teachingassistant.handlers.CheckHandler"
             id="TeachingAssistant.check"
             name="CheckCommand">
-      </command>
-      <command
-            defaultHandler="teachingassistant.handlers.UpdateHandler"
-            id="TeachingAssistant.update"
-            name="UpdateCommand">
       </command>
    </extension>
    <extension
