@@ -16,9 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -47,7 +44,6 @@ public class PrologAnalyzer {
 	private Theory basic_theory;
 	private Theory specific_theory;
 	private Theory rules_theory;
-	private boolean inited;
 
 	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins"
 			+ File.separator + "plugins" + File.separator + "resources" + File.separator;
@@ -58,15 +54,11 @@ public class PrologAnalyzer {
 
 	public PrologAnalyzer() {
 		this.bugs = new Vector<Bug>();
-		this.readRules();
-		this.inited = false;
+		this.init();
 	}
 
 	public void init() {
-		if (!this.inited) {
-			this.inited = true;
-			this.updateRules();
-		}
+		this.readRules();
 	}
 
 	public RuleSet getRules() {
@@ -131,17 +123,7 @@ public class PrologAnalyzer {
 			this.rules_theory = new Theory(readFile(RULES_KNOWLEDGE_PATH));
 
 		} catch (FileNotFoundException | InvalidTheoryException e) {
-
-		}
-	}
-
-	public void updateRules() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
-		try {
-			handlerService.executeCommand("TeachingAssistant.update", null);
-		} catch (Exception e) {
-
+			
 		}
 	}
 
