@@ -1,6 +1,5 @@
 package teachingassistant.modeler;
 
-import java.io.PrintWriter;
 import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -9,10 +8,7 @@ import teachingassistant.modeler.converters.NodeConverterFactory;
 
 public class ModelGenerator {
 
-	private static final String MONITOR_TITLE = "Arbol Sintáctico -> Código Prolog";
-	private static final String LOG_HEADER = System.lineSeparator() + "Generando el Modelo Prolog";
-	private static final String LOG_FOOTER = System.lineSeparator() + "Modelo Prolog Generado Correctamente" + System.lineSeparator();
-	private static final String LOG_ERROR = System.lineSeparator() + "Error:" + System.lineSeparator();
+	private static final String MONITOR_TITLE = "Converting AST to Prolog";
 
 	private PrologCode check_code;
 	private Mapper mapper;
@@ -28,11 +24,9 @@ public class ModelGenerator {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public int process(List<CompilationUnit> units, IProgressMonitor monitor, PrintWriter logger) {
+	public int process(List<CompilationUnit> units, IProgressMonitor monitor) {
 		init();
 		try {
-			logger.println(LOG_HEADER);
-
 			monitor.beginTask(MONITOR_TITLE, units.size() * 2);
 			
 			for (CompilationUnit unit : units) {
@@ -53,16 +47,10 @@ public class ModelGenerator {
 				}
 			}
 			
-			logger.println(LOG_FOOTER);
-			
-			this.check_code.log(logger);
-
 			return 0;			
 		}
 		catch (Exception e) {
 			monitor.done();
-			logger.println(LOG_ERROR);
-			logger.println(e.toString());
 			return -1;
 		}
 	}

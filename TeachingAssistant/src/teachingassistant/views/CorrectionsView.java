@@ -1,7 +1,5 @@
 package teachingassistant.views;
 
-import java.awt.Desktop;
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -9,10 +7,8 @@ import java.util.Vector;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -47,10 +43,9 @@ public class CorrectionsView extends ViewPart {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "plugin.viewer");
 		getSite().setSelectionProvider(viewer);
 
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
 				Object selectedNode = thisSelection.getFirstElement();
 				if (selectedNode == null)
@@ -59,31 +54,6 @@ public class CorrectionsView extends ViewPart {
 					((Bug) selectedNode).open();
 				else if (selectedNode instanceof BuggedCode)
 					((BuggedCode) selectedNode).open();
-			}
-
-		});
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
-				Object selectedNode = thisSelection.getFirstElement();
-				if (selectedNode == null)
-					return;
-				else {
-					if (selectedNode instanceof Bug) {
-						String uri = ((Bug) selectedNode).getRule().getUri();
-						if (uri != null) {
-							Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-							if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-								try {
-									desktop.browse(new URI(uri));
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-				}
 			}
 		});
 
@@ -136,7 +106,7 @@ public class CorrectionsView extends ViewPart {
 		this.columns = new Vector<TreeViewerColumn>();
 
 		TreeViewerColumn col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText("Corrección");
+		col.getColumn().setText("Detection");
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -148,7 +118,7 @@ public class CorrectionsView extends ViewPart {
 		this.columns.add(col);
 
 		col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText("Archivo");
+		col.getColumn().setText("File");
 		col.getColumn().setAlignment(SWT.CENTER);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -166,7 +136,7 @@ public class CorrectionsView extends ViewPart {
 		this.columns.add(col);
 
 		col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText("Linea");
+		col.getColumn().setText("Line");
 		col.getColumn().setAlignment(SWT.CENTER);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -184,7 +154,7 @@ public class CorrectionsView extends ViewPart {
 		this.columns.add(col);
 
 		col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText("Código");
+		col.getColumn().setText("Code");
 		col.getColumn().setAlignment(SWT.CENTER);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -202,8 +172,8 @@ public class CorrectionsView extends ViewPart {
 		this.columns.add(col);
 
 		col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setWidth(500);
-		col.getColumn().setText("Descripción");
+		col.getColumn().setWidth(800);
+		col.getColumn().setText("Description");
 		col.setLabelProvider(new ColumnLabelProvider() {
 
 			@Override

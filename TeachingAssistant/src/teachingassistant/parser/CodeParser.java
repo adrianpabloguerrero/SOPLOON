@@ -1,7 +1,6 @@
 
 package teachingassistant.parser;
 
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Vector;
 
@@ -17,9 +16,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 public class CodeParser {
 
 	private static final String MONITOR_TITLE = "Código Java -> Arbol Sintáctico";
-	private static final String LOG_HEADER = "Generando AST" + System.lineSeparator();
-	private static final String LOG_FOOTER = System.lineSeparator() + "AST Generado Corretamente";
-	private static final String LOG_ERROR = System.lineSeparator() + "Error:" + System.lineSeparator();
 
 	private ASTParser parser;
 	private List<CompilationUnit> units;
@@ -37,15 +33,10 @@ public class CodeParser {
 		return c;
 	}
 
-	public int process(IJavaProject project, IProgressMonitor monitor, PrintWriter logger) {
+	public int process(IJavaProject project, IProgressMonitor monitor) {
 		this.units.clear();
 		
 		try {
-			logger.println(LOG_HEADER);
-
-			logger.println("AST JLS8");
-			logger.println("Binding activated");
-
 			IPackageFragment[] packages = project.getPackageFragments();
 
 			Vector<IPackageFragment> packages_source = new Vector<IPackageFragment>();
@@ -72,13 +63,9 @@ public class CodeParser {
 				monitor.worked(1);
 			}
 
-			logger.println(LOG_FOOTER);
-
 			return 0;
 		} catch (Exception e) {
 			monitor.done();
-			logger.println(LOG_ERROR);
-			logger.println(e.toString());
 			return -1;
 		}
 	}

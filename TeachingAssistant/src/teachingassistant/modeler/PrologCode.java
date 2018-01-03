@@ -1,24 +1,26 @@
 
 package teachingassistant.modeler;
 
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class PrologCode {
    
-	private static final String LOG_HEADER = "====== Prolog Model =====" + System.lineSeparator();
-	private static final String LOG_FOOTER = System.lineSeparator() + "=========================";
-	
+	private HashMap<Long,String> facts_map;
 	private Vector<String> facts;
 	private Mapper mapper;
 	
     public PrologCode() {
         this.facts = new Vector<String>();
+        this.facts_map = new HashMap<Long,String>();
         this.mapper = new Mapper();
     }
    
-    public void addFact(String functor, String[] param) {   
+    public void addFact(String functor, String[] param) { 
     	String fact = this.term(functor, param);
+    	this.facts_map.put(Long.parseLong(param[0]), fact);
     	this.facts.add(fact);
     }
 
@@ -38,8 +40,13 @@ public class PrologCode {
         return sb;
     }
 
-    public Vector<String> getFacts() {
-    	return this.facts;
+    public ArrayList<String> getFacts() {
+    	ArrayList<Long> keys = new ArrayList<Long>(this.facts_map.keySet());
+    	Collections.sort(keys);
+    	ArrayList<String> out = new ArrayList<String>();
+    	for (Long key: keys)
+    		out.add(this.facts_map.get(key));
+    	return out;
     }
     
     public String getFact(int index) {
@@ -57,13 +64,6 @@ public class PrologCode {
     	return out.toString();
     }
     
-    public void log(PrintWriter logger) {
-    	logger.println(LOG_HEADER);
-    	for(String fact: facts)
-    		logger.println(fact.toString());
-    	logger.println(LOG_FOOTER);
-    }
-
 	public Mapper getMapper() {
 		return mapper;
 	}

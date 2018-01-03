@@ -13,7 +13,7 @@
                   commandId="TeachingAssistant.check"
                   icon="icons/lupa.png"
                   style="push"
-                  tooltip="Corregir Código">
+                  tooltip="Check code">
             </command>
          </toolbar>
       </menuContribution>
@@ -37,7 +37,14 @@
             class="teachingassistant.views.CorrectionsView"
             icon="icons/icon.png"
             id="TeachingAssistant.corrections"
-            name="Correcciones">
+            name="Corrections">
+      </view>
+      <view
+            category="TeachingAssistant.category"
+            class="teachingassistant.views.TranslationView"
+            icon="icons/translate.png"
+            id="TeachingAssistant.translation"
+            name="Translation">
       </view>
    </extension>
 

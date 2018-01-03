@@ -18,10 +18,10 @@ import teachingassistant.teacher.Teacher;
 
 public class CheckHandler extends AbstractHandler {
 
-	private static final String ERROR_NO_PROJECT = "Selecciona un proyecto Java antes de pedir correcciones";
-	private static final String ERROR_CLOSED = "El proyecto seleccionado debe estar abierto";
-	private static final String ERROR_COMPILATION = "El proyecto no debe contener errores de compilación";
-	private static final String ERROR_NO_RULES = "Es necesario actualizar para corregir el proyecto";
+	private static final String ERROR_NO_PROJECT = "You have to select a Java Project before running the assistant ";
+	private static final String ERROR_CLOSED = "The Project has to be open";
+	private static final String ERROR_COMPILATION = "The Project can not contain compilation errors";
+	private static final String ERROR_NO_RULES = "Prolog rules were not found";
 
 	private Teacher teacher;
 	private IJavaProject last_check;
@@ -53,6 +53,7 @@ public class CheckHandler extends AbstractHandler {
 		if (project == null && this.last_check != null)
 			project = this.last_check;
 		
+		// TODO Cambiar los nombres
 		if (project != null && project.exists() && !hasCompilationErrors(project)) {
 			this.teacher.init();
 			if (this.teacher.getAnalyzer().getRules() != null) {

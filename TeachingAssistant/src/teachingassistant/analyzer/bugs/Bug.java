@@ -87,7 +87,7 @@ public class Bug implements Comparable<Bug> {
 
 	@Override
 	public int compareTo(Bug bug) {
-		return this.getType().compareTo(bug.getType());
+		return this.getRule().compareTo(bug.getRule());
 	}
 	
 	public void open() {
