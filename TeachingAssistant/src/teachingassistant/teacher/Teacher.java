@@ -28,7 +28,7 @@ import teachingassistant.views.TranslationView;
 
 public class Teacher {
 
-	private static final String ERROR_MESSAGE_X0 = "Error in the Project";
+	private static final String ERROR_MESSAGE_X0 = "Error when openning the Project";
 	private static final String ERROR_MESSAGE_X1 = "Error when generating the Prolog code";
 	private static final String ERROR_MESSAGE_X2 = "Error when generating the AST";
 	private static final String ERROR_MESSAGE_X3 = "Error checking the Prolog code";

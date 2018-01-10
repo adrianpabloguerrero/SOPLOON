@@ -99,7 +99,7 @@
           <query>reference_to_sister_class_instead_of_father</query>
       </simple-rule>
       <simple-rule>
-          <type>Falta de delegacion</type>
+          <type>Lack of delegation</type>
           <description>The class is not delegating responsibilities to the objects that compose it. Should the class delegate responsibilities?</description>
           <query>lack_of_delegation</query>
       </simple-rule>  
@@ -231,6 +231,23 @@
           <type>Similar codes in methods of the same class</type>
           <description>Some methods of the same class have similar behavior. Is this duplicated code?</description>
           <query>similar_behaviour_in_methods_of_the_same_class</query>
+      </simple-rule>
+
+      <!-- Nuevos -->
+      <simple-rule>
+          <type>Similar attribute</type>
+          <description>Some sister classes have similar attributes. Should the attribute be abstracted?</description>
+          <query>similar_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Lonely method</type>
+          <description>This method does not use any attribute or method of its class. Should the method be static?</description>
+          <query>lonely_method</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Using Java Collections without defining equals</type>
+          <description>Java Collection needs that parameters have equals defined to do some operations. Should the equals method be defined in this parameter's type?</description>
+          <query>java_collections_without_equals</query>
       </simple-rule>
    	</rules>
 </rules-set>

@@ -248,6 +248,14 @@ is_named_type([X|REST]):-
 collection_type(ID):-
 	(
 		array_type(ID,_, _);
+		java_collection_type(ID)
+    ),
+    !.
+
+/* Colecciones de java */
+
+java_collection_type(ID):-
+	(
 		list_type(ID);
 		map_type(ID);
 		set_type(ID)
@@ -1014,7 +1022,7 @@ has_method(CLASS,METHOD):-
     PARENT \= CLASS,
     not(method_declaration(METHOD_2, parent(CLASS), NAME, _, _, parameters_types(PARAMETER_TYPES), _, dimensions(D), _, _, _)),
     (
-        class_declaration(CLASS, _, _, _, _, super_type(SUPER), implements(IMPLEMENTS), _, _, _, _),
+        class_declaration(CLASS, _, _, _, _, super_type(SUPER), implements(IMPLEMENTS), _, _, _, _);
         interface_declaration(CLASS, _, _, _, _, super_type(SUPER), implements(IMPLEMENTS), _, _, _, _)
     ),
     (
@@ -1027,6 +1035,19 @@ has_method(CLASS,METHOD):-
             has_method(INTERFACE,METHOD)
         )
     ),
+    !.
+
+/* Una clase posee determinado atributo */
+
+has_field(CLASS,FIELD):-
+	field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),
+	!.
+
+has_field(CLASS,FIELD):-
+	field_declaration(FIELD, parent(SUPER), _, _, _, _, _, _),
+	CLASS \= SUPER,
+    is_super(SUPER,CLASS),
+    not(private_field(FIELD)),
     !.
 
 /* Un método delega funcionalidad a un metodo hermano */
@@ -1075,61 +1096,61 @@ object_method(METHOD):-
 
 /* Referencia a variable dentro de un método */
 
-var_reference(VAR,METHOD,CLASS):-
+var_reference(VAR,METHOD,CLASS,REF):-
     (
-        array_access(_, _, array(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        array_access(_, _, _, index(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        array_creation(_, _, _, _, initializer(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        array_initializer(_, _, expressions(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        assert_statement(_, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        assert_statement(_, _, _, message(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        assignment(_, _, _, left_operand(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        assignment(_, _, _, _, right_operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        cast_expression(_, _, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        catch_clause(_, _, exception(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        class_instance_creation(_, _, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
-        conditional_expression(_, _, condition(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        conditional_expression(_, _, _, then(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        conditional_expression(_, _, _, else(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        constructor_invocation(_, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        creation_reference(_, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
-        do_statement(_, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        enhanced_for_statement(_, _, parameter(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        enhanced_for_statement(_, _, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        expression_method_reference(_, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        expression_method_reference(_, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        field_access(_, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        field_access(_, _, _, field(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        for_statement(_, _, _, expression(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        if_statement(_, _, condition(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        infix_expression(_, _, _, left_operand(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        infix_expression(_, _, _, _, right_operand(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        infix_expression(_, _, _, _, _, extended_operands(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
-        instanceof_expression(_, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        lambda_expression(_, _, parameters(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        array_access(REF, _, array(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        array_access(REF, _, _, index(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        array_creation(REF, _, _, _, initializer(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        array_initializer(REF, _, expressions(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        assert_statement(REF, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        assert_statement(REF, _, _, message(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        assignment(REF, _, _, left_operand(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        assignment(REF, _, _, _, right_operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        cast_expression(REF, _, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        catch_clause(REF, _, exception(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        class_instance_creation(REF, _, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
+        conditional_expression(REF, _, condition(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        conditional_expression(REF, _, _, then(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        conditional_expression(REF, _, _, else(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        constructor_invocation(REF, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        creation_reference(REF, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
+        do_statement(REF, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        enhanced_for_statement(REF, _, parameter(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        enhanced_for_statement(REF, _, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        expression_method_reference(REF, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        expression_method_reference(REF, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        field_access(REF, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        field_access(REF, _, _, field(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        for_statement(REF, _, _, expression(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        if_statement(REF, _, condition(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        infix_expression(REF, _, _, left_operand(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        infix_expression(REF, _, _, _, right_operand(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        infix_expression(REF, _, _, _, _, extended_operands(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
+        instanceof_expression(REF, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        lambda_expression(REF, _, parameters(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
         method_declaration(METHOD, parent(CLASS), _, _, parameters(LIST), _, _, _, _, _, _);
         constructor_declaration(METHOD, parent(CLASS), _, _, parameters(LIST), _, _, _, _, _, _);
-        method_invocation(_, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        method_invocation(_, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        postfix_expression(_, _, _, operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        prefix_expression(_, _, _, operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        qualified_name(_, _, qualified(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        qualified_name(_, _, _, name(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        return_statement(_, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        super_constructor_invocation(_, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        super_constructor_invocation(_, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        super_field_access(_, _, field(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        super_method_invocation(_, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        super_method_reference(_, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        switch_case(_, _, case(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        switch_statement(_, _, switch(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        synchronized_statement(_, _, synchronized(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        this_expression(_, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        throw_statement(_, _, throw(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        try_statement(_, _, resources(LIST), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        type_method_reference(_, _, _, _, arguments(LIST), body_declarations(METHOD), type_declaration(CLASS), _);
-        variable_declaration(_, _, _, _, _, _, initializer(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        while_statement(_, _, condition(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _)
+        method_invocation(REF, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        method_invocation(REF, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        postfix_expression(REF, _, _, operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        prefix_expression(REF, _, _, operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        qualified_name(REF, _, qualified(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        qualified_name(REF, _, _, name(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        return_statement(REF, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        super_constructor_invocation(REF, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        super_constructor_invocation(REF, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        super_field_access(REF, _, field(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        super_method_invocation(REF, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        super_method_reference(REF, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        switch_case(REF, _, case(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        switch_statement(REF, _, switch(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        synchronized_statement(REF, _, synchronized(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        this_expression(REF, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        throw_statement(REF, _, throw(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        try_statement(REF, _, resources(LIST), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        type_method_reference(REF, _, _, _, arguments(LIST), body_declarations(METHOD), type_declaration(CLASS), _);
+        variable_declaration(REF, _, _, _, _, _, initializer(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
+        while_statement(REF, _, condition(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _)
     ),
     (
         var(LIST);

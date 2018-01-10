@@ -183,6 +183,7 @@ non_abstracted_attribute_aux(FIELD,SIMILAR):-
     common_super(CLASS,CLASS_2,CLASS_3),
     CLASS_3 \= CLASS,
     CLASS_3 \= CLASS_2,
+    CLASS \= CLASS_2,
     (
         class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);
         interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)
@@ -216,6 +217,7 @@ no_abstracted_method_aux(METHOD,SIMILAR):-
     common_super(CLASS,CLASS_2,CLASS_3),
     CLASS_3 \= CLASS,
     CLASS_3 \= CLASS_2,
+    CLASS \= CLASS_2,
     (
         class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);
         interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)
@@ -615,7 +617,7 @@ not_dinamic_attribute(ID):-
     ),
     not(
         (
-            var_reference(ID,METHOD,CLASS),
+            var_reference(ID,METHOD,CLASS,_),
             method_declaration(METHOD, _, _, _, _, _, _, _, _, _, _),
             define_behaviour(METHOD)
         )
@@ -700,6 +702,138 @@ similar_behaviour_in_methods_of_the_same_class_aux(METHOD,SIMILAR):-
     similar_code([B1],[B2]),
     assert(similar_behaviour_in_same_class_checked(SIMILAR)).
 
+/* Atributos similares */
 
+similar_attribute(ID):-
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), _, _, _, _, compilation_unit(UNIT)),
+    SUPER_CLASS \= null,
+    model_unit(UNIT),
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),
+    not(similar_attribute_checked(FIELD)),
+    assert(similar_attribute_checked(FIELD)),
+    not(redefined_attribute(FIELD)),
+    findall(SIMILAR,similar_attribute_aux(FIELD,SIMILAR),LIST),
+    not(length(LIST,0)),
+    append([FIELD],LIST,ID).
 
+similar_attribute_aux(FIELD,SIMILAR):-
+    field_declaration(FIELD, parent(CLASS), NAME, type(TYPE), _, extra_dimensions(D), _, _),
+    field_declaration(SIMILAR, parent(CLASS_2), NAME_2, type(TYPE), _, extra_dimensions(D), _, _),
+    not(similar_attribute_checked(SIMILAR)),
+    not(similar_attribute_checked(FIELD,CLASS_2)),
+    NAME_2 \= NAME,
+    common_super(CLASS,CLASS_2,CLASS_3),
+    CLASS_3 \= CLASS,
+    CLASS_3 \= CLASS_2,
+    CLASS \= CLASS_2,
+    not(field_declaration(_, parent(CLASS), NAME_2, type(TYPE), _, extra_dimensions(D), _, _)),
+    not(field_declaration(_, parent(CLASS_2), NAME, type(TYPE), _, extra_dimensions(D), _, _)),
+    (
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)
+    ),
+    assert(similar_attribute_checked(SIMILAR)),
+    assert(similar_attribute_checked(FIELD,CLASS_2)).
 
+/* Metodo solitario */
+
+lonely_method(ID):-
+    method_declaration(ID, parent(CLASS), _, _, parameters(PARAMETERS), _, return_type(RETURN_TYPE), _, body(BODY), _, compilation_unit(UNIT)),
+    field_declaration(_, parent(CLASS), _, _, _, _, _, _),
+    not(lonely_method_checked(ID)),
+    assert(lonely_method_checked(ID)),
+    BODY \= null,
+    block(BODY, _, statements(STM), _, _, _),
+    not(length(STM,0)),
+    not(length(PARAMETERS,0)),
+    not(static_method(ID)),
+    not(
+        (
+            field_declaration(FIELD, parent(P), _, _, _, _, _, _),
+            has_field(CLASS,FIELD),
+            var_reference(FIELD,ID,CLASS,NOT_QUALIFIED),
+            not(qualified_name(NOT_QUALIFIED, _, _, name(FIELD), body_declaration(METHOD), _, _))
+        )
+    ),
+    not(
+        (
+            (
+                (
+                    method_invocation(_, _, expression(EXP), method(METHOD), _, _, body_declaration(ID), _, _),
+                    METHOD \= ID,
+                    (
+                        EXP = null;
+                        this_expression(EXP, _, _, _, _, _)
+                    )
+                );
+                super_method_invocation(_, _, method(METHOD), _, _, body_declaration(ID), _, _)
+            ),
+            not(static_method(METHOD))
+        )
+    ),
+    not(
+        (
+            this_expression(EXP, parent(PARENT), _, body_declaration(ID), _, _),
+            not(
+                (
+                    method_invocation(PARENT, _, expression(EXP), _, _, _, _, _, _);
+                    field_access(PARENT, _, _, _, _, _, _)
+                )
+            )
+        )
+    ),
+    model_unit(UNIT).
+
+/* Usando colecciones de Java sin el equals */
+
+java_collections_without_equals(ID):-
+    method_invocation(ID, _, expression(EXP), method(METHOD), arguments([ARG]), _, _, _, compilation_unit(UNIT)),
+    (
+        method(METHOD, name('contains'), _, _);
+        method(METHOD, name('remove'), _, _)
+    ),
+    (
+        field_declaration(ARG, _, _, type(TYPE), _, _, _, _);
+        variable_declaration(ARG , _, _, type(TYPE), _, _, _, _, _, _)
+    ),
+    variable_declaration(ARG , _, _, type(TYPE), _, _, _, _, _, _),
+    resolve_expression(EXP,VAR),
+    (
+        field_declaration(VAR, _, _, type(COLLECTION), _, _, _, _);
+        variable_declaration(VAR , _, _, type(COLLECTION), _, _, _, _, _, _)
+    ),
+    java_collection_type(COLLECTION),
+    (
+        (
+            class_declaration(TYPE, _, _, _, _, _, _, _, _, _, _),
+            not(abstract_class(TYPE)),
+            not(
+                (
+                    method_declaration(AUX, _, _, _, _, _, _, _, _, _, _),
+                    is_equals(AUX),
+                    has_method(TYPE,AUX)
+                )
+            )
+        );
+        (
+            (
+                (
+                    class_declaration(TYPE, _, _, _, _, _, _, _, _, _, _),
+                    abstract_class(TYPE)
+                );
+                interface_declaration(TYPE, _, _, _, _, _, _, _, _, _, _)
+            ),
+            class_declaration(CHILD, _, _, _, _, _, _, _, _, _, _),
+            is_super(TYPE,CHILD),
+            not(
+                (
+                    method_declaration(AUX, _, _, _, _, _, _, _, _, _, _),
+                    is_equals(AUX),
+                    has_method(CHILD,AUX)
+                )
+            )
+        )
+    ),
+    model_unit(UNIT),
+    not(java_collections_without_equals_checked(ID)),
+    assert(java_collections_without_equals_checked(ID)).
