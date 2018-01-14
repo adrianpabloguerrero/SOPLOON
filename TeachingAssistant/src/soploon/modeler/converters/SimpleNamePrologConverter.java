@@ -18,6 +18,7 @@ public class SimpleNamePrologConverter extends NodeConverter<SimpleName> {
 		{ null, "name" },
 		{ null, "name", "type" },
 		{ null, "name", "type", "return_type" },
+		{ null, "name" },
 		{ null, "name" }
 	};
 
