@@ -1,0 +1,83 @@
+-- Maidana
+* No entregó informe.
+* Tiene clase colección. (que actua como una colección!)
+* En interface declaró métodos como "public abstract".
+* Las búsquedas no retornan lo especificado en el enunciado.
+* Nombres de paquetes no respetan la convención.
+* Intenta hacer extractores de valor, pero mezcla eso con los filtros, con lo que queda medio mal. O sea, en lugar de hacerlo teniendo una jerarquía distinta de extractores y dejar limpios los filtros, hace herencia.
+* Los filtros son innecesariamente complicados!! Tiene asociación y herencia para hacer los de mayor, menor e igual. Tiene herencia entre comparador de String y de int. Completamente innecesario!
+* La búsqueda no retorna nada, sino que modifica un parámetro!!! Encima, una playlist.
+* Adentro de playlist hace casting a PistaDeAudio!!!!! No!! Se rompe si tengo una playlist adentro de otra y quiero intercambiar el orden!
+* Hace contains sin implementar el equals.
+* El insertar música a una playlist lo hace en forma alfabética.
+
+-- Bautista
+* Métodos innecesarios en la clase de Música.
+* Tienen un contador estático para definir el id de las pistas. No corresponde, dado que según el enunciado el id debe poder ser cambiado.
+* No implementan toString(), sino getResumen(). Mal!
+* Lista tiene un método de eliminar que recibe una lista y una pista para eliminar! WTF!
+* Eliminar pista siempre retorna null!
+* Lista tiene un getResumen(ElementoMusical) WTF!!
+* Hacen de lista la colección que tendrían en el main con los métodos generales que deberían ser estáticos.
+* En Busqueda tienen un coincide de string... ??? Hace matching completo, no parcial.
+* Informe incompleto.
+* Definen ids estáticos pero la comparación de equals es por nombre!!!
+* Los filtros no están bien hechos. No cumplen con la consigna.
+* Diagrama de clases no se corresponde con el código entregado.
+
+-- Bollati
+* La pista no tiene nombre.
+* Condición podría ser una interfaz.
+* Mal elección del nombre del método en Condición.
+* Diagrama de clases no se corresponde con el código.
+* Titulo de pista y nombre de playlist son lo mismo. Arriba.
+* buscaPosElem se puede reemplazar por "indexOf".
+* Buscar debería volver Vector<Pista>.
+* Diseño bien.
+
+-- Segura
+* El diagrama de clases tiene una clase suelta.
+* Diagrama con clases repetidas.
+* Repiten atributos en playlist y pista.
+* Tienen contador estático en pista.
+* Buscar retorna Vector<Elemento>.
+* Informe pobre.
+* Falta el equals.
+* Casteo innecesario en Condicion.
+* Diseño bien.
+
+-- Mazza
+* Repiten atributo en pista y playlist.
+* Pensar bien el orden en "eliminarElemento".
+* No tiene toString().
+* Falta equals.
+* Escritura informal.
+
+-- Bravo
+* No tiene to String.
+* Usan extractor de valor. No muy bien que digamos. Retorna Object.
+* Métodos "mostrar".
+* Código MUY poco elegante. No pide eliminar repetidos la consigna.
+* No tienen equals.
+* Criterio parcial. Horrible.
+
+-- Moran Losada
+* Clases abstractas que debieran ser interfaces.
+* Método imprimir!!
+* Faltan filtros ?
+* El informe tiene errores ortográficos, ni el corrector le pasó. "resivir"
+* Tiene contador para el id. El id también se puede setear desde afuera!!
+* El delete debía ser por pista, no por posición.
+* Falta funcionalidad pedida. (Tanto en filtro como en elemento musical)
+* Diagrama inconsistente con el código.
+* No respeta convenciones de nombres.
+
+-- Rodriguez
+* Método imprimir.
+* La clase que contiene el main tiene la misma funcionalidad y estructura que la playlist.
+* MÚLTIPLES METODOS IMPRIMIR
+* No implementa el equals.
+* Los objetos imprimen!!
+* Código poco elegante.
+* Respecto a la Nota al final del informe, eso no había que hacerlo. Eso se rompe si tienen una pista con el mismo título que lo que ustedes buscan. 
+* El mejor informe que me tocó.
