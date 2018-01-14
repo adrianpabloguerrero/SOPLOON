@@ -1,7 +1,7 @@
 <rules-set>
   	<version>estandar-1.0</version>
   	<rules>
-      <!-- Encapsulation 
+      <!-- Encapsulation -->
       <simple-rule>
           <type>Public attribute</type>
           <description>The class as a public attribute. Is it breaking encapsulation?</description>
@@ -21,9 +21,9 @@
           <type>Direct acces to attribute</type>
           <description>Direct access to the attribute of another object. Is it breaking encapsulation?</description>
           <query>direct_access_to_attribute</query>
-      </simple-rule> -->
+      </simple-rule>
 
-      <!-- Design 
+      <!-- Design --> 
       <simple-rule>
           <type>Abstract class without abstract methods</type>
           <description>An abstract class that has not abstract methods. Should the class be non-abstract?</description>
@@ -68,9 +68,14 @@
           <type>Lazy class</type>
           <description>This class just has getters and setters. Is it a lazy class?</description>
           <query>lazy_class</query>
-      </simple-rule> -->
+      </simple-rule>
+ 	  <simple-rule>
+          <type>Abstract class that may be interface</type>
+          <description>This abstract class does not have attributes.</description>
+          <query>abstract_class_may_be_interface</query>
+      </simple-rule>
 
-      <!-- Inheritance 
+      <!-- Inheritance --> 
       <simple-rule>
           <type>Redefined attribute</type>
           <description>This class defines an attribute similar to a parent's attribute. Is it redefining the attribute?</description>
@@ -90,9 +95,14 @@
           <type>Redefine method with super</type>
           <description>Redefining a method by just doing super. Is necessary to redefine the method?</description>
           <query>redefine_with_super</query>
-      </simple-rule> -->
- 
-      <!-- Composite 
+      </simple-rule>
+       <simple-rule>
+          <type>Method redefined as abstract</type>
+          <description>This method is redefined as abstract.</description>
+          <query>method_redefined_as_abstract</query>
+      </simple-rule>
+
+      <!-- Composite -->
       <simple-rule>
           <type>Reference to sister class</type>
           <description>The class has an attribute of a sister type. Should the attribute be of a parent type?</description>
@@ -102,9 +112,9 @@
           <type>Lack of delegation</type>
           <description>The class is not delegating responsibilities to the objects that compose it. Should the class delegate responsibilities?</description>
           <query>lack_of_delegation</query>
-      </simple-rule> -->
+      </simple-rule>
 
-      <!-- Cohesion 
+      <!-- Cohesion --> 
       <simple-rule>
           <type>Many interfaces implemented</type>
           <description>The class is implementing too many interfaces (more than 2). Is the class monopolizing too many responsibilities?</description>
@@ -119,9 +129,9 @@
           <type>God class</type>
           <description>This class is too long, and the remaining classes are too short. Is the class monopolizing all the responsibilities?</description>
           <query>god_class</query>
-      </simple-rule> -->
+      </simple-rule>
 
-      <!-- Polymorphism 
+      <!-- Polymorphism --> 
       <simple-rule>
           <type>Use of instanceOf</type>
           <description>Using instanceOf outside the equals method. Is not taking advantage of the polymorphism?</description>
@@ -151,10 +161,10 @@
           <type>Class name contains number</type>
           <description>A class that contains a number in its name. Is not taking advantage of the polymorphism?</description>
           <query>class_name_contains_number</query>
-      </simple-rule> -->
+      </simple-rule>
 
 
-      <!-- Model vs main 
+      <!-- Model vs main --> 
       <simple-rule>
           <type>System out print</type>
           <description>The method is printing by console. Is printing the responsibility of this class?</description>
@@ -164,9 +174,9 @@
           <type>Main class as model class</type>
           <description>The main class is part of a hierarchy. Is it okay for this class to be the main class?</description>
           <query>main_class_as_model_class</query>
-      </simple-rule> -->
+      </simple-rule>
 
-      <!-- Others 
+      <!-- Others --> 
       <simple-rule>
           <type>Equals no usado</type>
           <description>Comparing not primitive data by using "==". Should the data be compared by using equals?</description>
@@ -181,9 +191,19 @@
           <type>Public constructor in an abstract class</type>
           <description>The abstract class has a public constructor that only child classes can invoke. Should the constructor be protected?</description>
           <query>public_constructor_in_abstract_class</query>
-      </simple-rule> -->
+      </simple-rule>
+      <simple-rule>
+          <type>Method that always return null</type>
+          <description>This method always returns null.</description>
+          <query>method_always_returns_null</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Empty method</type>
+          <description>This method has an empty body.</description>
+          <query>empty_method</query>
+      </simple-rule>
 
-      <!-- Constants 
+      <!-- Constants --> 
       <simple-rule>
           <type>Constant in a method invocation</type>
           <description>The method uses constants to invoke another methods. Should the constants be reemplaced by variables?</description>
@@ -213,9 +233,9 @@
           <type>String constants</type>
           <description>This method uses String constants. Should the constants be reemplaced by variables?</description>
           <query>constant_string_in_operation</query>
-      </simple-rule> -->
+      </simple-rule>
 
-      <!-- Dynamic attributes
+      <!-- Dynamic attributes -->
       <simple-rule>
           <type>Non dynamic attribute</type>
           <description>This attribute does not seem to have any special meaning. Should the attribute be a dynamic attribute?</description>
@@ -225,9 +245,9 @@
           <type>Dynamic attribute</type>
           <description>This dynamic attribute does seem to have a special meaning. Should the dynamic attribute be a normal attribute?</description>
           <query>dinamic_attribute</query>
-      </simple-rule> -->
+      </simple-rule>
 
-      <!-- Duplicated code 
+      <!-- Duplicated code --> 
       <simple-rule>
           <type>Similar codes in classes of the same hierarchy</type>
           <description>Some classes of the same hierarchy have similar behavior.</description>
@@ -237,32 +257,9 @@
           <type>Similar codes in methods of the same class</type>
           <description>Some methods of the same class have similar behavior.</description>
           <query>similar_behaviour_in_methods_of_the_same_class</query>
-      </simple-rule> -->
-
-
-      <!-- Correr -->
-      <simple-rule>
-          <type>Method that always return null</type>
-          <description>This method always returns null.</description>
-          <query>method_always_returns_null</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Abstract class that may be interface</type>
-          <description>This abstract class does not have attributes.</description>
-          <query>abstract_class_may_be_interface</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Empty method</type>
-          <description>This method has an empty body.</description>
-          <query>empty_method</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Method redefined as abstract</type>
-          <description>This method is redefined as abstract.</description>
-          <query>method_redefined_as_abstract</query>
       </simple-rule>
 
-      <!-- Nuevos en segunda corrida -->
+      <!-- Nuevos -->
       <simple-rule>
           <type>Similar attribute</type>
           <description>Some sister classes have similar attributes. Should the attribute be abstracted?</description>
