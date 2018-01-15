@@ -138,7 +138,7 @@
           <query>use_of_instanceof</query>
       </simple-rule>
       <simple-rule>
-          <type>Boolean como tipo</type>
+          <type>Boolean field as type indicator</type>
           <description>Using a boolean attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
           <query>boolean_as_type</query>
       </simple-rule>
@@ -178,7 +178,7 @@
 
       <!-- Others --> 
       <simple-rule>
-          <type>Equals no usado</type>
+          <type>== instead of equals</type>
           <description>Comparing not primitive data by using "==". Should the data be compared by using equals?</description>
           <query>not_use_of_equals</query>
       </simple-rule>

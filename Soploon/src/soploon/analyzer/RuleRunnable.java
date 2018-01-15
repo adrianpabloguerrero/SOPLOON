@@ -53,7 +53,7 @@ public class RuleRunnable implements Runnable {
 			synchronized(rules) {
 				rule = null;
 				if (!rules.isEmpty()) {
-					monitor.subTask("Progreso: " + (100 - (( rules.size()*100)/total_rules)) + "%");
+					monitor.subTask("Progress: " + (100 - (( rules.size()*100)/total_rules)) + "%");
 					rule = rules.remove(0);
 				}
 				monitor.worked(1);
