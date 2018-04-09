@@ -35,9 +35,6 @@ public class CodeParser {
 		this.parser.setSource(compilation_unit);
 		this.parser.setResolveBindings(true);
 		CompilationUnit c = (CompilationUnit) this.parser.createAST(null);
-		Visitor v = new Visitor();
-		c.accept(v);
-		System.out.println(v.get());
 		return c;
 	}
 

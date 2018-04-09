@@ -125,7 +125,7 @@ public class PrologAnalyzer {
 			this.rule_set = (RuleSet) xstream.fromXML(new FileInputStream(RULES_PATH));
 
 			this.auxiliary_theory = new Theory(readFile(AUXILIARY_PREDICATES_PATH));
-			this.rules_theory = new Theory(readFile(RULES_PATH));
+			this.rules_theory = new Theory(readFile(ERROR_PREDICATES_PATH));
 
 		} catch (FileNotFoundException | InvalidTheoryException e) {
 

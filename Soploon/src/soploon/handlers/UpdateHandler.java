@@ -59,7 +59,7 @@ public class UpdateHandler extends AbstractHandler {
 							dir.mkdirs();
 						saveToFile(rulesxml, PrologAnalyzer.RULES_PATH);
 						saveToFile(auxiliary, PrologAnalyzer.AUXILIARY_PREDICATES_PATH);
-						saveToFile(rules, PrologAnalyzer.RULES_PATH);
+						saveToFile(rules, PrologAnalyzer.ERROR_PREDICATES_PATH);
 						if (event.getTrigger() != null)
 							MessageDialog.openInformation(null, "Ayudante Virtual", "Ayudante actualizado!");
 					} else if (event.getTrigger() != null) {
