@@ -1,0 +1,279 @@
+<rules-set>
+  	<version>estandar-1.0</version>
+  	<rules>
+      <!-- Encapsulation -->
+      <simple-rule>
+          <type>Public attribute</type>
+          <description>The class as a public attribute. Is it breaking encapsulation?</description>
+          <query>public_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Returned collection</type>
+          <description>Returning a collection attribute without cloning it. Is it breaking encapsulation?</description>
+          <query>returned_collection</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Assigned collection</type>
+          <description>Assigning the external collection without cloning it. Is it breaking encapsulation?</description>
+          <query>assigned_collection</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Direct acces to attribute</type>
+          <description>Direct access to the attribute of another object. Is it breaking encapsulation?</description>
+          <query>direct_access_to_attribute</query>
+      </simple-rule>
+
+      <!-- Design --> 
+      <simple-rule>
+          <type>Abstract class without abstract methods</type>
+          <description>An abstract class that has not abstract methods. Should the class be non-abstract?</description>
+          <query>abstract_class_without_abstract_method</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Class or interface without methods</type>
+          <description>A class without public methods. What is the meaning of this class?</description>
+          <query>absence_of_methods</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Unimplemented interface</type>
+          <description>This interface is not implemented by any class. Should it be eliminated?</description>
+          <query>unimplemented_interface</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Non extended abstract class</type>
+          <description>This abstract class is not extended by any class. Should it be eliminated?</description>
+          <query>non_extended_abstract_class</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Unnecessary interface</type>
+          <description>This interface is implemented by just one class. Should it be eliminated?</description>
+          <query>unnecessary_interface</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Unnecessary abstract class</type>
+          <description>This abstract class is extended by just one class. Should it be eliminated?</description>
+          <query>unnecessary_abstract_class</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Non abstracted attribute</type>
+          <description>Some sister classes have the same attribute. Should the attribute be abstracted?</description>
+          <query>non_abstracted_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Non abstracted method</type>
+          <description>Some sister classes have a similar method. Should the method be abstracted?</description>
+          <query>non_abstracted_method</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Lazy class</type>
+          <description>This class just has getters and setters. Is it a lazy class?</description>
+          <query>lazy_class</query>
+      </simple-rule>
+ 	  <simple-rule>
+          <type>Abstract class that may be interface</type>
+          <description>This abstract class does not have attributes.</description>
+          <query>abstract_class_may_be_interface</query>
+      </simple-rule>
+
+      <!-- Inheritance --> 
+      <simple-rule>
+          <type>Redefined attribute</type>
+          <description>This class defines an attribute similar to a parent's attribute. Is it redefining the attribute?</description>
+          <query>redefined_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Use of super to invoke a method</type>
+          <description>Invoking a method by using super. Is necessary to use super?</description>
+          <query>super_in_method_invocation</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Use of super to acces a field</type>
+          <description>Accessing a field by using super. Is necessary to use super?</description>
+          <query>super_in_field_access</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Redefine method with super</type>
+          <description>Redefining a method by just doing super. Is necessary to redefine the method?</description>
+          <query>redefine_with_super</query>
+      </simple-rule>
+       <simple-rule>
+          <type>Method redefined as abstract</type>
+          <description>This method is redefined as abstract.</description>
+          <query>method_redefined_as_abstract</query>
+      </simple-rule>
+
+      <!-- Composite -->
+      <simple-rule>
+          <type>Reference to sister class</type>
+          <description>The class has an attribute of a sister type. Should the attribute be of a parent type?</description>
+          <query>reference_to_sister_class_instead_of_father</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Lack of delegation</type>
+          <description>The class is not delegating responsibilities to the objects that compose it. Should the class delegate responsibilities?</description>
+          <query>lack_of_delegation</query>
+      </simple-rule>
+
+      <!-- Cohesion --> 
+      <simple-rule>
+          <type>Many interfaces implemented</type>
+          <description>The class is implementing too many interfaces (more than 2). Is the class monopolizing too many responsibilities?</description>
+          <query>many_implements</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Low cohesion</type>
+          <description>The class has too many public behaviors (more than 9). Is the class monopolizing too many responsibilities?</description>
+          <query>low_cohesion</query>
+      </simple-rule>
+      <simple-rule>
+          <type>God class</type>
+          <description>This class is too long, and the remaining classes are too short. Is the class monopolizing all the responsibilities?</description>
+          <query>god_class</query>
+      </simple-rule>
+
+      <!-- Polymorphism --> 
+      <simple-rule>
+          <type>Use of instanceOf</type>
+          <description>Using instanceOf outside the equals method. Is not taking advantage of the polymorphism?</description>
+          <query>use_of_instanceof</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Boolean field as type indicator</type>
+          <description>Using a boolean attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+          <query>boolean_as_type</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Attribute used in switches</type>
+          <description>Using an attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+          <query>switch_of_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Parameter used in switch</type>
+          <description>Using a parameter to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+          <query>switch_of_param</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Type attribute</type>
+          <description>An attribute named "type" or "tipo". Is not taking advantage of the polymorphism?</description>
+          <query>type_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Class name contains number</type>
+          <description>A class that contains a number in its name. Is not taking advantage of the polymorphism?</description>
+          <query>class_name_contains_number</query>
+      </simple-rule>
+
+
+      <!-- Model vs main --> 
+      <simple-rule>
+          <type>System out print</type>
+          <description>The method is printing by console. Is printing the responsibility of this class?</description>
+          <query>system_out_print</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Main class as model class</type>
+          <description>The main class is part of a hierarchy. Is it okay for this class to be the main class?</description>
+          <query>main_class_as_model_class</query>
+      </simple-rule>
+
+      <!-- Others --> 
+      <simple-rule>
+          <type>== instead of equals</type>
+          <description>Comparing not primitive data by using "==". Should the data be compared by using equals?</description>
+          <query>not_use_of_equals</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Abstract method in an interface</type>
+          <description>The interface declares a method as abstract, but interface's methods are abstract by default. Is the method defined as abstract unnecessarily?</description>
+          <query>abstract_method_in_interface</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Public constructor in an abstract class</type>
+          <description>The abstract class has a public constructor that only child classes can invoke. Should the constructor be protected?</description>
+          <query>public_constructor_in_abstract_class</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Method that always return null</type>
+          <description>This method always returns null.</description>
+          <query>method_always_returns_null</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Empty method</type>
+          <description>This method has an empty body.</description>
+          <query>empty_method</query>
+      </simple-rule>
+
+      <!-- Constants --> 
+      <simple-rule>
+          <type>Constant in a method invocation</type>
+          <description>The method uses constants to invoke another methods. Should the constants be reemplaced by variables?</description>
+          <query>constant_in_invocation</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Constant in an assignment</type>
+          <description>The method uses constants in assignments. Should the constants be reemplaced by variables?</description>
+          <query>constant_in_assignment</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Constant in a comparision</type>
+          <description>The method uses constants in comparisions. Should the constants be reemplaced by variables?</description>
+          <query>constant_in_comparision</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Constant in an operation</type>
+          <description>The method uses constants in operations. Should the constants be reemplaced by variables?</description>
+          <query>constant_in_operation</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Constant in a return</type>
+          <description>The method uses constants in return statements. Should the constants be reemplaced by variables?</description>
+          <query>constant_in_return</query>
+      </simple-rule>   
+      <simple-rule>
+          <type>String constants</type>
+          <description>This method uses String constants. Should the constants be reemplaced by variables?</description>
+          <query>constant_string_in_operation</query>
+      </simple-rule>
+
+      <!-- Dynamic attributes -->
+      <simple-rule>
+          <type>Non dynamic attribute</type>
+          <description>This attribute does not seem to have any special meaning. Should the attribute be a dynamic attribute?</description>
+          <query>not_dinamic_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Dynamic attribute</type>
+          <description>This dynamic attribute does seem to have a special meaning. Should the dynamic attribute be a normal attribute?</description>
+          <query>dinamic_attribute</query>
+      </simple-rule>
+
+      <!-- Duplicated code --> 
+      <simple-rule>
+          <type>Similar codes in classes of the same hierarchy</type>
+          <description>Some classes of the same hierarchy have similar behavior.</description>
+          <query>similar_behaviour_in_classes_of_the_same_hierarchy</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Similar codes in methods of the same class</type>
+          <description>Some methods of the same class have similar behavior.</description>
+          <query>similar_behaviour_in_methods_of_the_same_class</query>
+      </simple-rule>
+
+      <!-- Nuevos -->
+      <simple-rule>
+          <type>Similar attribute</type>
+          <description>Some sister classes have similar attributes. Should the attribute be abstracted?</description>
+          <query>similar_attribute</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Lonely method</type>
+          <description>This method does not use any attribute or method of its class. Should the method be static?</description>
+          <query>lonely_method</query>
+      </simple-rule>
+      <simple-rule>
+          <type>Using Java Collections without defining equals</type>
+          <description>Java Collection needs that parameters have equals defined to do some operations. Should the equals method be defined in this parameter's type?</description>
+          <query>java_collections_without_equals</query>
+      </simple-rule>
+   	</rules>
+</rules-set>
