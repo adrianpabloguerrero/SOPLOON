@@ -15,7 +15,9 @@ public class TypeDeclarationPrologConverter extends NodeConverter<TypeDeclaratio
 
 	private static final String CLASS_KEY = "class_declaration";
 	private static final String INTERFACE_KEY = "interface_declaration";
-	private static final String[] KEYS = new String[] { null, "parent", null, "parameters_types", "modifiers",
+	private static final String[] CLASS_KEYS = new String[] { null, "parent", null, "parameters_types", "modifiers",
+			"super_type", "implements", "fields", "methods", "declarations", "compilation_unit" };
+	private static final String[] INTERFACE_KEYS = new String[] { null, "parent", null, "parameters_types", "modifiers",
 			"super_type", "implements", "fields", "methods", "declarations", "compilation_unit" };
 
 	public TypeDeclarationPrologConverter(Mapper mapper, PrologCode code, NodeConverterFactory converter_factory) {
@@ -32,7 +34,8 @@ public class TypeDeclarationPrologConverter extends NodeConverter<TypeDeclaratio
 		String name = this.quote(node.getName().getIdentifier());
 
 		String fact = node.isInterface() ? INTERFACE_KEY : CLASS_KEY;
-
+		String[] keys = node.isInterface() ? INTERFACE_KEYS : CLASS_KEYS;
+		
 		Vector<ASTNode> parameters_types_nodes = new Vector<ASTNode>();
 		parameters_types_nodes.addAll(node.typeParameters());
 		for (ASTNode parameter : parameters_types_nodes)
@@ -44,7 +47,7 @@ public class TypeDeclarationPrologConverter extends NodeConverter<TypeDeclaratio
 			this.converter_factory.getConverter(node.getSuperclassType()).convert(node.getSuperclassType());
 			super_type = this.mapper.getNodeID(node.getSuperclassType());
 		}
-		
+
 		Vector<IExtendedModifier> modifiers_nodes = new Vector<IExtendedModifier>();
 		modifiers_nodes.addAll(node.modifiers());
 		Vector<String> modifiers_names = new Vector<String>();
@@ -73,13 +76,18 @@ public class TypeDeclarationPrologConverter extends NodeConverter<TypeDeclaratio
 		Vector<ASTNode> methods_nodes = new Vector<ASTNode>();
 		methods_nodes.addAll(Arrays.asList(node.getMethods()));
 		String methods = this.generateList(methods_nodes);
-		
+
 		String unit = this.mapper.getNodeID(node.getRoot());
 
-		String[] args = new String[] { id, parent, name, parameters_types, modifiers, super_type, implements_ids,
-				fields, methods, declarations, unit };
-		this.code.addFact(fact, generateArgs(KEYS, args));
-
+		String[] args = null;
+		if (node.isInterface())
+			args = new String[] { id, parent, name, parameters_types, modifiers, super_type, fields, methods,
+					declarations, unit };
+		else
+			args = new String[] { id, parent, name, parameters_types, modifiers, super_type, implements_ids, fields,
+					methods, declarations, unit };
+		
+		this.code.addFact(fact, generateArgs(keys, args));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,7 +95,7 @@ public class TypeDeclarationPrologConverter extends NodeConverter<TypeDeclaratio
 	public void bind(TypeDeclaration node) {
 		this.mapper.setBindingID(node.resolveBinding(), this.mapper.getNodeID(node));
 
-		this.mapper.setParent(node,node);
+		this.mapper.setParent(node, node);
 
 		Vector<ASTNode> parameters_types_nodes = new Vector<ASTNode>();
 		parameters_types_nodes.addAll(node.typeParameters());

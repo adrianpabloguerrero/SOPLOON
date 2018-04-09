@@ -56,7 +56,7 @@ public class ModelGenerator {
 			logger.println(LOG_FOOTER);
 			
 			this.check_code.log(logger);
-
+			
 			return 0;			
 		}
 		catch (Exception e) {

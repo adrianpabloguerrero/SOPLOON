@@ -13,7 +13,7 @@ public class ExpressionMethodReferencePrologConverter extends NodeConverter<Expr
 
 	private static final String KEY = "expression_method_reference";
 	private static final String[] KEYS = new String[] { null, "parent", "expression", "method", "arguments",
-			"type_arguments", "body_declaration", "type_declaration", "compilation_unit" };
+			"body_declaration", "type_declaration", "compilation_unit" };
 
 	public ExpressionMethodReferencePrologConverter(Mapper mapper, PrologCode code,
 			NodeConverterFactory converter_factory) {
@@ -38,19 +38,13 @@ public class ExpressionMethodReferencePrologConverter extends NodeConverter<Expr
 			this.converter_factory.getConverter(argument).convert(argument);
 		String arguments = this.generateList(arguments_nodes);
 
-		Vector<ASTNode> arguments_types_nodes = new Vector<ASTNode>();
-		arguments_types_nodes.addAll(node.typeArguments());
-		for (ASTNode type_argument_node : arguments_types_nodes)
-			this.converter_factory.getConverter(type_argument_node).convert(type_argument_node);
-		String type_arguments = this.generateList(arguments_types_nodes);
-
 		String body_declaration = this.mapper.getNodeID(this.mapper.getParent(node));
 
 		String type_declaration = this.mapper.getNodeID(this.mapper.getParent(node).getParent());
 
 		String unit = this.mapper.getNodeID(node.getRoot());
 
-		String[] args = new String[] { id, parent, expression_id, method, arguments, type_arguments, body_declaration,
+		String[] args = new String[] { id, parent, expression_id, method, arguments, body_declaration,
 				type_declaration, unit };
 		this.code.addFact(KEY, this.generateArgs(KEYS, args));
 	}
