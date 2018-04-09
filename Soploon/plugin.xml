@@ -47,7 +47,7 @@
             category="Soploon.category"
             class="soploon.views.CorrectionsView"
             icon="icons/icon.png"
-            id="TeachingAssistant.corrections"
+            id="Soploon.corrections"
             name="Correcciones">
       </view>
    </extension>
