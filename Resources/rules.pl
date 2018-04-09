@@ -239,7 +239,7 @@ redefined_attribute(ID):-
 /* Uso de super para invocar un método sin estar redefiniendolo */
 
 super_in_method_invocation(ID):-
-    super_method_invocation(ID, _, method(SUPER), arguments(ARGUMENTS), _, body_declaration(METHOD), _, compilation_unit(UNIT)),
+    super_method_invocation(ID, _, method(SUPER), arguments(ARGUMENTS), body_declaration(METHOD), _, compilation_unit(UNIT)),
     (
         method_declaration(SUPER, _, NAME, _, _, _, _, _, _, _, _);
         method(SUPER, name(NAME), _, _)
@@ -256,7 +256,7 @@ super_in_field_access(ID):-
 /* Redefine llamando al Super */
 
 redefine_with_super(ID):-
-    super_method_invocation(INVOCATION, parent(PARENT), method(SUPER_METHOD), _, _, body_declaration(ID), _, compilation_unit(UNIT)),
+    super_method_invocation(INVOCATION, parent(PARENT), method(SUPER_METHOD), _, body_declaration(ID), _, compilation_unit(UNIT)),
     method_declaration(ID, _, _, _, _, _, _, _, body(BODY), _, _),
     (
         block(BODY, _, statements([INVOCATION]), _, _, _);
@@ -289,7 +289,7 @@ use_of_instanceof(ID):-
         instanceof_expression(ID, _, _, _, body_declaration(METHOD), _, compilation_unit(UNIT));
         (
             method(IS_INSTANCE, name('isInstance'), _, _),
-            method_invocation(ID, _, _, method(IS_INSTANCE), arguments([]), _, body_declaration(METHOD), _, compilation_unit(UNIT))
+            method_invocation(ID, _, _, method(IS_INSTANCE), arguments([]), body_declaration(METHOD), _, compilation_unit(UNIT))
         )
     ),
     not(is_equals(METHOD)),
@@ -411,7 +411,7 @@ lack_of_delegation(ID):-
 
 system_out_print(ID):-
     is_print(PRINT),
-    method_invocation(PRINT, _, _, _, _, _, body_declaration(ID), _, compilation_unit(UNIT)),
+    method_invocation(PRINT, _, _, _, _, body_declaration(ID), _, compilation_unit(UNIT)),
     not(system_out_print_checked(ID)),
     assert(system_out_print_checked(ID)),
     model_unit(UNIT).
@@ -514,13 +514,13 @@ constant_in_invocation(LITERAL):-
     not(valid_literal(VAL)),
     (
         (
-            method_invocation(INVOCATION, _, _, _, _, _, _, _, _),
+            method_invocation(INVOCATION, _, _, _, _, _, _, _),
             not(is_print(INVOCATION))
         );
-        constructor_invocation(INVOCATION, _, _, _, _, _, _, _);
-        class_instance_creation(INVOCATION, _, _, _, _, _, _, _, _);
-        super_method_invocation(INVOCATION, _, _, _, _, _, _, _);
-        super_constructor_invocation(INVOCATION, _, _, _, _, _, _, _, _)
+        constructor_invocation(INVOCATION, _, _, _, _, _, _);
+        class_instance_creation(INVOCATION, _, _, _, _, _, _, _);
+        super_method_invocation(INVOCATION, _, _, _, _, _, _);
+        super_constructor_invocation(INVOCATION, _, _, _, _, _, _, _)
     ),
     not(dinamic_attribute(LITERAL)),
     model_unit(UNIT).
@@ -625,7 +625,7 @@ not_dinamic_attribute(ID):-
 /* Atributo que no deberia ser dinamico */
 
 dinamic_attribute(ID):-
-    method_invocation(INVOCATION, _, expression(EXP), method(METHOD), arguments([ID]), _, _, type_declaration(CLASS), _),
+    method_invocation(INVOCATION, _, expression(EXP), method(METHOD), arguments([ID]), _, type_declaration(CLASS), _),
     string_literal(ID, _, _, _, _, _),
     (
         (
@@ -812,14 +812,14 @@ lonely_method(ID):-
         (
             (
                 (
-                    method_invocation(_, _, expression(EXP), method(METHOD), _, _, body_declaration(ID), _, _),
+                    method_invocation(_, _, expression(EXP), method(METHOD), _, body_declaration(ID), _, _),
                     METHOD \= ID,
                     (
                         EXP = null;
                         this_expression(EXP, _, _, _, _, _)
                     )
                 );
-                super_method_invocation(_, _, method(METHOD), _, _, body_declaration(ID), _, _)
+                super_method_invocation(_, _, method(METHOD), _, body_declaration(ID), _, _)
             ),
             not(static_method(METHOD))
         )
@@ -829,7 +829,7 @@ lonely_method(ID):-
             this_expression(EXP, parent(PARENT), _, body_declaration(ID), _, _),
             not(
                 (
-                    method_invocation(PARENT, _, expression(EXP), _, _, _, _, _, _);
+                    method_invocation(PARENT, _, expression(EXP), _, _, _, _, _);
                     field_access(PARENT, _, _, _, _, _, _)
                 )
             )
@@ -840,7 +840,7 @@ lonely_method(ID):-
 /* Usando colecciones de Java sin el equals */
 
 java_collections_without_equals(ID):-
-    method_invocation(ID, _, expression(EXP), method(METHOD), arguments([ARG]), _, _, _, compilation_unit(UNIT)),
+    method_invocation(ID, _, expression(EXP), method(METHOD), arguments([ARG]), _, _, compilation_unit(UNIT)),
     (
         method(METHOD, name('contains'), _, _);
         method(METHOD, name('remove'), _, _)

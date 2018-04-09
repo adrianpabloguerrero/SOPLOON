@@ -373,7 +373,7 @@ plain_types([],[]):- !.
 plain_types(ID,[ID]):-
 	(
 		class_declaration(ID, _, _, _, _, _, _, _, _, _, _);
-		interface_declaration(ID, _, _, _, _, _, _, _, _, _, _);
+		interface_declaration(ID, _, _, _, _, _, _, _, _, _);
 		enum_declaration(ID, _, _, _, _, _, _, _)
 	),
 	!.
@@ -414,7 +414,7 @@ plain_types([X|COLA],LIST):-
 
 is_type(ID):-
 	class_declaration(ID, _, _, _, _, _, _, _, _, _, _);
-	interface_declaration(ID, _, _, _, _, _, _, _, _, _, _);
+	interface_declaration(ID, _, _, _, _, _, _, _, _, _);
 	enum_declaration(ID, _, _, _, _, _, _, _);
 	type(ID,_).
 
@@ -644,7 +644,7 @@ is_hm_item_getter(ID):-
     field_declaration(FIELD, parent(CLASS), _, type(MAP),  _, _, _, _),
     map_type(MAP),
     parameterized_type(MAP, _, parameters([INDEX_TYPE,RETURN_TYPE])),
-    method_invocation(INVOCATION, _, expression(EXP), method(GET), arguments([PARAM]), _, body_declaration(ID), _, _),
+    method_invocation(INVOCATION, _, expression(EXP), method(GET), arguments([PARAM]), body_declaration(ID), _, _),
     field_access(EXP,FIELD),
     method(GET, name('get'), _, _),
     !.
@@ -723,7 +723,7 @@ list_super_classes(ID,[]):-
         wildcard_type(ID, _, _);
         array_type(ID, _, _);
         type(ID, _);
-        interface_declaration(ID, _, _, _, _, _, _, _, _, _, _);
+        interface_declaration(ID, _, _, _, _, _, _, _, _, _);
         class_declaration(ID, _, _, _, _, super_type(null), _, _, _, _, _)
     ),
     !.
@@ -741,12 +741,12 @@ list_super_interfaces(ID,[]):-
         wildcard_type(ID, _, _);
         array_type(ID, _, _);
         type(ID, _);
-        interface_declaration(ID, _, _, _, _, super_type(null), _, _, _, _, _)
+        interface_declaration(ID, _, _, _, _, super_type(null), _, _, _, _)
     ),
     !.
 
 list_super_interfaces(ID,L):-
-    interface_declaration(ID, _, _, _, _, _, implements(I), _, _, _, _),
+    interface_declaration(ID, _, _, _, _, super_type(I), _, _, _, _),
     list_super_interfaces(I,L),
     !.
 
@@ -915,7 +915,7 @@ resolve_expression(NAME,BIND):-
 
 
 resolve_expression(EXP,EXP):-
-	method_invocation(EXP, _, _, _, _, _, _, _, _).
+	method_invocation(EXP, _, _, _, _, _, _, _).
 
 /* Necesidad del equals */
 
@@ -926,7 +926,7 @@ need_equals(ID):-
             field_declaration(ID, _, _, type(TYPE), _, _, _, _);
             variable_declaration(ID, _, _, type(TYPE), _, _, _, _, _, _);
             (
-            	method_invocation(ID, _, _,  method(METHOD), _, _, _, _, _),
+            	method_invocation(ID, _, _,  method(METHOD), _, _, _, _),
             	method_declaration(METHOD, _, _, _, _, _, return_type(TYPE), _, _, _, _)
             )
         ),
@@ -949,7 +949,7 @@ valid_literal('" "'):- !.
 
 is_print(ID):-
     nonvar(ID),
-    method_invocation(ID, _, expression(SYSOUT), method(PRINT), _, _, _, _, _),
+    method_invocation(ID, _, expression(SYSOUT), method(PRINT), _, _, _, _),
     qualified_name(SYSOUT, _, qualified(SYSTEM), name(OUT), _, _, _),
     type(SYSTEM, name('System')),
     variable(OUT, name('out'), _),
@@ -963,7 +963,7 @@ is_print(ID):-
     type(SYSTEM, name('System')),
     variable(OUT, name('out'), _),
     qualified_name(SYSOUT, _, qualified(SYSTEM), name(OUT), _, _, _),
-    method_invocation(ID, _, expression(SYSOUT), method(PRINT), _, _, _, _, _),
+    method_invocation(ID, _, expression(SYSOUT), method(PRINT), _, _, _, _),
     (
         method(PRINT, name('println'), _, _);
         method(PRINT, name('print'), _, _)
@@ -1037,7 +1037,8 @@ has_method(CLASS,METHOD):-
     not(method_declaration(METHOD_2, parent(CLASS), NAME, _, _, parameters_types(PARAMETER_TYPES), _, dimensions(D), _, _, _)),
     (
         class_declaration(CLASS, _, _, _, _, super_type(SUPER), implements(IMPLEMENTS), _, _, _, _);
-        interface_declaration(CLASS, _, _, _, _, super_type(SUPER), implements(IMPLEMENTS), _, _, _, _)
+        interface_declaration(CLASS, _, _, _, _, super_type(SUPER), _, _, _, _),
+		IMPLEMENTS = []
     ),
     (
         (
@@ -1067,12 +1068,12 @@ has_field(CLASS,FIELD):-
 /* Un método delega funcionalidad a un metodo hermano */
 
 delegation(METHOD,CHILD_METHOD):-
-    method_invocation(_, _, _, method(CHILD_METHOD), _, _, body_declaration(METHOD), _, _),
+    method_invocation(_, _, _, method(CHILD_METHOD), _, body_declaration(METHOD), _, _),
     !.
 
 delegation(METHOD,FIELD,TYPE):-
     method_declaration(METHOD, _, NAME, _, parameters(PARAMETERS), _, _, _, _, _, _),
-    method_invocation(_, _, expression(EXP), method(AUX_METHOD), arguments(PARAMETERS), _, body_declaration(METHOD), _, _),
+    method_invocation(_, _, expression(EXP), method(AUX_METHOD), arguments(PARAMETERS), body_declaration(METHOD), _, _),
  	(
         method_declaration(AUX_METHOD, _, NAME, _, _, parameters_types(PARAMETER_TYPES), _, dimensions(D), _, _, _);
         method(AUX_METHOD, name(NAME), _, _)
@@ -1084,7 +1085,7 @@ delegation(METHOD,FIELD,TYPE):-
     	);
 		variable_declaration(EXP, _, _, type(TYPE), _, _, _, _, _, _);
 		(
-            method_invocation(EXP, _, expression(EXP_2), method(GET), _, _, _, _, _),
+            method_invocation(EXP, _, expression(EXP_2), method(GET), _, _, _, _),
             field_access(EXP_2,FIELD),
             (
                 method(GET, name('get'), _, _);
@@ -1122,17 +1123,17 @@ var_reference(VAR,METHOD,CLASS,REF):-
         assignment(REF, _, _, _, right_operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         cast_expression(REF, _, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         catch_clause(REF, _, exception(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        class_instance_creation(REF, _, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
+        class_instance_creation(REF, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         conditional_expression(REF, _, condition(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
         conditional_expression(REF, _, _, then(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
         conditional_expression(REF, _, _, else(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        constructor_invocation(REF, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        constructor_invocation(REF, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         creation_reference(REF, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         do_statement(REF, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
         enhanced_for_statement(REF, _, parameter(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
         enhanced_for_statement(REF, _, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        expression_method_reference(REF, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        expression_method_reference(REF, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        expression_method_reference(REF, _, expression(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        expression_method_reference(REF, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         field_access(REF, _, expression(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
         field_access(REF, _, _, field(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         for_statement(REF, _, _, expression(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
@@ -1144,18 +1145,18 @@ var_reference(VAR,METHOD,CLASS,REF):-
         lambda_expression(REF, _, parameters(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
         method_declaration(METHOD, parent(CLASS), _, _, parameters(LIST), _, _, _, _, _, _);
         constructor_declaration(METHOD, parent(CLASS), _, _, parameters(LIST), _, _, _, _, _, _);
-        method_invocation(REF, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        method_invocation(REF, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        method_invocation(REF, _, expression(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        method_invocation(REF, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         postfix_expression(REF, _, _, operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         prefix_expression(REF, _, _, operand(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         qualified_name(REF, _, qualified(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
         qualified_name(REF, _, _, name(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         return_statement(REF, _, expression(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        super_constructor_invocation(REF, _, expression(VAR), _, _, _, body_declaration(METHOD), type_declaration(CLASS), _);
-        super_constructor_invocation(REF, _, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        super_constructor_invocation(REF, _, expression(VAR), _, _, body_declaration(METHOD), type_declaration(CLASS), _);
+        super_constructor_invocation(REF, _, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         super_field_access(REF, _, field(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
-        super_method_invocation(REF, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
-        super_method_reference(REF, _, _, arguments(LIST), _, body_declaration(METHOD), type_declaration(CLASS), _);
+        super_method_invocation(REF, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
+        super_method_reference(REF, _, _, arguments(LIST), body_declaration(METHOD), type_declaration(CLASS), _);
         switch_case(REF, _, case(VAR), body_declaration(METHOD), type_declaration(CLASS), _);
         switch_statement(REF, _, switch(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
         synchronized_statement(REF, _, synchronized(VAR), _, body_declaration(METHOD), type_declaration(CLASS), _);
@@ -1430,8 +1431,8 @@ similar_code([X|COLA],[Y|COLA2]):-
  
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    class_instance_creation(X, _, type(T1), _, _, _, _, _, _),
-    class_instance_creation(Y, _, type(T2), _, _, _, _, _, _),
+    class_instance_creation(X, _, type(T1), _, _, _, _, _),
+    class_instance_creation(Y, _, type(T2), _, _, _, _, _),
     !,
     similar_type(T1,T2),
     similar_code(COLA,COLA2).
@@ -1445,8 +1446,8 @@ similar_code([X|COLA],[Y|COLA2]):-
 
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    constructor_invocation(X, _, _, constructor(C1), _, _, _, _, _),
-    constructor_invocation(Y, _, _, constructor(C2), _, _, _, _, _),
+    constructor_invocation(X, _, _, constructor(C1), _, _, _, _),
+    constructor_invocation(Y, _, _, constructor(C2), _, _, _, _),
     !,
     (
         C1 = null;
@@ -1492,8 +1493,8 @@ similar_code([X|COLA],[Y|COLA2]):-
 
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    expression_method_reference(X, _, expression(E1), method(M1), _, _, _, _, _),
-    expression_method_reference(Y, _, expression(E2), method(M2), _, _, _, _, _),
+    expression_method_reference(X, _, expression(E1), method(M1), _, _, _, _),
+    expression_method_reference(Y, _, expression(E2), method(M2), _, _, _, _),
     !,
     similar_method(M1,M2),
     similar_code([E1|COLA],[E2|COLA2]).
@@ -1569,8 +1570,8 @@ similar_code([X|COLA],[Y|COLA2]):-
 
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    method_invocation(X, _, expression(E1), method(M1), arguments(A1), _, _, _, _),
-    method_invocation(Y, _, expression(E2), method(M2), arguments(A2), _, _, _, _),
+    method_invocation(X, _, expression(E1), method(M1), arguments(A1), _, _, _),
+    method_invocation(Y, _, expression(E2), method(M2), arguments(A2), _, _, _),
     !,
     similar_method(M1,M2),
     append(A1,[E1|COLA],NEWCOLA),
@@ -1607,8 +1608,8 @@ similar_code([X|COLA],[Y|COLA2]):-
 
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    super_constructor_invocation(X, _, _, _, _, _, _, type_declaration(T1), _),
-    super_constructor_invocation(Y, _, _, _, _, _, _, type_declaration(T2), _),
+    super_constructor_invocation(X, _, _, _, _, _, type_declaration(T1), _),
+    super_constructor_invocation(Y, _, _, _, _, _, type_declaration(T2), _),
     !,
     similar_type(T1,T2),
     similar_code(COLA,COLA2).
@@ -1622,16 +1623,16 @@ similar_code([X|COLA],[Y|COLA2]):-
 
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    super_method_invocation(X, _, method(M1), _, _, _, _, _),
-    super_method_invocation(Y, _, method(M2), _, _, _, _, _),
+    super_method_invocation(X, _, method(M1), _, _, _, _),
+    super_method_invocation(Y, _, method(M2), _, _, _, _),
     !,
     similar_method(M1,M2),
     similar_code(COLA,COLA2).
 
 similar_code([X|COLA],[Y|COLA2]):-
     X \= Y,
-    super_method_reference(X, _, method(M1), _, _, _, _, _),
-    super_method_reference(Y, _, method(M2), _, _, _, _, _),
+    super_method_reference(X, _, method(M1), _, _, _, _),
+    super_method_reference(Y, _, method(M2), _, _, _, _),
     !,
     similar_method(M1,M2),
     similar_code(COLA,COLA2).
