@@ -38,7 +38,7 @@ public class Uploader implements Runnable {
 			uploadFile.setEntity(multipart);
 			CloseableHttpResponse response = httpClient.execute(uploadFile);
 
-			if (response.getStatusLine().getStatusCode() == 200)
+			if (response.getStatusLine().getStatusCode() == 202)
 				file.delete();
 		} catch (IOException e) {
 		}
