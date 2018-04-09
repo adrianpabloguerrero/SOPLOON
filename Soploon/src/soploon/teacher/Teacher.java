@@ -73,7 +73,7 @@ public class Teacher {
 	}
 
 	public void init() {
-		//this.prolog_analyzer.init();	
+		this.prolog_analyzer.init();	
 	}
 	
 	public PrologAnalyzer getAnalyzer() {
@@ -183,12 +183,7 @@ public class Teacher {
 				}
 
 				result = this.model_generator.process(this.code_parser.getUnits(), monitor, logger) * 20;
-				
-				for (String fact: this.model_generator.getCheckCode().getFacts())
-					System.out.println(fact);
-				
-				result = -1;
-				
+								
 				if (result < 0) { // Error
 					logger.close();
 					return;
