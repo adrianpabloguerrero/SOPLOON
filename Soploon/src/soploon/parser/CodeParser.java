@@ -20,6 +20,7 @@ public class CodeParser {
 	private ASTParser parser;
 	private List<CompilationUnit> units;
 
+	@SuppressWarnings("deprecation")
 	public CodeParser() {
 		this.parser = ASTParser.newParser(AST.JLS8);
 		this.parser.setKind(ASTParser.K_COMPILATION_UNIT);

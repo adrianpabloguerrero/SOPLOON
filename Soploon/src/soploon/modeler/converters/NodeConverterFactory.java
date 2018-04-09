@@ -14,19 +14,20 @@ public class NodeConverterFactory {
 	private PrologCode code;
 	@SuppressWarnings("rawtypes")
 	private HashMap<Integer, NodeConverter> converters;
-
+	private EmptyConverter empty_converter;
+	
 	@SuppressWarnings("rawtypes")
 	public NodeConverterFactory(Mapper mapper, PrologCode code) {
 		this.mapper = mapper;
 		this.code = code;
 		this.converters = new HashMap<Integer, NodeConverter>();
-		this.converters.put(null, new EmptyConverter(mapper,code,this));
+		this.empty_converter = new EmptyConverter(mapper,code,this);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public NodeConverter getConverter(ASTNode node) {
 		if (node == null)
-			return this.converters.get(node);
+			return this.empty_converter;
 		
 		Integer type = node.getNodeType();
 
