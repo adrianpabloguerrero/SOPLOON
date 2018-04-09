@@ -9,9 +9,10 @@ import java.io.PrintWriter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,22 +43,20 @@ public class UpdateHandler extends AbstractHandler {
 		PrologAnalyzer analyzer = Teacher.getInstance().getAnalyzer();
 		RuleSet local_rules = analyzer.getRules();
 		if (local_rules == null || !local_rules.getVersion().equals(remote_rules.getVersion())) {
-			String basic = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/basic_knowledge.pl");
-			String specific = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/specific_knowledge.pl");
-			String rules = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/rules_knowledge.pl");
+			String auxiliary = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/auxiliary_predicates.pl");
+			String rules = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/rules.pl");
 
-			if ((basic == null || specific == null || rules == null)) {
+			if ((auxiliary == null || rules == null)) {
 				if (event.getTrigger() != null)
 					MessageDialog.openInformation(null, "Ayudante Virtual", "No se pudo actualizar el Ayudante Virtual (servidor inalcanzable)");
 			} else {
-				if (analyzer.setRules(remote_rules, basic, specific, rules)) {
+				if (analyzer.setRules(remote_rules, auxiliary, rules)) {
 					File dir = new File(PrologAnalyzer.BASE_PATH);
 					if (!dir.exists())
 						dir.mkdirs();
 					saveToFile(rulesxml, PrologAnalyzer.RULES_PATH);
-					saveToFile(basic, PrologAnalyzer.BASIC_KNOWLEDGE_PATH);
-					saveToFile(specific, PrologAnalyzer.SPECIFIC_KNOWLEDGE_PATH);
-					saveToFile(rules, PrologAnalyzer.RULES_KNOWLEDGE_PATH);
+					saveToFile(auxiliary, PrologAnalyzer.AUXILIARY_PREDICATES_PATH);
+					saveToFile(rules, PrologAnalyzer.RULES_PATH);
 					if (event.getTrigger() != null)
 						MessageDialog.openInformation(null, "Ayudante Virtual", "Ayudante actualizado!");
 				} else if (event.getTrigger() != null) {		
@@ -73,9 +72,10 @@ public class UpdateHandler extends AbstractHandler {
 
 	private String getURL(String path) {
 		try {
-			CloseableHttpClient httpClient = HttpClients.createDefault();
-			HttpGet httpget = new HttpGet(path);
-			HttpResponse response = httpClient.execute(httpget);
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(1 * 1000).build();
+			HttpClient http_client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();			
+			HttpGet get = new HttpGet(path);
+			HttpResponse response = http_client.execute(get);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				InputStream input = entity.getContent();
@@ -89,6 +89,7 @@ public class UpdateHandler extends AbstractHandler {
 				return null;
 			}
 		} catch (IOException e1) {
+			e1.printStackTrace();
 			return null;
 		}
 	}

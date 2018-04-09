@@ -44,17 +44,16 @@ public class PrologAnalyzer {
 
 	private RuleSet rule_set;
 	private List<Bug> bugs;
-	private Theory basic_theory;
-	private Theory specific_theory;
+	private Theory auxiliary_theory;
 	private Theory rules_theory;
 	private boolean inited;
 
 	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins"
 			+ File.separator + "plugins" + File.separator + "resources" + File.separator;
+	
 	public static final String RULES_PATH = BASE_PATH + "rules.xml";
-	public static final String BASIC_KNOWLEDGE_PATH = BASE_PATH + "basic_knowledge.pl";
-	public static final String SPECIFIC_KNOWLEDGE_PATH = BASE_PATH + "specific_knowledge.pl";
-	public static final String RULES_KNOWLEDGE_PATH = BASE_PATH + "rules_knowledge.pl";
+	public static final String AUXILIARY_PREDICATES_PATH = BASE_PATH + "auxiliary_predicates.pl";
+	public static final String ERROR_PREDICATES_PATH = BASE_PATH + "rules.pl";
 
 	public PrologAnalyzer() {
 		this.bugs = new Vector<Bug>();
@@ -77,14 +76,12 @@ public class PrologAnalyzer {
 		return this.bugs;
 	}
 
-	public boolean setRules(RuleSet remote_rules, String basic, String specific, String rules) {
+	public boolean setRules(RuleSet remote_rules, String auxiliary, String rules) {
 		try {
-			Theory new_basic = new Theory(basic);
-			Theory new_specific = new Theory(specific);
+			Theory new_auxiliary = new Theory(auxiliary);
 			Theory new_rules = new Theory(rules);
 			this.rule_set = remote_rules;
-			this.basic_theory = new_basic;
-			this.specific_theory = new_specific;
+			this.auxiliary_theory = new_auxiliary;
 			this.rules_theory = new_rules;
 			return true;
 		} catch (InvalidTheoryException e) {
@@ -127,9 +124,8 @@ public class PrologAnalyzer {
 			xstream.processAnnotations(RuleSet.class);
 			this.rule_set = (RuleSet) xstream.fromXML(new FileInputStream(RULES_PATH));
 
-			this.basic_theory = new Theory(readFile(BASIC_KNOWLEDGE_PATH));
-			this.specific_theory = new Theory(readFile(SPECIFIC_KNOWLEDGE_PATH));
-			this.rules_theory = new Theory(readFile(RULES_KNOWLEDGE_PATH));
+			this.auxiliary_theory = new Theory(readFile(AUXILIARY_PREDICATES_PATH));
+			this.rules_theory = new Theory(readFile(RULES_PATH));
 
 		} catch (FileNotFoundException | InvalidTheoryException e) {
 
@@ -140,7 +136,7 @@ public class PrologAnalyzer {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
 		try {
-			handlerService.executeCommand("TeachingAssistant.update", null);
+			handlerService.executeCommand("Soploon.update", null);
 		} catch (Exception e) {
 
 		}
@@ -164,9 +160,8 @@ public class PrologAnalyzer {
 
 			for (int i = 0; i < cores; i++) {
 				Prolog engine = new Prolog();
-				engine.addTheory(basic_theory);
-				engine.addTheory(specific_theory);
-				engine.addTheory(rules_theory);
+				engine.addTheory(this.auxiliary_theory);
+				engine.addTheory(this.rules_theory);
 				engine.addTheory(code_theory);
 				runnables.add(new RuleRunnable(monitor, engine, mapper, converter_factory, rules, bugs));
 				monitor.worked(1);
