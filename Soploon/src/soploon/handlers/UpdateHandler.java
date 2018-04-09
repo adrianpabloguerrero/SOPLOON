@@ -32,7 +32,7 @@ public class UpdateHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) {
 		try {
-			String rulesxml = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/rules.xml");
+			String rulesxml = getURL("http://si.isistan.unicen.edu.ar:8080/soploon/api/xml");
 			if (rulesxml == null && event.getTrigger() != null) {
 				MessageDialog.openInformation(null, "Teaching Assistant",
 						"No se pudo actualizar el Ayudante Virtual (servidor inalcanzable)");
@@ -45,8 +45,8 @@ public class UpdateHandler extends AbstractHandler {
 			PrologAnalyzer analyzer = Teacher.getInstance().getAnalyzer();
 			RuleSet local_rules = analyzer.getRules();
 			if (local_rules == null || !local_rules.getVersion().equals(remote_rules.getVersion())) {
-				String auxiliary = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/auxiliary_predicates.pl");
-				String rules = getURL("http://si.isistan.unicen.edu.ar:8080/Rules/rules.pl");
+				String auxiliary = getURL("http://si.isistan.unicen.edu.ar:8080/soploon/api/auxiliary");
+				String rules = getURL("http://si.isistan.unicen.edu.ar:8080/soploon/api/rules");
 
 				if ((auxiliary == null || rules == null)) {
 					if (event.getTrigger() != null)
