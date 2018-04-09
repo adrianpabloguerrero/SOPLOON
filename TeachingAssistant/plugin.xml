@@ -10,13 +10,13 @@
                id="TeachingAssistant.toolbar"
                label="Ayudante Virtual">
             <command
-                  commandId="TeachingAssistant.update"
+                  commandId="Soploon.update"
                   icon="icons/update.png"
                   style="push"
                   tooltip="Actualizar Ayudante">
             </command>
             <command
-                  commandId="TeachingAssistant.check"
+                  commandId="Soploon.check"
                   icon="icons/lupa.png"
                   style="push"
                   tooltip="Corregir Código">
@@ -27,25 +27,25 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="teachingassistant.handlers.CheckHandler"
-            id="TeachingAssistant.check"
+            defaultHandler="soploon.handlers.CheckHandler"
+            id="Soploon.check"
             name="CheckCommand">
       </command>
       <command
-            defaultHandler="teachingassistant.handlers.UpdateHandler"
-            id="TeachingAssistant.update"
+            defaultHandler="soploon.handlers.UpdateHandler"
+            id="Soploon.update"
             name="UpdateCommand">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="TeachingAssistant.category"
-            name="Teaching Assistant">
+            id="Soploon.category"
+            name="Soploon">
       </category>
       <view
-            category="TeachingAssistant.category"
-            class="teachingassistant.views.CorrectionsView"
+            category="Soploon.category"
+            class="soploon.views.CorrectionsView"
             icon="icons/icon.png"
             id="TeachingAssistant.corrections"
             name="Correcciones">
