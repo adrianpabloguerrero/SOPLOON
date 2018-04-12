@@ -5,8 +5,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
@@ -34,12 +38,10 @@ public class PrologAnalyzer {
 	private RuleSet rule_set;
 	private List<Bug> bugs;
 	private Theory auxiliary_theory;
-	private Theory rules_theory;
 
 	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins" + File.separator + "plugins" + File.separator + "resources" + File.separator;
 	public static final String RULES_PATH = BASE_PATH + "rules.xml";
 	public static final String AUXILIARY_PREDICATES_PATH = BASE_PATH + "auxiliary_predicates.pl";
-	public static final String ERROR_PREDICATES_PATH = BASE_PATH + "rules.pl";
 
 	public PrologAnalyzer() {
 		this.bugs = new Vector<Bug>();
@@ -50,27 +52,14 @@ public class PrologAnalyzer {
 		this.readRules();
 	}
 
-	public RuleSet getRules() {
+	public RuleSet getRuleSet() {
 		return this.rule_set;
 	}
 
 	public List<Bug> getBugs() {
 		return this.bugs;
 	}
-
-	public boolean setRules(RuleSet remote_rules, String basic, String rules) {
-		try {
-			Theory new_basic = new Theory(basic);
-			Theory new_rules = new Theory(rules);
-			this.rule_set = remote_rules;
-			this.auxiliary_theory = new_basic;
-			this.rules_theory = new_rules;
-			return true;
-		} catch (InvalidTheoryException e) {
-			return false;
-		}
-	}
-
+	
 	private String readFile(String path) {
 		BufferedReader reader = null;
 		try {
@@ -101,35 +90,58 @@ public class PrologAnalyzer {
 
 	public void readRules() {
 		try {
-			XStream xstream = new XStream();
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
 			XStream.setupDefaultSecurity(xstream);
 			xstream.allowTypes(new Class[] {RuleSet.class, Rule.class} );
 			xstream.processAnnotations(RuleSet.class);
-			
-			this.rule_set = (RuleSet) xstream.fromXML(new FileInputStream(RULES_PATH));
-			this.auxiliary_theory = new Theory(readFile(AUXILIARY_PREDICATES_PATH));
-			this.rules_theory = new Theory(readFile(ERROR_PREDICATES_PATH));
 
+			this.rule_set = (RuleSet) xstream.fromXML(new FileInputStream(RULES_PATH));
+			this.auxiliary_theory = new Theory(readFile(AUXILIARY_PREDICATES_PATH));			
 		} catch (FileNotFoundException | InvalidTheoryException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void saveRules() {
+		try {
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] {RuleSet.class, Rule.class} );
+			xstream.processAnnotations(RuleSet.class);
+			
+			String rules_xml = xstream.toXML(this.rule_set);
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(RULES_PATH), StandardCharsets.UTF_8);
+			out.write(rules_xml);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int process(Mapper mapper, PrologCode code, NodeConverterFactory converter_factory, IProgressMonitor monitor) {
 		this.bugs.clear();
 		try {
 			Theory code_theory = new Theory(code.toString());
 
+			String rules_predicates = new String();
+
+			List<Rule> rules = new Vector<Rule>();
+			for (Rule rule: this.rule_set.getRules())
+				if (rule.isActive()) {
+					rules.add(rule);
+					rules_predicates += rule.getPredicates() + System.lineSeparator();
+				}
+			
+			Theory rule_theory = new Theory(rules_predicates);
+			
 			int cores = Runtime.getRuntime().availableProcessors();
 			Vector<RuleRunnable> runnables = new Vector<RuleRunnable>();
-			List<Rule> rules = new Vector<Rule>(this.rule_set.getRules());
-
 			monitor.beginTask(MONITOR_TITLE_PRE, cores);
 
 			for (int i = 0; i < cores; i++) {
 				Prolog engine = new Prolog();
 				engine.addTheory(auxiliary_theory);
-				engine.addTheory(rules_theory);
+				engine.addTheory(rule_theory);
 				engine.addTheory(code_theory);
 				runnables.add(new RuleRunnable(monitor, engine, mapper, converter_factory, rules, bugs));
 				monitor.worked(1);
@@ -172,4 +184,13 @@ public class PrologAnalyzer {
 
 	}
 
+	public String validateProlog(String code) {
+		try {
+			Prolog engine = new Prolog();
+			engine.addTheory(new Theory(code));
+			return null;
+		} catch (InvalidTheoryException e) {
+			return e.getMessage();
+		}
+	}
 }

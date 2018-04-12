@@ -56,7 +56,7 @@ public class CheckHandler extends AbstractHandler {
 		// TODO Cambiar los nombres
 		if (project != null && project.exists() && !hasCompilationErrors(project)) {
 			this.teacher.init();
-			if (this.teacher.getAnalyzer().getRules() != null) {
+			if (this.teacher.getAnalyzer().getRuleSet() != null) {
 				this.last_check = project;
 				this.teacher.check(project);
 			} else {

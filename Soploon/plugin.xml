@@ -15,6 +15,11 @@
                   style="push"
                   tooltip="Check code">
             </command>
+                 <command
+                       commandId="Soploon.edit"
+                       icon="icons/edit.png"
+                       style="push">
+                 </command>
          </toolbar>
       </menuContribution>
    </extension>
@@ -24,6 +29,11 @@
             defaultHandler="soploon.handlers.CheckHandler"
             id="Soploon.check"
             name="CheckCommand">
+      </command>
+      <command
+            defaultHandler="soploon.handlers.EditHandler"
+            id="Soploon.edit"
+            name="EditCommand">
       </command>
    </extension>
    <extension

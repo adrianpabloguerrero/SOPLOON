@@ -93,7 +93,7 @@ public class Teacher {
 					break;
 				}
 				// TODO Cambiar los nombres
-				MessageDialog.openInformation(null, "Ayudante Virtual", message);
+				MessageDialog.openInformation(null, "Soploon", message);
 			}
 		} catch (InvocationTargetException | InterruptedException | PartInitException e) {
 			e.printStackTrace();

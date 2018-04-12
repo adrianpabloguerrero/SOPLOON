@@ -28,9 +28,15 @@ public class Rule implements Comparable<Rule>{
 	private String type;
     private String description;
     private String query;
+    private String predicates;
+    private boolean active;
     
     public Rule() {
-        this.type = this.getClass().getName();
+        this.type = null;
+        this.query = null;
+        this.description = null;
+        this.predicates = null;
+        this.active = false;
     }
 
     public String getType() {
@@ -112,6 +118,30 @@ public class Rule implements Comparable<Rule>{
 	@Override
 	public int compareTo(Rule rule) {
 		return this.getType().compareTo(rule.getType());
+	}
+
+	public String getPredicates() {
+		return predicates;
+	}
+
+	public void setPredicates(String predicates) {
+		this.predicates = predicates;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (o == this)
+			return true;
+		return false;
 	}
 }
 
