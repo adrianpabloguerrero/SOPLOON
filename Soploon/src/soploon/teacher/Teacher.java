@@ -34,6 +34,7 @@ public class Teacher {
 	private static final String ERROR_MESSAGE_X3 = "Error checking the Prolog code";
 
 	private static Teacher TEACHER = null;
+	
 	private CodeParser code_parser;
 	private PrologAnalyzer prolog_analyzer;
 	private ModelGenerator model_generator;

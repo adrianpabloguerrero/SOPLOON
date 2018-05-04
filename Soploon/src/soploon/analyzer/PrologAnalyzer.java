@@ -1,13 +1,10 @@
 
 package soploon.analyzer;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -36,12 +33,12 @@ public class PrologAnalyzer {
 	private static final String MONITOR_TITLE_PRE = "Creating threads for analysis";
 
 	private RuleSet rule_set;
+	private PredicateSet predicate_set;
 	private List<Bug> bugs;
-	private Theory auxiliary_theory;
 
 	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins" + File.separator + "plugins" + File.separator + "resources" + File.separator;
 	public static final String RULES_PATH = BASE_PATH + "rules.xml";
-	public static final String AUXILIARY_PREDICATES_PATH = BASE_PATH + "auxiliary_predicates.pl";
+	public static final String PREDICATES_PATH = BASE_PATH + "predicates.xml";
 
 	public PrologAnalyzer() {
 		this.bugs = new Vector<Bug>();
@@ -50,44 +47,22 @@ public class PrologAnalyzer {
 
 	public void init() {
 		this.readRules();
+		this.readPredicates();
 	}
+
 
 	public RuleSet getRuleSet() {
 		return this.rule_set;
 	}
 
+	public PredicateSet getPredicateSet() {
+		return predicate_set;
+	}
+	
 	public List<Bug> getBugs() {
 		return this.bugs;
 	}
 	
-	private String readFile(String path) {
-		BufferedReader reader = null;
-		try {
-			File file = new File(path);
-			reader = new BufferedReader(new FileReader(file));
-			String line = null;
-			StringBuilder stringBuilder = new StringBuilder();
-			String ls = System.getProperty("line.separator");
-
-			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line);
-				stringBuilder.append(ls);
-			}
-
-			return stringBuilder.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null)
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
-		return null;
-	}
-
 	public void readRules() {
 		try {
 			XStream xstream = new XStream(new DomDriver("UTF-8"));
@@ -96,8 +71,21 @@ public class PrologAnalyzer {
 			xstream.processAnnotations(RuleSet.class);
 
 			this.rule_set = (RuleSet) xstream.fromXML(new FileInputStream(RULES_PATH));
-			this.auxiliary_theory = new Theory(readFile(AUXILIARY_PREDICATES_PATH));			
-		} catch (FileNotFoundException | InvalidTheoryException e) {
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void readPredicates() {
+		try {
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] {PredicateSet.class, Predicate.class} );
+			xstream.processAnnotations(PredicateSet.class);
+
+			this.predicate_set = (PredicateSet) xstream.fromXML(new FileInputStream(PREDICATES_PATH));
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -117,6 +105,23 @@ public class PrologAnalyzer {
 			e.printStackTrace();
 		}
 	}
+	
+	public void savePredicates() {
+		try {
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] {PredicateSet.class, Predicate.class} );
+			xstream.processAnnotations(PredicateSet.class);
+			
+			String predicates_xml = xstream.toXML(this.predicate_set);
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(PREDICATES_PATH), StandardCharsets.UTF_8);
+			out.write(predicates_xml);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public int process(Mapper mapper, PrologCode code, NodeConverterFactory converter_factory, IProgressMonitor monitor) {
 		this.bugs.clear();
@@ -140,7 +145,6 @@ public class PrologAnalyzer {
 
 			for (int i = 0; i < cores; i++) {
 				Prolog engine = new Prolog();
-				engine.addTheory(auxiliary_theory);
 				engine.addTheory(rule_theory);
 				engine.addTheory(code_theory);
 				runnables.add(new RuleRunnable(monitor, engine, mapper, converter_factory, rules, bugs));
@@ -193,4 +197,6 @@ public class PrologAnalyzer {
 			return e.getMessage();
 		}
 	}
+
+
 }
