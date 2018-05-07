@@ -109,7 +109,7 @@ public class EditWindow {
 		parent.setLayout(new GridLayout(2,false));		
 		
 		Group left = new Group(parent, SWT.NONE);
-		left.setText("Predicates");
+		left.setText("Predicates Set");
 		left.setLayout(new GridLayout(1, false));
 		GridData left_data = new GridData(SWT.CENTER, SWT.CENTER, false, false);
 		left_data.heightHint = 400;
@@ -123,17 +123,17 @@ public class EditWindow {
 		right.setLayoutData(second_data);
 
 		Label predicate_type_label = new Label(right, SWT.NONE);
-		predicate_type_label.setText("Predicate name:");
+		predicate_type_label.setText("Predicate Set name:");
 		this.predicate_type_text = new Text(right, SWT.BORDER | SWT.MULTI);
 		this.predicate_type_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		
 		Label predicate_description_label = new Label(right, SWT.NONE);
-		predicate_description_label.setText("Predicate description:");
+		predicate_description_label.setText("Predicate Set description:");
 		this.predicate_description_text = new Text(right, SWT.BORDER | SWT.MULTI);
 		this.predicate_description_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		
 		Label predicate_predicates_label = new Label(right, SWT.NONE);
-		predicate_predicates_label.setText("Prolog code:");
+		predicate_predicates_label.setText("Prolog code (predicates):");
 		this.predicate_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		this.predicate_predicates_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	
@@ -142,7 +142,7 @@ public class EditWindow {
 		this.predicates_left_scroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Button button_save = new Button(right,SWT.PUSH);
-		button_save.setText("Save Predicate");
+		button_save.setText("Save Predicate Set");
 		button_save.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
 		button_save.addSelectionListener(new SelectionListener() {
 
@@ -185,7 +185,7 @@ public class EditWindow {
 		Label empty_label = new Label(this.predicates_grid, SWT.CENTER);
 		empty_label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
 		Label predicate_label = new Label(this.predicates_grid, SWT.CENTER);
-		predicate_label.setText("Predicate");
+		predicate_label.setText("Predicate Set");
 		predicate_label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
 		Label empty_label_2 = new Label(this.predicates_grid, SWT.NONE);
 		empty_label_2.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
@@ -200,16 +200,16 @@ public class EditWindow {
 		this.predicates_left_scroll.setMinSize(predicates_grid.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		Button button_new_predicate = new Button(left,SWT.PUSH);
-		button_new_predicate.setText("New Predicate");
+		button_new_predicate.setText("New Predicate Set");
 		button_new_predicate.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
 		button_new_predicate.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Predicate predicate = new Predicate();
-				predicate.setTitle("New Predicate");
-				predicate.setDescription("Please write a description for this predicate");
-				predicate.setPredicates("/* this is a comment */" + System.lineSeparator() + System.lineSeparator() + "new_predicate(PARAM) :- fail. ");
+				predicate.setTitle("New Predicate Set");
+				predicate.setDescription("Please write a description for this set of predicates");
+				predicate.setPredicates("/* this is a comment */" + System.lineSeparator() + System.lineSeparator() + "new_predicate(PARAM) :- fail. " + System.lineSeparator() + "new_predicate_2(PARAM) :- fail. " + System.lineSeparator() + System.lineSeparator() + "/* here you can define as many predicates as you want */");
 				selectPredicate(predicate);
 			}
 
@@ -386,10 +386,7 @@ public class EditWindow {
 				button_edit.dispose();
 				teacher.getAnalyzer().getPredicateSet().removePredicate(predicate);
 	            teacher.getAnalyzer().savePredicates();
-	            EditWindow.this.predicates_left_scroll.layout(true,true);
-	            EditWindow.this.predicates_left_scroll.setMinSize(EditWindow.this.predicates_grid.computeSize(SWT.DEFAULT, SWT.DEFAULT));		             
-	            EditWindow.this.predicates_left_scroll.setOrigin(0, Integer.MAX_VALUE);
-	    		EditWindow.this.parent.layout(true,true);
+	            EditWindow.this.parent.layout(true,true);
 	        }
 
 			@Override

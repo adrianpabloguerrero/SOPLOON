@@ -1,279 +1,1125 @@
 <rules-set>
-  	<version>estandar-1.0</version>
-  	<rules>
-      <!-- Encapsulation -->
-      <simple-rule>
-          <type>Public attribute</type>
-          <description>The class as a public attribute. Is it breaking encapsulation?</description>
-          <query>public_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Returned collection</type>
-          <description>Returning a collection attribute without cloning it. Is it breaking encapsulation?</description>
-          <query>returned_collection</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Assigned collection</type>
-          <description>Assigning the external collection without cloning it. Is it breaking encapsulation?</description>
-          <query>assigned_collection</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Direct acces to attribute</type>
-          <description>Direct access to the attribute of another object. Is it breaking encapsulation?</description>
-          <query>direct_access_to_attribute</query>
-      </simple-rule>
-
-      <!-- Design --> 
-      <simple-rule>
-          <type>Abstract class without abstract methods</type>
-          <description>An abstract class that has not abstract methods. Should the class be non-abstract?</description>
-          <query>abstract_class_without_abstract_method</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Class or interface without methods</type>
-          <description>A class without public methods. What is the meaning of this class?</description>
-          <query>absence_of_methods</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Unimplemented interface</type>
-          <description>This interface is not implemented by any class. Should it be eliminated?</description>
-          <query>unimplemented_interface</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Non extended abstract class</type>
-          <description>This abstract class is not extended by any class. Should it be eliminated?</description>
-          <query>non_extended_abstract_class</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Unnecessary interface</type>
-          <description>This interface is implemented by just one class. Should it be eliminated?</description>
-          <query>unnecessary_interface</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Unnecessary abstract class</type>
-          <description>This abstract class is extended by just one class. Should it be eliminated?</description>
-          <query>unnecessary_abstract_class</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Non abstracted attribute</type>
-          <description>Some sister classes have the same attribute. Should the attribute be abstracted?</description>
-          <query>non_abstracted_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Non abstracted method</type>
-          <description>Some sister classes have a similar method. Should the method be abstracted?</description>
-          <query>non_abstracted_method</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Lazy class</type>
-          <description>This class just has getters and setters. Is it a lazy class?</description>
-          <query>lazy_class</query>
-      </simple-rule>
- 	  <simple-rule>
-          <type>Abstract class that may be interface</type>
-          <description>This abstract class does not have attributes.</description>
-          <query>abstract_class_may_be_interface</query>
-      </simple-rule>
-
-      <!-- Inheritance --> 
-      <simple-rule>
-          <type>Redefined attribute</type>
-          <description>This class defines an attribute similar to a parent's attribute. Is it redefining the attribute?</description>
-          <query>redefined_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Use of super to invoke a method</type>
-          <description>Invoking a method by using super. Is necessary to use super?</description>
-          <query>super_in_method_invocation</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Use of super to acces a field</type>
-          <description>Accessing a field by using super. Is necessary to use super?</description>
-          <query>super_in_field_access</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Redefine method with super</type>
-          <description>Redefining a method by just doing super. Is necessary to redefine the method?</description>
-          <query>redefine_with_super</query>
-      </simple-rule>
-       <simple-rule>
-          <type>Method redefined as abstract</type>
-          <description>This method is redefined as abstract.</description>
-          <query>method_redefined_as_abstract</query>
-      </simple-rule>
-
-      <!-- Composite -->
-      <simple-rule>
-          <type>Reference to sister class</type>
-          <description>The class has an attribute of a sister type. Should the attribute be of a parent type?</description>
-          <query>reference_to_sister_class_instead_of_father</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Lack of delegation</type>
-          <description>The class is not delegating responsibilities to the objects that compose it. Should the class delegate responsibilities?</description>
-          <query>lack_of_delegation</query>
-      </simple-rule>
-
-      <!-- Cohesion --> 
-      <simple-rule>
-          <type>Many interfaces implemented</type>
-          <description>The class is implementing too many interfaces (more than 2). Is the class monopolizing too many responsibilities?</description>
-          <query>many_implements</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Low cohesion</type>
-          <description>The class has too many public behaviors (more than 9). Is the class monopolizing too many responsibilities?</description>
-          <query>low_cohesion</query>
-      </simple-rule>
-      <simple-rule>
-          <type>God class</type>
-          <description>This class is too long, and the remaining classes are too short. Is the class monopolizing all the responsibilities?</description>
-          <query>god_class</query>
-      </simple-rule>
-
-      <!-- Polymorphism --> 
-      <simple-rule>
-          <type>Use of instanceOf</type>
-          <description>Using instanceOf outside the equals method. Is not taking advantage of the polymorphism?</description>
-          <query>use_of_instanceof</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Boolean field as type indicator</type>
-          <description>Using a boolean attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
-          <query>boolean_as_type</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Attribute used in switches</type>
-          <description>Using an attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
-          <query>switch_of_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Parameter used in switch</type>
-          <description>Using a parameter to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
-          <query>switch_of_param</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Type attribute</type>
-          <description>An attribute named "type" or "tipo". Is not taking advantage of the polymorphism?</description>
-          <query>type_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Class name contains number</type>
-          <description>A class that contains a number in its name. Is not taking advantage of the polymorphism?</description>
-          <query>class_name_contains_number</query>
-      </simple-rule>
-
-
-      <!-- Model vs main --> 
-      <simple-rule>
-          <type>System out print</type>
-          <description>The method is printing by console. Is printing the responsibility of this class?</description>
-          <query>system_out_print</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Main class as model class</type>
-          <description>The main class is part of a hierarchy. Is it okay for this class to be the main class?</description>
-          <query>main_class_as_model_class</query>
-      </simple-rule>
-
-      <!-- Others --> 
-      <simple-rule>
-          <type>== instead of equals</type>
-          <description>Comparing not primitive data by using "==". Should the data be compared by using equals?</description>
-          <query>not_use_of_equals</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Abstract method in an interface</type>
-          <description>The interface declares a method as abstract, but interface's methods are abstract by default. Is the method defined as abstract unnecessarily?</description>
-          <query>abstract_method_in_interface</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Public constructor in an abstract class</type>
-          <description>The abstract class has a public constructor that only child classes can invoke. Should the constructor be protected?</description>
-          <query>public_constructor_in_abstract_class</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Method that always return null</type>
-          <description>This method always returns null.</description>
-          <query>method_always_returns_null</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Empty method</type>
-          <description>This method has an empty body.</description>
-          <query>empty_method</query>
-      </simple-rule>
-
-      <!-- Constants --> 
-      <simple-rule>
-          <type>Constant in a method invocation</type>
-          <description>The method uses constants to invoke another methods. Should the constants be reemplaced by variables?</description>
-          <query>constant_in_invocation</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Constant in an assignment</type>
-          <description>The method uses constants in assignments. Should the constants be reemplaced by variables?</description>
-          <query>constant_in_assignment</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Constant in a comparision</type>
-          <description>The method uses constants in comparisions. Should the constants be reemplaced by variables?</description>
-          <query>constant_in_comparision</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Constant in an operation</type>
-          <description>The method uses constants in operations. Should the constants be reemplaced by variables?</description>
-          <query>constant_in_operation</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Constant in a return</type>
-          <description>The method uses constants in return statements. Should the constants be reemplaced by variables?</description>
-          <query>constant_in_return</query>
-      </simple-rule>   
-      <simple-rule>
-          <type>String constants</type>
-          <description>This method uses String constants. Should the constants be reemplaced by variables?</description>
-          <query>constant_string_in_operation</query>
-      </simple-rule>
-
-      <!-- Dynamic attributes -->
-      <simple-rule>
-          <type>Non dynamic attribute</type>
-          <description>This attribute does not seem to have any special meaning. Should the attribute be a dynamic attribute?</description>
-          <query>not_dinamic_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Dynamic attribute</type>
-          <description>This dynamic attribute does seem to have a special meaning. Should the dynamic attribute be a normal attribute?</description>
-          <query>dinamic_attribute</query>
-      </simple-rule>
-
-      <!-- Duplicated code --> 
-      <simple-rule>
-          <type>Similar codes in classes of the same hierarchy</type>
-          <description>Some classes of the same hierarchy have similar behavior.</description>
-          <query>similar_behaviour_in_classes_of_the_same_hierarchy</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Similar codes in methods of the same class</type>
-          <description>Some methods of the same class have similar behavior.</description>
-          <query>similar_behaviour_in_methods_of_the_same_class</query>
-      </simple-rule>
-
-      <!-- Nuevos -->
-      <simple-rule>
-          <type>Similar attribute</type>
-          <description>Some sister classes have similar attributes. Should the attribute be abstracted?</description>
-          <query>similar_attribute</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Lonely method</type>
-          <description>This method does not use any attribute or method of its class. Should the method be static?</description>
-          <query>lonely_method</query>
-      </simple-rule>
-      <simple-rule>
-          <type>Using Java Collections without defining equals</type>
-          <description>Java Collection needs that parameters have equals defined to do some operations. Should the equals method be defined in this parameter's type?</description>
-          <query>java_collections_without_equals</query>
-      </simple-rule>
-   	</rules>
+  <rules>
+    <simple-rule>
+      <type>Public attribute</type>
+      <description>The class as a public attribute. Is it breaking encapsulation?</description>
+      <query>public_attribute</query>
+      <predicates>/* Atributo publico */&#xd;
+&#xd;
+public_attribute(ID):-&#xd;
+    field_declaration(ID, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    public_field(ID),&#xd;
+	not(final_field(ID)),&#xd;
+    not(static_field(ID)),&#xd;
+	model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Returned collection</type>
+      <description>Returning a collection attribute without cloning it. Is it breaking encapsulation?</description>
+      <query>returned_collection</query>
+      <predicates>/* Coleccion retornada */&#xd;
+&#xd;
+returned_collection(ID):-&#xd;
+    return_statement(ID, _, expression(EXP), body_declaration(METHOD), _, compilation_unit(UNIT)),&#xd;
+    public_method(METHOD),&#xd;
+    field_access(EXP,FIELD),&#xd;
+    (&#xd;
+        field_declaration(FIELD, _, _, type(TYPE), _, _, _, _);&#xd;
+        not(returned_collection_checked(ID)),&#xd;
+        method_declaration(METHOD, _, _, _, _, _, return_type(TYPE), _, _, _, _)&#xd;
+    ),&#xd;
+    collection_type(TYPE),&#xd;
+    not(public_field(FIELD)),&#xd;
+    not(final_field(FIELD)),&#xd;
+    model_unit(UNIT),&#xd;
+    assert(returned_collection_checked(ID)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Assigned collection</type>
+      <description>Assigning the external collection without cloning it. Is it breaking encapsulation?</description>
+      <query>assigned_collection</query>
+      <predicates>/* Coleccion asignada */&#xd;
+&#xd;
+assigned_collection(ID):-&#xd;
+    assignment(ID, _, operator(&apos;ASSIGN&apos;), left_operand(LO), right_operand(RO), body_declaration(METHOD), _, compilation_unit(UNIT)),&#xd;
+    method_declaration(METHOD, _, _, _, parameters(PARAMETERS), _, _, _, _, _, _),&#xd;
+    public_method(METHOD),&#xd;
+    field_access(LO,FIELD),&#xd;
+    var_access(RO,VAR),&#xd;
+    member(VAR,PARAMETERS),&#xd;
+    not(public_field(FIELD)),&#xd;
+    (&#xd;
+        field_declaration(FIELD, _, _, type(TYPE), _, _, _, _);&#xd;
+        not(assigned_collection_checked(ID)),&#xd;
+        variable_declaration(VAR , _, _, type(TYPE), _, _, initializer(null), _, _, _)&#xd;
+    ),&#xd;
+    collection_type(TYPE),&#xd;
+    model_unit(UNIT),&#xd;
+    assert(assigned_collection_checked(ID)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Direct acces to attribute</type>
+      <description>Direct access to the attribute of another object. Is it breaking encapsulation?</description>
+      <query>direct_access_to_attribute</query>
+      <predicates>/* Acceso directo a atributo */&#xd;
+&#xd;
+direct_access_to_attribute(ID):-&#xd;
+    field_access(ID, _, expression(NOT_THIS), field(FIELD), _, _, compilation_unit(UNIT)),&#xd;
+    not(this_expression(NOT_THIS, _, _, _, _, _)),&#xd;
+    field_declaration(FIELD, _, _, _, _, _, _, _),&#xd;
+    not(public_field(FIELD)),&#xd;
+    model_unit(ID).&#xd;
+&#xd;
+direct_access_to_attribute(ID):-&#xd;
+    qualified_name(ID, _, _, name(FIELD), _, _, compilation_unit(UNIT)),&#xd;
+    field_declaration(FIELD, _, _, _, _, _, _, _),&#xd;
+    not(public_field(FIELD)),&#xd;
+    model_unit(ID).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Abstract class without abstract methods</type>
+      <description>An abstract class that has not abstract methods. Should the class be non-abstract?</description>
+      <query>abstract_class_without_abstract_method</query>
+      <predicates>/* Clase abstracta sin metodos abstractos */&#xd;
+&#xd;
+abstract_class_without_abstract_method(ID):-&#xd;
+    class_declaration(ID, _, _, _, _, super_type(ST), implements(IMPLEMENTS), _, methods(METHODS), _, compilation_unit(UNIT)),&#xd;
+    abstract_class(ID),&#xd;
+    not(length(METHODS,0)),&#xd;
+    length(IMPLEMENTS,0),&#xd;
+    not(&#xd;
+        (&#xd;
+            ST \= null,&#xd;
+            (&#xd;
+                abstract_class(ST);&#xd;
+                not(class_declaration(ST, _, _, _, _, _, _, _, _, _, _))&#xd;
+            )&#xd;
+        )&#xd;
+    ),&#xd;
+    not(&#xd;
+        (&#xd;
+            method_declaration(METHOD, parent(ID), _, _, _, _, _, _, _, _, _),&#xd;
+            abstract_method(METHOD)&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Class or interface without methods</type>
+      <description>A class without public methods. What is the meaning of this class?</description>
+      <query>absence_of_methods</query>
+      <predicates>/* Clase o interfaz que no define ningun metodo -- */&#xd;
+&#xd;
+absence_of_methods(ID):-&#xd;
+    ( &#xd;
+        class_declaration(ID, _, _, _, _, super_type(ST), implements(IMPLEMENTS), _, methods(METHODS), _, compilation_unit(UNIT));&#xd;
+        interface_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT))&#xd;
+    ),&#xd;
+    (&#xd;
+        length(METHODS,0);&#xd;
+        (&#xd;
+            not(length(METHODS,0)),&#xd;
+            filter_methods(METHODS,AUX),&#xd;
+            length(AUX,0),&#xd;
+            not(&#xd;
+                (&#xd;
+                    abstract_class(ID),&#xd;
+                    ST \= null&#xd;
+                )&#xd;
+            )&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).&#xd;
+</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Unimplemented interface</type>
+      <description>This interface is not implemented by any class. Should it be eliminated?</description>
+      <query>unimplemented_interface</query>
+      <predicates>/* Interfaz no implementada */&#xd;
+&#xd;
+unimplemented_interface(ID):-&#xd;
+    interface_declaration(ID, _, _, _, _, _, _, _, _, _, _),&#xd;
+    not(&#xd;
+        (&#xd;
+            (&#xd;
+                interface_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _);&#xd;
+                class_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _)&#xd;
+            ),&#xd;
+            member(ID,IMPLEMENTS)&#xd;
+        )&#xd;
+    ).&#xd;
+</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Non extended abstract class</type>
+      <description>This abstract class is not extended by any class. Should it be eliminated?</description>
+      <query>non_extended_abstract_class</query>
+      <predicates>/* Clase abstracta no extendida */&#xd;
+&#xd;
+non_extended_abstract_class(ID):-&#xd;
+    abstract_class(ID),&#xd;
+    not(class_declaration(C1, _, _, _, _, super_type(ID), _, _, _, _, _)).&#xd;
+</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Unnecessary interface</type>
+      <description>This interface is implemented by just one class. Should it be eliminated?</description>
+      <query>unnecessary_interface</query>
+      <predicates>/* Interfaz innecesaria */&#xd;
+&#xd;
+unnecessary_interface(ID):-&#xd;
+    interface_declaration(ID, _, _, _, _, _, _, _, _, _, _),&#xd;
+    (&#xd;
+        interface_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _);&#xd;
+        class_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _)&#xd;
+    ),&#xd;
+    member(ID,IMPLEMENTS),&#xd;
+    not(&#xd;
+        (&#xd;
+            (&#xd;
+                interface_declaration(C2, _, _, _, _, _, implements(IMPLEMENTS_2), _, _, _, _);&#xd;
+                class_declaration(C2, _, _, _, _, _, implements(IMPLEMENTS_2), _, _, _, _)&#xd;
+            ),&#xd;
+            C2 \= C1,&#xd;
+            member(ID,IMPLEMENTS_2)&#xd;
+        )&#xd;
+    ).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Unnecessary abstract class</type>
+      <description>This abstract class is extended by just one class. Should it be eliminated?</description>
+      <query>unnecessary_abstract_class</query>
+      <predicates>unnecessary_abstract_class(ID):-&#xd;
+    abstract_class(ID),&#xd;
+    class_declaration(C1, _, _, _, _, super_type(ID), _, _, _, _, _),&#xd;
+    not(&#xd;
+        (&#xd;
+            class_declaration(C2, _, _, _, _, super_type(ID), _, _, _, _, _),&#xd;
+            C1 \= C2&#xd;
+        )&#xd;
+    ).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Non abstracted attribute</type>
+      <description>Some sister classes have the same attribute. Should the attribute be abstracted?</description>
+      <query>non_abstracted_attribute</query>
+      <predicates>/* Atributos duplicados */&#xd;
+&#xd;
+non_abstracted_attribute(ID):-&#xd;
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), _, _, _, _, compilation_unit(UNIT)),&#xd;
+    SUPER_CLASS \= null,&#xd;
+    model_unit(UNIT),&#xd;
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),&#xd;
+    not(non_abstracted_attribute_checked(FIELD)),&#xd;
+    assert(non_abstracted_attribute_checked(FIELD)),&#xd;
+    not(redefined_attribute(FIELD)),&#xd;
+    findall(SIMILAR,non_abstracted_attribute_aux(FIELD,SIMILAR),LIST),&#xd;
+    not(length(LIST,0)),&#xd;
+    append([FIELD],LIST,ID).&#xd;
+&#xd;
+non_abstracted_attribute_aux(FIELD,SIMILAR):-&#xd;
+    field_declaration(FIELD, parent(CLASS), NAME, type(TYPE), _, extra_dimensions(D), _, _),&#xd;
+    field_declaration(SIMILAR, parent(CLASS_2), NAME, type(TYPE), _, extra_dimensions(D), _, _),&#xd;
+    not(non_abstracted_attribute_checked(SIMILAR)),&#xd;
+    common_super(CLASS,CLASS_2,CLASS_3),&#xd;
+    CLASS_3 \= CLASS,&#xd;
+    CLASS_3 \= CLASS_2,&#xd;
+    CLASS \= CLASS_2,&#xd;
+    (&#xd;
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);&#xd;
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    assert(non_abstracted_attribute_checked(SIMILAR)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Non abstracted method</type>
+      <description>Some sister classes have a similar method. Should the method be abstracted?</description>
+      <query>non_abstracted_method</query>
+      <predicates>/* Duplicated methods */&#xd;
+&#xd;
+non_abstracted_method(ID):-&#xd;
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), implements(IMPLEMENTS), _, _, _, compilation_unit(UNIT)),&#xd;
+    (&#xd;
+        SUPER_CLASS \= null;&#xd;
+        not(length(IMPLEMENTS,0))&#xd;
+    ),&#xd;
+    model_unit(UNIT),&#xd;
+    method_declaration(METHOD, parent(CLASS), _, _, _, _, _, _, _, _, _),&#xd;
+    not(object_method(METHOD)),&#xd;
+    not(non_abstracted_method_checked(METHOD)),&#xd;
+    assert(non_abstracted_method_checked(METHOD)),&#xd;
+    not(redefine_method(METHOD,_)),&#xd;
+    findall(SIMILAR,non_abstracted_method_aux(METHOD,SIMILAR),LIST),&#xd;
+    not(length(LIST,0)),&#xd;
+    append([METHOD],LIST,ID).&#xd;
+&#xd;
+no_abstracted_method_aux(METHOD,SIMILAR):-&#xd;
+    method_declaration(METHOD, parent(CLASS), NAME, _, _, parameters_types(TYPES), return_type(RETURN_TYPE), dimensions(D), _, _, _),&#xd;
+    method_declaration(SIMILAR, parent(CLASS_2), NAME, _, _, parameters_types(TYPES), return_type(RETURN_TYPE), dimensions(D), _, _, _),&#xd;
+    METHOD \= SIMILAR,&#xd;
+    not(non_abstracted_method_checked(SIMILAR)),&#xd;
+    public_method(SIMILAR),&#xd;
+    common_super(CLASS,CLASS_2,CLASS_3),&#xd;
+    CLASS_3 \= CLASS,&#xd;
+    CLASS_3 \= CLASS_2,&#xd;
+    CLASS \= CLASS_2,&#xd;
+    (&#xd;
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);&#xd;
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    assert(non_abstracted_method_checked(SIMILAR)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Lazy class</type>
+      <description>This class just has getters and setters. Is it a lazy class?</description>
+      <query>lazy_class</query>
+      <predicates>/* Clase sin comportamiento, solo con getters y setters */&#xd;
+&#xd;
+lazy_class(ID):-&#xd;
+    class_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT)),&#xd;
+    not (abstract_class(ID)),&#xd;
+    filter_methods(METHODS,JUST_METHODS),&#xd;
+    filter_public_methods(JUST_METHODS,PUBLIC_METHODS),&#xd;
+    not(length(PUBLIC_METHODS,0)),&#xd;
+    filter_behaviours(PUBLIC_METHODS,BEHAVIOURS),&#xd;
+    length(BEHAVIOURS,0),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Abstract class that may be interface</type>
+      <description>This abstract class does not have attributes.</description>
+      <query>abstract_class_may_be_interface</query>
+      <predicates>/* Clase abstracta que podría ser interfaz */&#xd;
+&#xd;
+abstract_class_may_be_interface(ID):-&#xd;
+    class_declaration(ID, _, _, _, _, super_type(null), _, _, _, _, compilation_unit(UNIT)),&#xd;
+    abstract_class(ID),&#xd;
+    not(&#xd;
+        (&#xd;
+            field_declaration(FIELD, parent(ID), _, _, _, _, _, _),&#xd;
+            not(static_field(FIELD))&#xd;
+        )&#xd;
+    ),&#xd;
+    not(&#xd;
+        (&#xd;
+            method_declaration(METHOD, parent(ID), _, _, _, _, _, _, _, _, _),&#xd;
+            not(abstract_method(METHOD))&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Redefined attribute</type>
+      <description>This class defines an attribute similar to a parent&apos;s attribute. Is it redefining the attribute?</description>
+      <query>redefined_attribute</query>
+      <predicates>/* Atributo sobrescrito en clase hija */&#xd;
+&#xd;
+redefined_attribute(ID):-&#xd;
+    field_declaration(ID, parent(CLASS), NAME, type(TYPE), _, _, _, compilation_unit(UNIT)),&#xd;
+    field_declaration(ID_2, parent(SUPER_CLASS), NAME, type(TYPE), _, _, _, _),&#xd;
+    ID \= ID_2,&#xd;
+    is_super(SUPER_CLASS,CLASS),&#xd;
+    not(redefined_attribute(ID_2)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Use of super to invoke a method</type>
+      <description>Invoking a method by using super. Is necessary to use super?</description>
+      <query>super_in_method_invocation</query>
+      <predicates>/* Uso de super para invocar un método sin estar redefiniendolo */&#xd;
+&#xd;
+super_in_method_invocation(ID):-&#xd;
+    super_method_invocation(ID, _, method(SUPER), arguments(ARGUMENTS), body_declaration(METHOD), _, compilation_unit(UNIT)),&#xd;
+    (&#xd;
+        method_declaration(SUPER, _, NAME, _, _, _, _, _, _, _, _);&#xd;
+        method(SUPER, name(NAME), _, _)&#xd;
+    ),&#xd;
+    not(method_declaration(METHOD, _, NAME, _, parameters(ARGUMENTS), _, _, _, _, _, _)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Use of super to acces a field</type>
+      <description>Accessing a field by using super. Is necessary to use super?</description>
+      <query>super_in_field_access</query>
+      <predicates>/* Uso de super para acceder a un atributo */&#xd;
+&#xd;
+super_in_field_access(ID):-&#xd;
+    super_field_access(ID, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Redefine method with super</type>
+      <description>Redefining a method by just doing super. Is necessary to redefine the method?</description>
+      <query>redefine_with_super</query>
+      <predicates>/* Redefine llamando al Super */&#xd;
+&#xd;
+redefine_with_super(ID):-&#xd;
+    super_method_invocation(INVOCATION, parent(PARENT), method(SUPER_METHOD), _, body_declaration(ID), _, compilation_unit(UNIT)),&#xd;
+    method_declaration(ID, _, _, _, _, _, _, _, body(BODY), _, _),&#xd;
+    (&#xd;
+        block(BODY, _, statements([INVOCATION]), _, _, _);&#xd;
+        (&#xd;
+            block(BODY, _, statements([RETURN]), _, _, _),&#xd;
+            return_statement(RETURN, _, expression(INVOCATION), _, _, _)&#xd;
+        )&#xd;
+    ),&#xd;
+    redefine_method(ID,SUPER_METHOD),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Method redefined as abstract</type>
+      <description>This method is redefined as abstract.</description>
+      <query>method_redefined_as_abstract</query>
+      <predicates>/* Metodo redefinido como abstracto */&#xd;
+&#xd;
+method_redefined_as_abstract(ID):-&#xd;
+    method_declaration(ID, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    abstract_method(ID),&#xd;
+    (&#xd;
+        object_method(ID);&#xd;
+        redefine_method(ID,_)&#xd;
+    ),&#xd;
+    model_unit(UNIT),&#xd;
+    not(method_redefined_as_abstract_checked(ID)),&#xd;
+    assert(method_redefined_as_abstract_checked(ID)).&#xd;
+</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Reference to a sister class</type>
+      <description>The class has an attribute of a sister type. Should the attribute be of a parent type?</description>
+      <query>reference_to_sister_class_instead_of_father</query>
+      <predicates>/* Referencia a clases hermanas en lugar de al padre */&#xd;
+&#xd;
+reference_to_sister_class_instead_of_father(ID):-&#xd;
+    field_declaration(ID, parent(CLASS), NAME, type(TYPE), _, _, _, compilation_unit(UNIT)),&#xd;
+    plain_types(TYPE,LIST),&#xd;
+    member(CLASS_2,LIST),&#xd;
+    class_declaration(CLASS_2, _, _, _, _, _, _, _, _, _, _),  &#xd;
+    CLASS \= CLASS_2,&#xd;
+    common_super(CLASS,CLASS_2,SUPER),&#xd;
+    SUPER \= CLASS_2,&#xd;
+    SUPER \= CLASS,&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Lack of delegation</type>
+      <description>The class is not delegating responsibilities to the objects that compose it. Should the class delegate responsibilities?</description>
+      <query>lack_of_delegation</query>
+      <predicates>/* Falta de delegación/&#xd;
+&#xd;
+lack_of_delegation(ID):-&#xd;
+    field_declaration(FIELD, parent(CLASS), _, type(TYPE), _, _, _, compilation_unit(UNIT)),&#xd;
+    plain_types(TYPE,LIST),&#xd;
+    member(CLASS_2,LIST),&#xd;
+    common_super(CLASS,CLASS_2,SUPER),&#xd;
+    method_declaration(ID, parent(CLASS), NAME, _, _, parameters_types(PARAMETER_TYPES), return_type(RETURN), dimensions(D), _, _, _),&#xd;
+    define_behaviour(ID),&#xd;
+    (&#xd;
+        (&#xd;
+            method_declaration(METHOD_2, _, NAME, _, _, parameters_types(PARAMETER_TYPES), return_type(RETURN), dimensions(D), _, _, _),&#xd;
+            has_method(CLASS_2,METHOD_2),&#xd;
+            not(delegation(ID,METHOD_2))&#xd;
+        );&#xd;
+        (&#xd;
+            object_method(ID),&#xd;
+            not(delegation(ID,FIELD,CLASS_2))&#xd;
+        )&#xd;
+    ),&#xd;
+    not(delegation_checked(ID)),&#xd;
+    model_unit(UNIT),&#xd;
+    assert(delegation_checked(ID)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Many interfaces implemented</type>
+      <description>The class is implementing too many interfaces (more than 2). Is the class monopolizing too many responsibilities?</description>
+      <query>many_implements</query>
+      <predicates>/* Muchas interfaces implementadas */&#xd;
+&#xd;
+many_implements(ID):-&#xd;
+    class_declaration(ID, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, compilation_unit(UNIT)),&#xd;
+    length(IMPLEMENTS,LENGTH),&#xd;
+    LENGTH &gt; 2,&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Low cohesion</type>
+      <description>The class has too many public behaviors (more than 9). Is the class monopolizing too many responsibilities?</description>
+      <query>low_cohesion</query>
+      <predicates>/* Baja cohesion */&#xd;
+&#xd;
+low_cohesion(ID):-&#xd;
+    ( &#xd;
+        class_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT));&#xd;
+        interface_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT))&#xd;
+    ),&#xd;
+    filter_methods(METHODS,JUST_METHODS),&#xd;
+    filter_public_methods(JUST_METHODS,PUBLIC_METHODS),&#xd;
+    filter_behaviours(PUBLIC_METHODS,BEHAVIOURS),&#xd;
+    length(BEHAVIOURS,LENGTH),&#xd;
+    LENGTH &gt; 9, /* Maximum number of public behaviours */&#xd;
+    model_unit(UNIT).&#xd;
+</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>God class</type>
+      <description>This class is too long, and the remaining classes are too short. Is the class monopolizing all the responsibilities?</description>
+      <query>god_class</query>
+      <predicates>/* Clase Dios */&#xd;
+&#xd;
+god_class(ID):-&#xd;
+    findall(CID,class_declaration(CID, _, _, _, _, _, _, _, _, _, _),LIST),&#xd;
+    findall(SHORT,short_class(SORT),LIST_OF_SHORTS),&#xd;
+    length(LIST,T),&#xd;
+    length(LIST_OF_SHORTS,N),&#xd;
+    N is T - 1,&#xd;
+    long_class(ID),&#xd;
+    class_declaration(ID, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Use of instanceOf</type>
+      <description>Using instanceOf outside the equals method. Is not taking advantage of the polymorphism?</description>
+      <query>use_of_instanceof</query>
+      <predicates>/* Uso del instanceOf fuera del equals */&#xd;
+&#xd;
+use_of_instanceof(ID):-&#xd;
+    (&#xd;
+        instanceof_expression(ID, _, _, _, body_declaration(METHOD), _, compilation_unit(UNIT));&#xd;
+        (&#xd;
+            method(IS_INSTANCE, name(&apos;isInstance&apos;), _, _),&#xd;
+            method_invocation(ID, _, _, method(IS_INSTANCE), arguments([]), body_declaration(METHOD), _, compilation_unit(UNIT))&#xd;
+        )&#xd;
+    ),&#xd;
+    not(is_equals(METHOD)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Boolean field as type indicator</type>
+      <description>Using a boolean attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+      <query>boolean_as_type</query>
+      <predicates>/* Uso de una variable booleana como tipo */&#xd;
+&#xd;
+boolean_as_type(ID):-&#xd;
+    field_declaration(FIELD, parent(CLASS), _, type(BOOLEAN), _, _, _, compilation_unit(UNIT)),&#xd;
+    (&#xd;
+        primitive_type(BOOLEAN, code(&apos;boolean&apos;));&#xd;
+        type(BOOLEAN , name(&apos;Boolean&apos;))&#xd;
+    ),&#xd;
+    model_unit(UNIT),&#xd;
+    findall(IF,boolean_as_type_aux(FIELD,IF),ID),&#xd;
+    not(length(ID,0)).&#xd;
+&#xd;
+boolean_as_type_aux(FIELD,IF):-&#xd;
+    field_declaration(FIELD, parent(CLASS), _, type(BOOLEAN), _, _, _, _),&#xd;
+    if_statement(IF, _, condition(CONDITION), then(THEN), else(ELSE), _, type_declaration(CLASS), _),&#xd;
+    THEN \= null,&#xd;
+    ELSE \= null,&#xd;
+    (&#xd;
+        field_access(CONDITION,FIELD);&#xd;
+        (&#xd;
+            prefix_expression(CONDITION, _, _, operand(OPERAND), _, _, _),&#xd;
+            field_access(OPERAND,FIELD)&#xd;
+        );&#xd;
+        (&#xd;
+            (&#xd;
+                infix_expression(CONDITION, _, _, left_operand(OPERAND), right_operand(LITERAL), extended_operands([]), _, _, _);&#xd;
+                infix_expression(CONDITION, _, _, left_operand(LITERAL), right_operand(OPERAND), extended_operands([]), _, _, _)&#xd;
+            ),&#xd;
+            field_access(OPERAND,FIELD),&#xd;
+            boolean_literal(LITERAL, _, _, _, _, _)&#xd;
+        )&#xd;
+    ).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Attribute used in switches</type>
+      <description>Using an attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+      <query>switch_of_attribute</query>
+      <predicates>/* Atributo usado en switch */&#xd;
+&#xd;
+switch_of_attribute(ID):-&#xd;
+    field_declaration(FIELD, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    model_unit(UNIT),&#xd;
+    findall(SWITCH,switch_of_attribute_aux(FIELD,SWITCH),ID),&#xd;
+    not(length(ID,0)).&#xd;
+&#xd;
+switch_of_attribute_aux(FIELD,SWITCH):-&#xd;
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),&#xd;
+    switch_statement(SWITCH, _, switch(EXP), _, _, type_declaration(CLASS), _),&#xd;
+    field_access(EXP,FIELD).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Parameter used in switch</type>
+      <description>Using a parameter to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+      <query>switch_of_param</query>
+      <predicates>/* Parametro usado en switch */&#xd;
+&#xd;
+switch_of_param(ID):-&#xd;
+    switch_statement(ID, _, switch(SWITCH), _, body_declaration(METHOD), type_declaration(CLASS), compilation_unit(UNIT)),&#xd;
+    method_declaration(METHOD, _, _, _, parameters(PARAMS), _, _, _, _, _, _),&#xd;
+    variable_declaration(SWITCH, _, _, type(TYPE), _, _, _, _, _, _),&#xd;
+    member(SWITCH,PARAMS),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Type attribute</type>
+      <description>An attribute named &quot;type&quot; or &quot;tipo&quot;. Is not taking advantage of the polymorphism?</description>
+      <query>type_attribute</query>
+      <predicates>/* Atributo llamado tipo o type */&#xd;
+&#xd;
+type_attribute(ID):-&#xd;
+    field_declaration(ID, _, FIELD_NAME, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    contains_word(FIELD_NAME,&apos;tipo&apos;),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Class name contains number</type>
+      <description>A class that contains a number in its name. Is not taking advantage of the polymorphism?</description>
+      <query>class_name_contains_number</query>
+      <predicates>/* Clase con numeros en su nombre */&#xd;
+&#xd;
+class_name_contains_number(ID):-&#xd;
+    class_declaration(ID, _, CLASS_NAME, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    atom_codes(CLASS_NAME,CLASS_NAME_CODES),&#xd;
+    contains_number(CLASS_NAME_CODES),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>System out print</type>
+      <description>The method is printing by console. Is printing the responsibility of this class?</description>
+      <query>system_out_print</query>
+      <predicates>/* Impresion por pantalla */&#xd;
+&#xd;
+system_out_print(ID):-&#xd;
+    is_print(PRINT),&#xd;
+    method_invocation(PRINT, _, _, _, _, body_declaration(ID), _, compilation_unit(UNIT)),&#xd;
+    not(system_out_print_checked(ID)),&#xd;
+    assert(system_out_print_checked(ID)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Main class as model class</type>
+      <description>The main class is part of a hierarchy. Is it okay for this class to be the main class?</description>
+      <query>main_class_as_model_class</query>
+      <predicates>/* Clase del modelo en la unidad del Main */&#xd;
+&#xd;
+main_class_as_model_class(ID):-&#xd;
+    main_class(ID),&#xd;
+    (&#xd;
+        class_declaration(ID_2, _, _, _, _, _, _, _, _, _, _);&#xd;
+        interface_declaration(ID_2, _, _, _, _, _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    ID \= ID_2,&#xd;
+    common_super(ID,ID_2,_),&#xd;
+    not(main_class_as_model_class_checked(ID)),&#xd;
+    assert(main_class_as_model_class_checked(ID)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>== instead of equals</type>
+      <description>Comparing not primitive data by using &quot;==&quot;. Should the data be compared by using equals?</description>
+      <query>not_use_of_equals</query>
+      <predicates>/* Uso de == en lugar de equals  */&#xd;
+&#xd;
+not_use_of_equals(ID):-&#xd;
+    infix_expression(ID, _, operator(&apos;EQUALS&apos;), left_operand(LO), right_operand(RO), _, _, _, compilation_unit(UNIT)),&#xd;
+    resolve_expression(LO,LO_RESOLVED),&#xd;
+    resolve_expression(RO,RO_RESOLVED),&#xd;
+    not(null_literal(LO_RESOLVED,_,_,_,_)),&#xd;
+    not(null_literal(RO_RESOLVED,_,_,_,_)),&#xd;
+    (&#xd;
+        need_equals(LO_RESOLVED);&#xd;
+        (&#xd;
+            not(need_equals(LO_RESOLVED)),&#xd;
+            need_equals(RO_RESOLVED)&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Abstract method in an interface</type>
+      <description>The interface declares a method as abstract, but interface&apos;s methods are abstract by default. Is the method defined as abstract unnecessarily?</description>
+      <query>abstract_method_in_interface</query>
+      <predicates>/* Metodo abstracto en interfaz */&#xd;
+&#xd;
+abstract_method_in_interface(ID):-&#xd;
+    interface_declaration(INTERFACE, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    method_declaration(ID, parent(INTERFACE), _, _, _, _, _, _, _, _, _),&#xd;
+    abstract_method(ID),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Public constructor in an abstract class</type>
+      <description>The abstract class has a public constructor that only child classes can invoke. Should the constructor be protected?</description>
+      <query>public_constructor_in_abstract_class</query>
+      <predicates>/* Constructor publico en clase abstracta */&#xd;
+&#xd;
+public_constructor_in_abstract_class(ID):-&#xd;
+    abstract_class(CLASS),&#xd;
+    constructor_declaration(ID, parent(CLASS), _, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    public_method(ID),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Method that always return null</type>
+      <description>This method always returns null.</description>
+      <query>method_always_returns_null</query>
+      <predicates>/* Metodo que siempre retorna null */&#xd;
+&#xd;
+method_always_returns_null(ID):-&#xd;
+    method_declaration(ID, _, _, _, _, _, return_type(TYPE), _, body(B), _, compilation_unit(UNIT)),&#xd;
+    B \= null,&#xd;
+    not(primitive_type(TYPE, code(&apos;void&apos;))),&#xd;
+    not(&#xd;
+        (&#xd;
+            return_statement(_, _, expression(LITERAL), body_declaration(ID), _, _),&#xd;
+            not(null_literal(LITERAL, _, _, _, _))&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Empty method</type>
+      <description>This method has an empty body.</description>
+      <query>empty_method</query>
+      <predicates>/* Metodo vacio */&#xd;
+&#xd;
+empty_method(ID):-&#xd;
+    method_declaration(ID, _, _, _, _, _, _, _, body(B), _, compilation_unit(UNIT)),&#xd;
+    B \= null,&#xd;
+    block(B, _, statements([]), _, _, _),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Constant in a method invocation</type>
+      <description>The method uses constants to invoke another methods. Should the constants be reemplaced by variables?</description>
+      <query>constant_in_invocation</query>
+      <predicates>/* Inovcacion a método con constantes como parametros */&#xd;
+&#xd;
+constant_in_invocation(LITERAL):-&#xd;
+    (&#xd;
+        boolean_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        character_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        number_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        string_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT))&#xd;
+    ),&#xd;
+    not(valid_literal(VAL)),&#xd;
+    (&#xd;
+        (&#xd;
+            method_invocation(INVOCATION, _, _, _, _, _, _, _),&#xd;
+            not(is_print(INVOCATION))&#xd;
+        );&#xd;
+        constructor_invocation(INVOCATION, _, _, _, _, _, _);&#xd;
+        class_instance_creation(INVOCATION, _, _, _, _, _, _, _);&#xd;
+        super_method_invocation(INVOCATION, _, _, _, _, _, _);&#xd;
+        super_constructor_invocation(INVOCATION, _, _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    not(dinamic_attribute(LITERAL)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Constant in an assignment</type>
+      <description>The method uses constants in assignments. Should the constants be reemplaced by variables?</description>
+      <query>constant_in_assignment</query>
+      <predicates>/* Constante en asignación/&#xd;
+&#xd;
+constant_in_assignment(LITERAL):-&#xd;
+    (&#xd;
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        string_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))&#xd;
+    ),&#xd;
+    not(valid_literal(VAL)),&#xd;
+    (&#xd;
+        variable_declaration(PARENT, _, _, _, _, _, initializer(LITERAL), _, _, _);&#xd;
+        assignment(PARENT, _, _, _, right_operand(LITERAL), _, _, _)&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Constant in a comparision</type>
+      <description>The method uses constants in comparisions. Should the constants be reemplaced by variables?</description>
+      <query>constant_in_comparision</query>
+      <predicates>/* Constantes en comparaciones */&#xd;
+&#xd;
+constant_in_comparision(LITERAL):-&#xd;
+    (&#xd;
+        boolean_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        string_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))&#xd;
+    ),&#xd;
+    not(valid_literal(VAL)),&#xd;
+    infix_expression(PARENT, _, operator(O), _, _, _, _, _, _),&#xd;
+    comparision_operator(O),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Constant in an operation</type>
+      <description>The method uses constants in operations. Should the constants be reemplaced by variables?</description>
+      <query>constant_in_operation</query>
+      <predicates>/* Operacion aritmetica con constantes */&#xd;
+&#xd;
+constant_in_operation(LITERAL):-&#xd;
+    (&#xd;
+        boolean_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))&#xd;
+     ),&#xd;
+    not(valid_literal(VAL)),&#xd;
+    infix_expression(PARENT, _, operator(O), _, _, _, _, _, _),&#xd;
+    (&#xd;
+        arithmetic_operator(O);&#xd;
+        bit_operator(O)&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Constant in a return</type>
+      <description>The method uses constants in return statements. Should the constants be reemplaced by variables?</description>
+      <query>constant_in_return</query>
+      <predicates>/* Constante en return */&#xd;
+&#xd;
+constant_in_return(LITERAL):-&#xd;
+    return_statement(RETURN, _, expression(LITERAL), _, _, compilation_unit(UNIT)),&#xd;
+    (&#xd;
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));&#xd;
+        string_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))&#xd;
+    ),&#xd;
+    not(valid_literal(VAL)),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>String constants</type>
+      <description>This method uses String constants. Should the constants be reemplaced by variables?</description>
+      <query>constant_string_in_operation</query>
+      <predicates>/* Operaciones con strings */&#xd;
+&#xd;
+constant_string_in_operation(METHOD):-&#xd;
+    string_literal(LITERAL,parent(PARENT),value(VAL),body_declaration(METHOD),_,_),&#xd;
+    not(valid_literal(VAL)),&#xd;
+    infix_expression(PARENT, _, operator(O), _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    not(is_tostring(METHOD)),&#xd;
+    arithmetic_operator(O),&#xd;
+    model_unit(UNIT),&#xd;
+    not(constant_string_in_operation_checked(METHOD)),&#xd;
+    assert(constant_string_in_operation_checked(METHOD)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Non dynamic attribute</type>
+      <description>This attribute does not seem to have any special meaning. Should the attribute be a dynamic attribute?</description>
+      <query>not_dinamic_attribute</query>
+      <predicates>/* Atributo que debería ser dinamico */&#xd;
+&#xd;
+not_dinamic_attribute(ID):-&#xd;
+    field_declaration(FIELD, parent(CLASS), _, type(HASHMAP), _, extra_dimensions(D), _, compilation_unit(UNIT)),&#xd;
+    map_type(HASHMAP),&#xd;
+    parameterized_type(HASHMAP, _, parameters([STRING,OTHER])),&#xd;
+    type(STRING, name(&apos;String&apos;)),&#xd;
+    field_declaration(ID, parent(CLASS), _, type(TYPE), _, _, _, _),&#xd;
+    ID \= FIELD,&#xd;
+    (&#xd;
+        (&#xd;
+            OTHER = STRING,&#xd;
+            TYPE = STRING&#xd;
+        );&#xd;
+        type(OTHER, name(&apos;Object&apos;))&#xd;
+    ),&#xd;
+    not(&#xd;
+        (&#xd;
+            var_reference(ID,METHOD,CLASS,_),&#xd;
+            method_declaration(METHOD, _, _, _, _, _, _, _, _, _, _),&#xd;
+            define_behaviour(METHOD)&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Dynamic attribute</type>
+      <description>This dynamic attribute does seem to have a special meaning. Should the dynamic attribute be a normal attribute?</description>
+      <query>dinamic_attribute</query>
+      <predicates>/* Atributo que no deberia ser dinamico */&#xd;
+&#xd;
+dinamic_attribute(ID):-&#xd;
+    method_invocation(INVOCATION, _, expression(EXP), method(METHOD), arguments([ID]), _, type_declaration(CLASS), _),&#xd;
+    string_literal(ID, _, _, _, _, _),&#xd;
+    (&#xd;
+        (&#xd;
+            field_access(EXP,FIELD),&#xd;
+            method(METHOD, name(&apos;get&apos;), _, _),&#xd;
+            field_declaration(FIELD, parent(CLASS), _, type(HASHMAP), _, _, _, compilation_unit(UNIT)),&#xd;
+            map_type(HASHMAP),&#xd;
+            parameterized_type(HASHMAP, _, parameters([STRING,OTHER])),&#xd;
+            type(STRING, name(&apos;String&apos;)),&#xd;
+            (&#xd;
+                OTHER = STRING;&#xd;
+                type(OTHER, name(&apos;Object&apos;))&#xd;
+            )&#xd;
+        );&#xd;
+        is_hm_item_getter(METHOD)&#xd;
+    ),&#xd;
+    model_unit(UNIT).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Similar codes in classes of the same hierarchy</type>
+      <description>Some classes of the same hierarchy have similar behavior.</description>
+      <query>similar_behaviour_in_classes_of_the_same_hierarchy</query>
+      <predicates>/* Comportamiento duplicado en clases hermanas */&#xd;
+&#xd;
+similar_behaviour_in_classes_of_the_same_hierarchy(ID):-&#xd;
+    method_declaration(METHOD, parent(CLASS), _, _, _, _, _, _, body(BODY), _, _),&#xd;
+    BODY \= null,&#xd;
+    not(block(BODY, _, statements([]), _, _, _)),&#xd;
+    not(similar_behaviour_in_sister_classes_checked(METHOD)),&#xd;
+    assert(similar_behaviour_in_sister_classes_checked(METHOD)),&#xd;
+    /*define_behaviour(METHOD),*/&#xd;
+    hierarchy(CLASS,HIERARCHY),&#xd;
+    findall(DUPLICATED,similar_behaviour_in_classes_of_the_same_hierarchy_aux(METHOD,DUPLICATED,HIERARCHY),LIST),&#xd;
+    not(length(LIST,0)),&#xd;
+    append([METHOD],LIST,ID).&#xd;
+&#xd;
+similar_behaviour_in_classes_of_the_same_hierarchy_aux(METHOD,DUPLICATED,HIERARCHY):-&#xd;
+    method_declaration(METHOD, parent(TYPE1), NAME, _, _, parameters_types(PARAMETERS_1), return_type(RETURN_1), dimensions(D), body(B1), _, _),&#xd;
+    member(TYPE2,HIERARCHY),&#xd;
+    TYPE1 \= TYPE2,&#xd;
+    method_declaration(DUPLICATED, parent(TYPE2), NAME, _, _, parameters_types(PARAMETERS_2), return_type(RETURN_2), dimensions(D), body(B2), _, _),&#xd;
+    B2 \= null,&#xd;
+    not(block(B2, _, statements([]), _, _, _)),&#xd;
+    not(similar_behaviour_in_sister_classes_checked(DUPLICATED)),&#xd;
+    similar_type(RETURN_1,RETURN_2),&#xd;
+    similar_type(PARAMETERS_1,PARAMETERS_2),&#xd;
+    similar_code([B1],[B2]),&#xd;
+    assert(similar_behaviour_in_sister_classes_checked(DUPLICATED)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Similar codes in methods of the same class</type>
+      <description>Some methods of the same class have similar behavior.</description>
+      <query>similar_behaviour_in_methods_of_the_same_class</query>
+      <predicates>/* Comportamiento duplicado en la misma clase */&#xd;
+&#xd;
+similar_behaviour_in_methods_of_the_same_class(ID):-&#xd;
+    class_declaration(CLASS, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
+    model_unit(UNIT),&#xd;
+    method_declaration(METHOD, parent(CLASS), _, _, _, _, _, _, body(BODY), _, _),&#xd;
+    BODY \= null,&#xd;
+    not(block(BODY, _, statements([]), _, _, _)),&#xd;
+    not(similar_behaviour_in_same_class_checked(METHOD)),&#xd;
+    assert(similar_behaviour_in_same_class_checked(METHOD)),&#xd;
+    define_behaviour(METHOD),&#xd;
+    findall(SIMILAR,similar_behaviour_in_methods_of_the_same_class_aux(METHOD,SIMILAR),LIST),&#xd;
+    not(length(LIST,0)),&#xd;
+    append([METHOD],LIST,ID).&#xd;
+&#xd;
+similar_behaviour_in_methods_of_the_same_class_aux(METHOD,SIMILAR):-&#xd;
+    method_declaration(METHOD, parent(CLASS), _, _, _, parameters_types(PARAMETERS_1), return_type(RETURN_1), dimensions(D), body(B1), _, _),&#xd;
+    method_declaration(SIMILAR, parent(CLASS), _, _, _, parameters_types(PARAMETERS_2), return_type(RETURN_2), dimensions(D), body(B2), _, _),&#xd;
+    B2 \= null,&#xd;
+    not(block(B2, _, statements([]), _, _, _)),&#xd;
+    METHOD \= SIMILAR,&#xd;
+    not(similar_behaviour_in_same_class_checked(SIMILAR)),&#xd;
+    similar_type(PARAMETERS_1,PARAMETERS_2),&#xd;
+    similar_type(RETURN_1,RETURN_2),&#xd;
+    similar_code([B1],[B2]),&#xd;
+    assert(similar_behaviour_in_same_class_checked(SIMILAR)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Similar attribute</type>
+      <description>Some sister classes have similar attributes. Should the attribute be abstracted?</description>
+      <query>similar_attribute</query>
+      <predicates>/* Atributos similares */&#xd;
+&#xd;
+similar_attribute(ID):-&#xd;
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), _, _, _, _, compilation_unit(UNIT)),&#xd;
+    SUPER_CLASS \= null,&#xd;
+    model_unit(UNIT),&#xd;
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),&#xd;
+    not(similar_attribute_checked(FIELD)),&#xd;
+    assert(similar_attribute_checked(FIELD)),&#xd;
+    not(redefined_attribute(FIELD)),&#xd;
+    findall(SIMILAR,similar_attribute_aux(FIELD,SIMILAR),LIST),&#xd;
+    not(length(LIST,0)),&#xd;
+    append([FIELD],LIST,ID).&#xd;
+&#xd;
+similar_attribute_aux(FIELD,SIMILAR):-&#xd;
+    field_declaration(FIELD, parent(CLASS), NAME, type(TYPE), _, extra_dimensions(D), _, _),&#xd;
+    field_declaration(SIMILAR, parent(CLASS_2), NAME_2, type(TYPE), _, extra_dimensions(D), _, _),&#xd;
+    not(similar_attribute_checked(SIMILAR)),&#xd;
+    not(similar_attribute_checked(FIELD,CLASS_2)),&#xd;
+    NAME_2 \= NAME,&#xd;
+    common_super(CLASS,CLASS_2,CLASS_3),&#xd;
+    CLASS_3 \= CLASS,&#xd;
+    CLASS_3 \= CLASS_2,&#xd;
+    CLASS \= CLASS_2,&#xd;
+    not(field_declaration(_, parent(CLASS), NAME_2, type(TYPE), _, extra_dimensions(D), _, _)),&#xd;
+    not(field_declaration(_, parent(CLASS_2), NAME, type(TYPE), _, extra_dimensions(D), _, _)),&#xd;
+    (&#xd;
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);&#xd;
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    assert(similar_attribute_checked(SIMILAR)),&#xd;
+    assert(similar_attribute_checked(FIELD,CLASS_2)).</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Lonely method</type>
+      <description>This method does not use any attribute or method of its class. Should the method be static?</description>
+      <query>lonely_method</query>
+      <predicates>/* Metodo solitario */&#xd;
+&#xd;
+lonely_method(ID):-&#xd;
+    method_declaration(ID, parent(CLASS), _, _, parameters(PARAMETERS), _, return_type(RETURN_TYPE), _, body(BODY), _, compilation_unit(UNIT)),&#xd;
+    field_declaration(_, parent(CLASS), _, _, _, _, _, _),&#xd;
+    not(lonely_method_checked(ID)),&#xd;
+    assert(lonely_method_checked(ID)),&#xd;
+    BODY \= null,&#xd;
+    block(BODY, _, statements(STM), _, _, _),&#xd;
+    not(length(STM,0)),&#xd;
+    not(length(PARAMETERS,0)),&#xd;
+    not(static_method(ID)),&#xd;
+    not(&#xd;
+        (&#xd;
+            field_declaration(FIELD, parent(P), _, _, _, _, _, _),&#xd;
+            has_field(CLASS,FIELD),&#xd;
+            var_reference(FIELD,ID,CLASS,NOT_QUALIFIED),&#xd;
+            not(qualified_name(NOT_QUALIFIED, _, _, name(FIELD), body_declaration(METHOD), _, _))&#xd;
+        )&#xd;
+    ),&#xd;
+    not(&#xd;
+        (&#xd;
+            (&#xd;
+                (&#xd;
+                    method_invocation(_, _, expression(EXP), method(METHOD), _, body_declaration(ID), _, _),&#xd;
+                    METHOD \= ID,&#xd;
+                    (&#xd;
+                        EXP = null;&#xd;
+                        this_expression(EXP, _, _, _, _, _)&#xd;
+                    )&#xd;
+                );&#xd;
+                super_method_invocation(_, _, method(METHOD), _, body_declaration(ID), _, _)&#xd;
+            ),&#xd;
+            not(static_method(METHOD))&#xd;
+        )&#xd;
+    ),&#xd;
+    not(&#xd;
+        (&#xd;
+            this_expression(EXP, parent(PARENT), _, body_declaration(ID), _, _),&#xd;
+            not(&#xd;
+                (&#xd;
+                    method_invocation(PARENT, _, expression(EXP), _, _, _, _, _);&#xd;
+                    field_access(PARENT, _, _, _, _, _, _)&#xd;
+                )&#xd;
+            )&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT).&#xd;
+</predicates>
+      <active>true</active>
+    </simple-rule>
+    <simple-rule>
+      <type>Using Java Collections without defining equals</type>
+      <description>Java Collection needs that parameters have equals defined to do some operations. Should the equals method be defined in this parameter&apos;s type?</description>
+      <query>java_collections_without_equals</query>
+      <predicates>/* Usando colecciones de Java sin el equals */&#xd;
+&#xd;
+java_collections_without_equals(ID):-&#xd;
+    method_invocation(ID, _, expression(EXP), method(METHOD), arguments([ARG]), _, _, compilation_unit(UNIT)),&#xd;
+    (&#xd;
+        method(METHOD, name(&apos;contains&apos;), _, _);&#xd;
+        method(METHOD, name(&apos;remove&apos;), _, _)&#xd;
+    ),&#xd;
+    (&#xd;
+        field_declaration(ARG, _, _, type(TYPE), _, _, _, _);&#xd;
+        variable_declaration(ARG , _, _, type(TYPE), _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    variable_declaration(ARG , _, _, type(TYPE), _, _, _, _, _, _),&#xd;
+    resolve_expression(EXP,VAR),&#xd;
+    (&#xd;
+        field_declaration(VAR, _, _, type(COLLECTION), _, _, _, _);&#xd;
+        variable_declaration(VAR , _, _, type(COLLECTION), _, _, _, _, _, _)&#xd;
+    ),&#xd;
+    java_collection_type(COLLECTION),&#xd;
+    (&#xd;
+        (&#xd;
+            class_declaration(TYPE, _, _, _, _, _, _, _, _, _, _),&#xd;
+            not(abstract_class(TYPE)),&#xd;
+            not(&#xd;
+                (&#xd;
+                    method_declaration(AUX, _, _, _, _, _, _, _, _, _, _),&#xd;
+                    is_equals(AUX),&#xd;
+                    has_method(TYPE,AUX)&#xd;
+                )&#xd;
+            )&#xd;
+        );&#xd;
+        (&#xd;
+            (&#xd;
+                (&#xd;
+                    class_declaration(TYPE, _, _, _, _, _, _, _, _, _, _),&#xd;
+                    abstract_class(TYPE)&#xd;
+                );&#xd;
+                interface_declaration(TYPE, _, _, _, _, _, _, _, _, _, _)&#xd;
+            ),&#xd;
+            class_declaration(CHILD, _, _, _, _, _, _, _, _, _, _),&#xd;
+            is_super(TYPE,CHILD),&#xd;
+            not(&#xd;
+                (&#xd;
+                    method_declaration(AUX, _, _, _, _, _, _, _, _, _, _),&#xd;
+                    is_equals(AUX),&#xd;
+                    has_method(CHILD,AUX)&#xd;
+                )&#xd;
+            )&#xd;
+        )&#xd;
+    ),&#xd;
+    model_unit(UNIT),&#xd;
+    not(java_collections_without_equals_checked(ID)),&#xd;
+    assert(java_collections_without_equals_checked(ID)).</predicates>
+      <active>true</active>
+    </simple-rule>
+  </rules>
 </rules-set>

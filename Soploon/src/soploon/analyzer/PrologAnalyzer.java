@@ -46,8 +46,10 @@ public class PrologAnalyzer {
 	}
 
 	public void init() {
-		this.readRules();
-		this.readPredicates();
+		if (this.rule_set == null || this.predicate_set == null) {
+			this.readRules();
+			this.readPredicates();
+		}
 	}
 
 
@@ -136,8 +138,14 @@ public class PrologAnalyzer {
 					rules.add(rule);
 					rules_predicates += rule.getPredicates() + System.lineSeparator();
 				}
+	
+			String auxiliary_predicates = new String();
+			for (Predicate predicate: this.predicate_set.getPredicates()) {
+				auxiliary_predicates += predicate.getPredicates() + System.lineSeparator();
+			}
 			
 			Theory rule_theory = new Theory(rules_predicates);
+			Theory auxiliary_theory = new Theory(auxiliary_predicates);
 			
 			int cores = Runtime.getRuntime().availableProcessors();
 			Vector<RuleRunnable> runnables = new Vector<RuleRunnable>();
@@ -146,6 +154,7 @@ public class PrologAnalyzer {
 			for (int i = 0; i < cores; i++) {
 				Prolog engine = new Prolog();
 				engine.addTheory(rule_theory);
+				engine.addTheory(auxiliary_theory);
 				engine.addTheory(code_theory);
 				runnables.add(new RuleRunnable(monitor, engine, mapper, converter_factory, rules, bugs));
 				monitor.worked(1);
