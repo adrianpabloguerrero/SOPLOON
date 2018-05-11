@@ -67,7 +67,7 @@ public class EditWindow {
         
     	Composite rule_editor = this.prepareRuleEditor();
     	Composite predicates_editor = this.preparePredicateEditor();
-    	this.layout.topControl = predicates_editor;
+    	this.layout.topControl = rule_editor;
         
 		Menu menu = new Menu(this.shell, SWT.BAR);
 		
@@ -134,7 +134,7 @@ public class EditWindow {
 		
 		Label predicate_predicates_label = new Label(right, SWT.NONE);
 		predicate_predicates_label.setText("Prolog code (predicates):");
-		this.predicate_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		this.predicate_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		this.predicate_predicates_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	
 		this.predicates_left_scroll= new ScrolledComposite(left, SWT.V_SCROLL);
@@ -260,7 +260,7 @@ public class EditWindow {
 
 		Label rule_predicates_label = new Label(right, SWT.NONE);
 		rule_predicates_label.setText("Prolog code:");
-		this.rule_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		this.rule_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		this.rule_predicates_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	
 		this.rules_left_scroll = new ScrolledComposite(left, SWT.V_SCROLL);
