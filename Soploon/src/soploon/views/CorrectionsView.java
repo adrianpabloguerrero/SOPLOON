@@ -30,7 +30,7 @@ public class CorrectionsView extends ViewPart {
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "Soploon.corrections";
+	public static final String ID = "TeachingAssistant.corrections";
 
 	private TreeViewer viewer;
 	private List<TreeViewerColumn> columns;

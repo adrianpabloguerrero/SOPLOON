@@ -14,7 +14,7 @@ import soploon.teacher.Teacher;
 
 public class Uploader implements Runnable {
 
-	private final static String URL = "http://si.isistan.unicen.edu.ar:8080/soploon/api/logs";
+	private final static String URL = "http://si.isistan.unicen.edu.ar:8080/assistant/api/logs";
 
 	@Override
 	public void run() {

@@ -18,7 +18,7 @@ public class TypeDeclarationPrologConverter extends NodeConverter<TypeDeclaratio
 	private static final String[] CLASS_KEYS = new String[] { null, "parent", null, "parameters_types", "modifiers",
 			"super_type", "implements", "fields", "methods", "declarations", "compilation_unit" };
 	private static final String[] INTERFACE_KEYS = new String[] { null, "parent", null, "parameters_types", "modifiers",
-			"super_type", "implements", "fields", "methods", "declarations", "compilation_unit" };
+			"super_type", "fields", "methods", "declarations", "compilation_unit" };
 
 	public TypeDeclarationPrologConverter(Mapper mapper, PrologCode code, NodeConverterFactory converter_factory) {
 		super(mapper, code, converter_factory);

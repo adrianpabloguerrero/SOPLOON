@@ -1,165 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <rules-set>
   	<version>estandar-1.0</version>
   	<rules>
       <!-- Encapsulation -->
       <simple-rule>
-          <type>Public attribute</type>
-          <description>The class as a public attribute. Is it breaking encapsulation?</description>
+		  <type>Atributo publico.</type>
+          <description>Los atributos publicos pueden ser modificado desde el exterior, rompiendo encapsulamiento. Declara el atributo como private o protected</description>
           <query>public_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20p%c3%bablico.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Returned collection</type>
-          <description>Returning a collection attribute without cloning it. Is it breaking encapsulation?</description>
+          <type>Coleccion retornada</type>
+          <description>Retorna una coleccion sin clonarla, rompiendo encapsulamiento. Clonar/copiar la coleccion antes de retornarla es buena practica.</description>
           <query>returned_collection</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Colecci%c3%b3n%20retornada.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Assigned collection</type>
-          <description>Assigning the external collection without cloning it. Is it breaking encapsulation?</description>
+          <type>Coleccion asignada</type>
+          <description>Estan asignando una coleccion que reciben por parametro, rompiendo encapsulamiento. Clonar/copiar la coleccion antes de retornarla es buena practica.</description>
           <query>assigned_collection</query>
-      </simple-rule>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Colecci%c3%b3n%20retornada.htm</uri>
+	  </simple-rule>
       <simple-rule>
-          <type>Direct acces to attribute</type>
-          <description>Direct access to the attribute of another object. Is it breaking encapsulation?</description>
+          <type>Acceso directo a atributo</type>
+          <description>Se esta accediendo directamente al atributo de otro objeto, rompiendo encapsulamiento. Acceder siempre mediante los metodos getter/setter que ofrece el objeto.</description>
           <query>direct_access_to_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Acceso%20directo%20a%20atributo.htm</uri>
       </simple-rule>
 
       <!-- Design --> 
       <simple-rule>
-          <type>Abstract class without abstract methods</type>
-          <description>An abstract class that has not abstract methods. Should the class be non-abstract?</description>
+          <type>Clase abstracta sin metodos abstractos</type>
+          <description>Esta clase abstracta no tiene metodos abstractos. ¿Porque se declaro la clase como abstracta?</description>
           <query>abstract_class_without_abstract_method</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20sin%20m%c3%a9todos%20abstractos.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Class or interface without methods</type>
-          <description>A class without public methods. What is the meaning of this class?</description>
+          <type>Clase o interfaz sin metodos</type>
+          <description>Esta clase/interfaz no posee metodos. ¿Porque se declaro esta clase/interfaz?</description>
           <query>absence_of_methods</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Ausencia%20de%20m%c3%a9todos.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Unimplemented interface</type>
-          <description>This interface is not implemented by any class. Should it be eliminated?</description>
+          <type>Interfaz no implementada</type>
+          <description>Esta interfaz no es implementada por ninguna otra clase. ¿Deberia eliminarse?</description>
           <query>unimplemented_interface</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Interfaz%20innecesaria.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Non extended abstract class</type>
-          <description>This abstract class is not extended by any class. Should it be eliminated?</description>
+          <type>Clase abstracta no extendida</type>
+          <description>Esta clase abstracta no es extendida por nadie. ¿Deberia eliminarse?</description>
           <query>non_extended_abstract_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20innecesaria.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Unnecessary interface</type>
-          <description>This interface is implemented by just one class. Should it be eliminated?</description>
+          <type>Interfaz innecesaria</type>
+          <description>Esta interfaz es implementada por una unica clase/interfaz. Tal vez sea innecesaria ¿Deberia eliminarse?</description>
           <query>unnecessary_interface</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Interfaz%20innecesaria.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Unnecessary abstract class</type>
-          <description>This abstract class is extended by just one class. Should it be eliminated?</description>
+          <type>Clase abstracta innecesaria</type>
+          <description>Esta clase abstracta es extendida por una unica clase. Tal vez sea innecesaria ¿Deberia eliminarse?</description>
           <query>unnecessary_abstract_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20innecesaria.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Non abstracted attribute</type>
-          <description>Some sister classes have the same attribute. Should the attribute be abstracted?</description>
+          <type>Atributo no abstraido</type>
+          <description>Algunas clases hermanas definen el mismo atributo. ¿Deberia abstraerse el atributo?</description>
           <query>non_abstracted_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20no%20abstra%c3%addo.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Non abstracted method</type>
-          <description>Some sister classes have a similar method. Should the method be abstracted?</description>
+          <type>Metodo no abstraido</type>
+          <description>Algunas clases hermanas definen el mismo metodo. ¿Deberia abstraerse el atributo?</description>
           <query>non_abstracted_method</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20no%20abstra%c3%addo.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Lazy class</type>
-          <description>This class just has getters and setters. Is it a lazy class?</description>
+          <type>Clase vaga (o lazy class)</type>
+          <description>Esta clase no define comportamiento (solo getters y setters). Quizas deba asignarsele alguna responsabilidad</description>
           <query>lazy_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20diccionario.htm</uri>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
  	  <simple-rule>
-          <type>Abstract class that may be interface</type>
-          <description>This abstract class does not have attributes.</description>
+          <type>Clase abstracta que podria ser interfaz</type>
+          <description>Esta clase no define atributos ¿Quizas podria ser una interfaz? </description>
           <query>abstract_class_may_be_interface</query>
       </simple-rule>
 
       <!-- Inheritance --> 
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Redefined attribute</type>
-          <description>This class defines an attribute similar to a parent's attribute. Is it redefining the attribute?</description>
+          <type>Atributo redefinido</type>
+          <description>Esta clase define un atributo igual al de una clase ancestro, en lugar de simplemente heredar el atributo del ancestro.</description>
           <query>redefined_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Redefinici%c3%b3n%20de%20atributo%20heredado.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Use of super to invoke a method</type>
-          <description>Invoking a method by using super. Is necessary to use super?</description>
+          <type>Uso de super para invocar metodo</type>
+          <description>No es necesario utilizar super para invocar un metodo ya heredado (a no ser que se lo este redefiniendo).</description>
           <query>super_in_method_invocation</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20del%20super%20para%20acceder%20a%20un%20m%c3%a9todo.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Use of super to acces a field</type>
-          <description>Accessing a field by using super. Is necessary to use super?</description>
+          <type>Uso de super para acceder a un atributo</type>
+          <description>No es necesario utilizar super para acceder a un atributo ya heredado.</description>
           <query>super_in_field_access</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20del%20super%20para%20acceder%20a%20un%20atributo.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Redefine method with super</type>
-          <description>Redefining a method by just doing super. Is necessary to redefine the method?</description>
+          <type>Metodo redefenido solo con super</type>
+          <description>Redefinir un metodo ya heredado, simplemente invocando al super, es redundante.</description>
           <query>redefine_with_super</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20redefinido%20simplemente%20invocando%20el%20super.htm</uri>
       </simple-rule>
-       <simple-rule>
-          <type>Method redefined as abstract</type>
-          <description>This method is redefined as abstract.</description>
+	  <!-- TODO PAGINAS --> 
+	  <simple-rule>
+          <type>Metodo redefinido como abstracto</type>
+          <description>Redefinir un metodo como abstracto es innecesario.</description>
           <query>method_redefined_as_abstract</query>
       </simple-rule>
 
       <!-- Composite -->
       <simple-rule>
-          <type>Reference to sister class</type>
-          <description>The class has an attribute of a sister type. Should the attribute be of a parent type?</description>
+          <type>Referencia a clase hermana</type>
+          <description>La clase tiene una referencia a una clase hermana. Quizas deberia referenciar al padre que tienen en comun, para lograr mayor flexibilidad.</description>
           <query>reference_to_sister_class_instead_of_father</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Composite%20limitado.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Lack of delegation</type>
-          <description>The class is not delegating responsibilities to the objects that compose it. Should the class delegate responsibilities?</description>
+          <type>Falta de delegacion</type>
+          <description>Es posible que este elemento compuesto no este delegando funcionalidad a sus objetos hijos en este metodo.</description>
           <query>lack_of_delegation</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Falta%20de%20delegaci%c3%b3n.htm</uri>
       </simple-rule>
 
       <!-- Cohesion --> 
       <simple-rule>
-          <type>Many interfaces implemented</type>
-          <description>The class is implementing too many interfaces (more than 2). Is the class monopolizing too many responsibilities?</description>
+          <type>Muchas interfaces implementadas</type>
+          <description>Esta clase implementa muchas interfaces. Es posible que se le hayan asignado muchas responsabilidades.</description>
           <query>many_implements</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Muchas%20interfaces%20implementadas.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Low cohesion</type>
-          <description>The class has too many public behaviors (more than 9). Is the class monopolizing too many responsibilities?</description>
+          <type>Baja cohesion</type>
+          <description>Esta clase implementa muchos comportamientos. Es posible que se le hayan asignado muchas responsabilidades.</description>
           <query>low_cohesion</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Baja%20cohesi%c3%b3n.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>God class</type>
-          <description>This class is too long, and the remaining classes are too short. Is the class monopolizing all the responsibilities?</description>
+          <type>Clase dios (o clase sistema)</type>
+          <description>Esta clase es muy larga, mientras que el resto de las clases son muy cortas. Es posible que esta clase este acaparando todas las responsabilidades.</description>
           <query>god_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20Dios.htm</uri>
       </simple-rule>
 
       <!-- Polymorphism --> 
       <simple-rule>
-          <type>Use of instanceOf</type>
-          <description>Using instanceOf outside the equals method. Is not taking advantage of the polymorphism?</description>
+          <type>Uso del instanceOf</type>
+          <description>Usar instanceOf fuera del metodo equals generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>use_of_instanceof</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20de%20instanceof.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Boolean field as type indicator</type>
-          <description>Using a boolean attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+          <type>Boolean como tipo</type>
+		  <description>Usar un atributo boolean para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>boolean_as_type</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Boolean%20como%20tipo.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Attribute used in switches</type>
-          <description>Using an attribute to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+          <type>Atributo en switch</type>
+		  <description>Usar un atributo en un switch para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>switch_of_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20de%20Switch%20en%20lugar%20de%20polimorfismo.htm</uri>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Parameter used in switch</type>
-          <description>Using a parameter to decide what behavior to take. Is not taking advantage of the polymorphism?</description>
+          <type>Parametro en un switch</type>
+		  <description>Usar un parametro en un switch para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>switch_of_param</query>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Type attribute</type>
-          <description>An attribute named "type" or "tipo". Is not taking advantage of the polymorphism?</description>
+          <type>Atributo 'tipo'</type>
+		  <description>Un atributo llamado 'tipo' o 'type' suele ser indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>type_attribute</query>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Class name contains number</type>
-          <description>A class that contains a number in its name. Is not taking advantage of the polymorphism?</description>
+          <type>Nombre de clase con numeros</type>
+		  <description>Los numeros en el nombre de clase suelen ser indicadores de que no se esta tomando ventaja del polimorfismo.</description>
           <query>class_name_contains_number</query>
       </simple-rule>
 
@@ -167,112 +199,132 @@
       <!-- Model vs main --> 
       <simple-rule>
           <type>System out print</type>
-          <description>The method is printing by console. Is printing the responsibility of this class?</description>
+          <description>El metodo esta imprimiendo por consola. ¿Imprimir por consola es responsabilidad de esta clase?</description>
           <query>system_out_print</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Impresi%c3%b3n%20por%20Pantalla.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Main class as model class</type>
-          <description>The main class is part of a hierarchy. Is it okay for this class to be the main class?</description>
+          <type>Main como parte del modelo</type>
+          <description>La clase Main no deberia ser parte del modelo del a solucion (no deberia heredar ni ser heredada por nadie).</description>
           <query>main_class_as_model_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Main%20como%20parte%20del%20modelo.htm</uri>
       </simple-rule>
 
       <!-- Others --> 
       <simple-rule>
-          <type>== instead of equals</type>
-          <description>Comparing not primitive data by using "==". Should the data be compared by using equals?</description>
+          <type>Uso de == en lugar de equals</type>
+          <description>Utilizar "==" solo sirve para comparar datos primitivos. Para comparar objetos debe utilizarse el metodo equals.</description>
           <query>not_use_of_equals</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20equals%20vs.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Abstract method in an interface</type>
-          <description>The interface declares a method as abstract, but interface's methods are abstract by default. Is the method defined as abstract unnecessarily?</description>
+          <type>Metodo abstracto en interfaz</type>
+          <description>Por defecto todos los metodos de la interfaz son abstractos, por lo que declarar explicitamente un metodo como abstracto es redundante.</description>
           <query>abstract_method_in_interface</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Interfaz%20con%20m%c3%a9todo%20abstracto.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Public constructor in an abstract class</type>
-          <description>The abstract class has a public constructor that only child classes can invoke. Should the constructor be protected?</description>
+          <type>Constructor publico en clase abstracta</type>
+          <description>El constructor de una clase abstracta solo puede ser invocado por las clases hijas, por lo que podria declararse como protected.</description>
           <query>public_constructor_in_abstract_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20con%20constructor%20p%c3%bablico.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Method that always return null</type>
-          <description>This method always returns null.</description>
+          <type>Metodo que siempre retorna null</type>
+          <description>Este metodo siempre retorna null ¿Es correcto?</description>
           <query>method_always_returns_null</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20que%20siempre%20retorna%20null.htm</uri>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Empty method</type>
-          <description>This method has an empty body.</description>
+          <type>Metodo vacio </type>
+          <description>Este metodo esta vacio.</description>
           <query>empty_method</query>
       </simple-rule>
 
       <!-- Constants --> 
       <simple-rule>
-          <type>Constant in a method invocation</type>
-          <description>The method uses constants to invoke another methods. Should the constants be reemplaced by variables?</description>
+          <type>Constante en invocacion a metodo</type>
+          <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_invocation</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20como%20par%c3%a1metro.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Constant in an assignment</type>
-          <description>The method uses constants in assignments. Should the constants be reemplaced by variables?</description>
+          <type>Constante en asignacion</type>
+          <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_assignment</query>
-      </simple-rule>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20asignaci%c3%b3n.htm</uri>
+	</simple-rule>
       <simple-rule>
-          <type>Constant in a comparision</type>
-          <description>The method uses constants in comparisions. Should the constants be reemplaced by variables?</description>
+          <type>Constante en comparacion</type>
+          <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_comparision</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20comparaci%c3%b3n.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Constant in an operation</type>
-          <description>The method uses constants in operations. Should the constants be reemplaced by variables?</description>
+          <type>Constante en operacion aritmetica</type>
+          <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_operation</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20operaci%c3%b3n.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Constant in a return</type>
-          <description>The method uses constants in return statements. Should the constants be reemplaced by variables?</description>
+          <type>Constante en return</type>
+          <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_return</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20retorno.htm</uri>
       </simple-rule>   
       <simple-rule>
-          <type>String constants</type>
-          <description>This method uses String constants. Should the constants be reemplaced by variables?</description>
+          <type>Constante String</type>
+          <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_string_in_operation</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/String%20Constante.htm</uri>
       </simple-rule>
 
       <!-- Dynamic attributes -->
       <simple-rule>
-          <type>Non dynamic attribute</type>
-          <description>This attribute does not seem to have any special meaning. Should the attribute be a dynamic attribute?</description>
+          <type>Atributo no dinamico</type>
+          <description>El atributo no parece tener un significado especial ¿Deberia ser un atributo dinamico?</description>
           <query>not_dinamic_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20no%20din%c3%a1mico%20y%20sin%20comportamiento%20especial.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Dynamic attribute</type>
-          <description>This dynamic attribute does seem to have a special meaning. Should the dynamic attribute be a normal attribute?</description>
+          <type>Atributo dinamico</type>
+          <description>El atributo dinamico parece tener un significado especial ¿Deberia ser declarado como un atributo normal?</description>
           <query>dinamic_attribute</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20din%c3%a1mico%20y%20con%20comportamiento%20especial.htm</uri>
       </simple-rule>
 
       <!-- Duplicated code --> 
       <simple-rule>
-          <type>Similar codes in classes of the same hierarchy</type>
-          <description>Some classes of the same hierarchy have similar behavior.</description>
+          <type>Codigo similar entre clases de la misma jerarquia</type>
+          <description>¿Se esta duplicando codigo?</description>
           <query>similar_behaviour_in_classes_of_the_same_hierarchy</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clases%20hermanas%20con%20c%c3%b3digo%20similar.htm</uri>
       </simple-rule>
       <simple-rule>
-          <type>Similar codes in methods of the same class</type>
-          <description>Some methods of the same class have similar behavior.</description>
+          <type>Codigo similar entre metodos de una misma clase</type>
+          <description>¿Se esta duplicando codigo?</description>
           <query>similar_behaviour_in_methods_of_the_same_class</query>
+		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todos%20de%20una%20clase%20con%20c%c3%b3digo%20similar.htm</uri>
       </simple-rule>
 
       <!-- Nuevos -->
-      <simple-rule>
-          <type>Similar attribute</type>
-          <description>Some sister classes have similar attributes. Should the attribute be abstracted?</description>
+	  <!-- TODO PAGINAS --> 
+       <simple-rule>
+          <type>Atributo similar</type>
+          <description>Estas clases hermanas tienen atributos simlares (del mismo tipo). ¿Podrian abstraerse o son cosas distintas?</description>
           <query>similar_attribute</query>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Lonely method</type>
-          <description>This method does not use any attribute or method of its class. Should the method be static?</description>
+          <type>Metodo solitario</type>
+          <description>Este metodo no utiliza ningun atributo de la clase. ¿Deberia ser estatico?</description>
           <query>lonely_method</query>
       </simple-rule>
+	  <!-- TODO PAGINAS --> 
       <simple-rule>
-          <type>Using Java Collections without defining equals</type>
-          <description>Java Collection needs that parameters have equals defined to do some operations. Should the equals method be defined in this parameter's type?</description>
+          <type>Usa collecciones de Java sin definir el equals</type>
+          <description>Algunos metodos de las colecciones de Java (como el contains) necesitan que los elementos que se almacenan tengan definido el equals.</description>
           <query>java_collections_without_equals</query>
       </simple-rule>
    	</rules>
