@@ -36,7 +36,7 @@ public class PrologAnalyzer {
 	private PredicateSet predicate_set;
 	private List<Bug> bugs;
 
-	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins" + File.separator + "plugins" + File.separator + "resources" + File.separator;
+	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins" + File.separator + "plugins" + File.separator + "Soploon" + File.separator;
 	public static final String RULES_PATH = BASE_PATH + "rules.xml";
 	public static final String PREDICATES_PATH = BASE_PATH + "predicates.xml";
 

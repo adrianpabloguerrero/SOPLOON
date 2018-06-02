@@ -18,7 +18,8 @@
                  <command
                        commandId="Soploon.edit"
                        icon="icons/edit.png"
-                       style="push">
+                       style="push"
+                       tooltip="Edit Soploon">
                  </command>
          </toolbar>
       </menuContribution>
