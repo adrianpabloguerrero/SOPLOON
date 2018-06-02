@@ -6,6 +6,8 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -19,6 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+import soploon.Activator;
 import soploon.analyzer.Predicate;
 import soploon.analyzer.Rule;
 import soploon.teacher.Teacher;
@@ -29,6 +32,7 @@ public class EditWindow {
 	private Shell shell;
 	private Composite parent;
 	private StackLayout layout;
+	private Display display;
 	
 	private Rule selected_rule;
 	private ScrolledComposite rules_left_scroll; 
@@ -54,8 +58,10 @@ public class EditWindow {
 	}
 	
 	private void prepareShell() {
-		Display display = PlatformUI.getWorkbench().getDisplay();
-		this.shell = new Shell(display, SWT.TITLE | SWT.MIN | SWT.CLOSE);
+		this.display = PlatformUI.getWorkbench().getDisplay();
+		this.shell = new Shell(this.display, SWT.TITLE | SWT.MIN | SWT.CLOSE);
+		Image image = Activator.getDefault().getImageRegistry().get(Activator.EDIT_ICON);
+		this.shell.setImage(image);    
 		this.shell.setText("Soploon Editor");
 
 		shell.setLayout(new GridLayout());
@@ -86,7 +92,7 @@ public class EditWindow {
 		});
 
 		MenuItem rules_predicates = new MenuItem(menu, SWT.PUSH);
-		rules_predicates.setText("Auxiliary Predicates");
+		rules_predicates.setText("Predicates");
 		rules_predicates.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -134,9 +140,9 @@ public class EditWindow {
 		
 		Label predicate_predicates_label = new Label(right, SWT.NONE);
 		predicate_predicates_label.setText("Prolog code (predicates):");
-		this.predicate_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+	 	this.predicate_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		this.predicate_predicates_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	
+		
 		this.predicates_left_scroll= new ScrolledComposite(left, SWT.V_SCROLL);
 		this.predicates_left_scroll.setLayout(new GridLayout(1, false));
 		this.predicates_left_scroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -247,22 +253,21 @@ public class EditWindow {
 		rule_type_label.setText("Rule name:");
 		this.rule_type_text = new Text(right, SWT.BORDER | SWT.MULTI);
 		this.rule_type_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		
+
 		Label rule_description_label = new Label(right, SWT.NONE);
 		rule_description_label.setText("Rule description:");
 		this.rule_description_text = new Text(right, SWT.BORDER | SWT.MULTI);
 		this.rule_description_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		
+
 		Label rule_query_label = new Label(right, SWT.NONE);
 		rule_query_label.setText("Predicate for query:");
 		this.rule_query_text = new Text(right, SWT.BORDER | SWT.MULTI);
 		this.rule_query_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-
 		Label rule_predicates_label = new Label(right, SWT.NONE);
 		rule_predicates_label.setText("Prolog code:");
 		this.rule_predicates_text = new Text(right, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		this.rule_predicates_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	
+		
 		this.rules_left_scroll = new ScrolledComposite(left, SWT.V_SCROLL);
 		this.rules_left_scroll.setLayout(new GridLayout(1, false));
 		this.rules_left_scroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));

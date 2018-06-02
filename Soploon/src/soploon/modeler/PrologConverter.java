@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import soploon.modeler.converters.NodeConverterFactory;
 
-public class ModelGenerator {
+public class PrologConverter {
 
 	private static final String MONITOR_TITLE = "Converting AST to Prolog";
 
@@ -15,7 +15,7 @@ public class ModelGenerator {
 	private Mapper mapper;
 	private NodeConverterFactory converter_factory;
 
-	public ModelGenerator() {
+	public PrologConverter() {
 	}
 
 	private void init() {

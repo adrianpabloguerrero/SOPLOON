@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import soploon.analyzer.PrologAnalyzer;
 import soploon.analyzer.bugs.Bug;
-import soploon.modeler.ModelGenerator;
+import soploon.modeler.PrologConverter;
 import soploon.modeler.NodesCounter;
 import soploon.parser.CodeParser;
 import soploon.views.CorrectionsView;
@@ -37,7 +37,7 @@ public class Teacher {
 	
 	private CodeParser code_parser;
 	private PrologAnalyzer prolog_analyzer;
-	private ModelGenerator model_generator;
+	private PrologConverter model_generator;
 
 	public static Teacher getInstance() {
 		if (TEACHER == null)
@@ -48,7 +48,7 @@ public class Teacher {
 	private Teacher() {
 		this.code_parser = new CodeParser();
 		this.prolog_analyzer = new PrologAnalyzer();
-		this.model_generator = new ModelGenerator();
+		this.model_generator = new PrologConverter();
 	}
 
 	public void init() {
@@ -106,13 +106,13 @@ public class Teacher {
 		private IJavaProject project;
 		private CodeParser code_parser;
 		private PrologAnalyzer prolog_analyzer;
-		private ModelGenerator model_generator;
+		private PrologConverter model_generator;
 		private List<Bug> bugs;
 		private int result;
 		private int cant_ast_nodes;
 	
 		public CheckRunnable(IJavaProject project, CodeParser code_parser, PrologAnalyzer prolog_analyzer,
-				ModelGenerator model_generator) {
+				PrologConverter model_generator) {
 			this.project = project;
 			this.code_parser = code_parser;
 			this.prolog_analyzer = prolog_analyzer;

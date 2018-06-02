@@ -1,6 +1,7 @@
 package soploon;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -11,7 +12,11 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "Soploon"; //$NON-NLS-1$
-
+	public static final String EDIT_ICON = "icons/edit.png";
+	public static final String SOPLOON_ICON = "icons/icon.png";
+	public static final String LUPA_ICON = "icons/lupa.png";
+	public static final String TRANSLATE_ICON = "icons/translate.png";
+	
 	// The shared instance
 	private static Activator plugin;
 
@@ -62,6 +67,12 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	@Override
+	protected void initializeImageRegistry(ImageRegistry reg) {
+		super.initializeImageRegistry(reg);
+	    reg.put(EDIT_ICON, imageDescriptorFromPlugin(PLUGIN_ID, EDIT_ICON));
 	}
 
 }
