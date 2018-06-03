@@ -1,0 +1,32 @@
+<body>
+	<div class="row">
+		<div class="col-xs-0 col-md-2"></div>
+		<div class="col-xs-12 col-md-8">
+			<h3>Soploon overview</h3>
+			<p style="text-align: justify;">
+				Soploon is intended for assisting teachers in assessing the student’s source codes in order to provide a more exhaustive feedback about the students misconception regarding object oriented programming. The assistant uses Prolog as a meta-level language to analyze the Java source codes. When the assistant detects an error, it notifies the teacher and highlights the code fragment that contains the error. In this way, the teacher can easily find errors in the student’s source code and give a more complete feedback to the student. Moreover, it is possible for the teacher to specify new errors to be detected by the assistant. In this way, the teacher can customize the assistant to detect the particular errors that his/her students are used to making.
+			</p>
+			<div style="text-align: center;">
+				<img class="image" src="./images/overview.png" border="3"></img>
+			</div><br/>
+			<p style="text-align: justify;">
+				The assistant’s workflow consists on three main steps. On the one hand, the assistant translates the student’s source code into a representation in Prolog (a). During this process, each syntactic construct of the Java source code is represented as a Prolog fact. Once the Prolog facts are generated, the assistant detects errors in the student’s source code by logic inference (b). To do this, the assistant executes queries over the Prolog facts generated during step (a). For each query, the assistant tries to find a set of Prolog facts that satisfies the conditions declared by a Prolog rule that specifies the preconditions for a particular error. Currently, he tool has an initial set of 50 common OOP error specified as Prolog Rules. Additionally, the teacher can specify new OOP errors to be detected as Prolog Rules (c), enabling the teacher to add domain rules for a particular problem besides OOP general errors. 
+			</p>
+			<hr/>
+			<h3>Soploon design</h3>
+			<p style="text-align: justify;">
+				There are two main packages: the user interface and the model. The first package groups the components related to user-interaction. The second package groups the main components related to the code analysis. When the assistant is executed, the CodeProvider component is responsible for obtaining the source code to be analyzed. The CodeParser component parses the source code and generates the AST by using the ASTGenerator component. The PrologConverter component walks down the generated tree and creates the Prolog representation of the student’s source code. Finally, the PrologAnalyzer component takes the Prolog representation and infers the errors specified by the teacher. The detected errors are shown to the user by the ErrorVisualizer component.
+			</p>
+			<div style="text-align: center;">
+				<img class="image" src="./images/diagram.png" border="3"></img>
+			</div><br/>
+			<p style="text-align: justify;">
+				Soploon was materialized in Java as an Eclipse plugin. Using popular technologies facilitated the implementation of Soploon due to the existence of a large number of libraries and frameworks. The CodeProvider and ErrorVisualizer components were developed by using the Eclipse Java development tools (JDT). JDT provides the needed functionalities for extending Eclipse IDE such as adding components to the Eclipse user interface. The CodeParser and the ASTGenerator components were implemented by using the components provided by Eclipse framework. Finally, the PrologEngine component was materialized using tuProlog, which is a light-weight Prolog engine developed in Java.
+			</p>	
+			<hr/>
+			<h3>Main classes</h3>
+				A diagram with the main classes of current Soploon implementation will be avaible here soon...
+		</div>
+		<div class="col-xs-0 col-md-2"></div>
+	</div>
+</body>

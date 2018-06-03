@@ -1,0 +1,374 @@
+<predicate-names>
+	<predicates>
+		<predicate>
+			<name>Package</name>
+			<predicate-name>package(id, "name")</predicate-name>
+			<description>Represents a package.</description>
+		</predicate>
+		<predicate>
+			<name>Compilation unit</name>
+			<predicate-name>compilation_unit(id, "name", "path", "package", "imports", "types")</predicate-name>
+			<description>Represents a compilation unit (the .java file).</description>
+		</predicate>
+		<predicate>
+			<name>Package declaration</name>
+			<predicate-name>package_declaration(id, "parent", "package")</predicate-name>
+			<description>Represents the package declaration in a compilation unit.</description>
+		</predicate>
+		<predicate>
+			<name>Import declaration</name>
+			<predicate-name>import_declaration(id, "parent", "fqn", "on_demand", "static")</predicate-name>
+			<description>Represents an import declaration in a compilation unit.</description>
+		</predicate>
+		<predicate>
+			<name>Class declaration</name>
+			<predicate-name>class_declaration(id, "parent", "name", "parameters_types", "modifiers", "super_type", "implements", "fields", "methods", "declarations", "compilation_unit")</predicate-name>
+			<description>Represents a class declaration.</description>
+		</predicate>
+		<predicate>
+			<name>Interface declaration</name>
+			<predicate-name>interface_declaration(id, "parent", "name", "parameters_types", "modifiers", "super_type", "implements", "fields", "methods", "declarations", "compilation_unit")</predicate-name>
+			<description>Represents an interface declaration. #TODO: implements is always empty, remove it.</description>
+		</predicate>
+		<predicate>
+			<name>Anonymous class declaration</name>
+			<predicate-name>anonymous_class_declaration(id, "parent", "declarations", "compilation_unit")</predicate-name>
+			<description>Represents an anonymous class declaration.</description>
+		</predicate>
+		<predicate>
+			<name>Enumeration declaration</name>
+			<predicate-name>enum_declaration(id, "parent", "name", "modifiers", "implements", "constants", "declarations", "compilation_unit")</predicate-name>
+			<description>Represents an enumeration declaration.</description>
+		</predicate>
+		<predicate>
+			<name>Enumeration constant declaration</name>
+			<predicate-name>enum_constant_declaration(id, "parent", "name", "modifiers", "arguments", "anonymous_class", "compilation_unit")</predicate-name>
+			<description>Represent a constant declaration in an enumeration.</description>
+		</predicate>
+		<predicate>
+			<name>Constructor declaration</name>
+			<predicate-name>constructor_declaration(id, "parent", "name", "modifiers", "parameters", "parameters_types", "return_type", "dimensions", "body", "exceptions", "compilation_unit")</predicate-name>
+			<description>Represents a constructor declaration in a class, interface or enumeration.</description>
+		</predicate>
+		<predicate>
+			<name>Method declaration</name>
+			<predicate-name>method_declaration(id, "parent", "name", "modifiers", "parameters", "parameters_types", "return_type", "dimensions", "body", "exceptions", "compilation_unit")</predicate-name>
+			<description>Represents a method declaration in a class, interface or enumeration.</description>
+		</predicate>
+		<predicate>
+			<name>Field declaration</name>
+			<predicate-name>field_declaration(id, "parent", "name", "type", "modifiers", "extra_dimensions", "initializer", "compilation_unit")</predicate-name>
+			<description>Represents a field declaration in a class interface or enumeration.</description>
+		</predicate>
+		<predicate>
+			<name>Block</name>
+			<predicate-name>block(id, "parent", "statements", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a block (like a method body, an if-statement body, a while-statement body, etc).</description>
+		</predicate>
+		<predicate>
+			<name>Variable declaration</name>
+			<predicate-name>variable_declaration(id, "parent", "name", "type", "modifiers", "extra_dimensions", "initializer", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a variable declaration (such as a method parameter, a constructor parameter or just a variable declaration in block).</description>
+		</predicate>
+		<predicate>
+			<name>Return statement</name>
+			<predicate-name>return_statement(id, "parent", "expression", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a return statement.</description>
+		</predicate>
+		<predicate>
+			<name>Postfix expression</name>
+			<predicate-name>postfix_expression(id, "parent", "operator", "operand", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a postfix expression, like "my_int++;".</description>
+		</predicate>
+		<predicate>
+			<name>Prefix expression</name>
+			<predicate-name>prefix_expression(id, "parent", "operator", "operand", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a prefix expression, like "++my_int;"</description>
+		</predicate>
+		<predicate>
+			<name>Infix expression</name>
+			<predicate-name>infix_expression(id, "parent", "operator", "left_operand", "right_operand", "extended_operands", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a infix expression, like "my_int + 1;".</description>
+		</predicate>
+		<predicate>
+			<name>For statement</name>
+			<predicate-name>for_statement(id, "parent", "initializers", "expression", "updaters", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a for statement: for (int i = 0; i &lt; limit; i++)</description>
+		</predicate>
+		<predicate>
+			<name>If statement</name>
+			<predicate-name>if_statement(id, "parent", "condition", "then", "else", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an if-statement. This predicate references the condition, the then body and the else body.</description>
+		</predicate>
+		<predicate>
+			<name>While statement</name>
+			<predicate-name>while_statement(id, "parent", "condition", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a while-statement. </description>
+		</predicate>
+		<predicate>
+			<name>Do statement</name>
+			<predicate-name>do_statement(id, "parent", "expression", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a do-statement. </description>
+		</predicate>
+		<predicate>
+			<name>Switch statement</name>
+			<predicate-name>switch_statement(id, "parent", "switch", "statements", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a switch-statement. </description>
+		</predicate>
+		<predicate>
+			<name>Switch case</name>
+			<predicate-name>switch_case(id, "parent", "case", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a case in a switch-statement. </description>
+		</predicate>
+		<predicate>
+			<name>Enhanced for statement</name>
+			<predicate-name>enhanced_for_statement(id, "parent", "parameter", "expression", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an enhanced  for statement: for (Integer val: my_array).</description>
+		</predicate>
+		<predicate>
+			<name>Try statement</name>
+			<predicate-name>try_statement(id, "parent", "resources", "body", "catchs", "finally", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a try-statement.</description>
+		</predicate>
+		<predicate>
+			<name>Catch clause</name>
+			<predicate-name>catch_clause(id, "parent", "exception", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an catch of a try-statement</description>
+		</predicate>
+		<predicate>
+			<name>Empty statement</name>
+			<predicate-name>empty_statement(id, "parent", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an empty statement (for example "; ;")</description>
+		</predicate>
+		<predicate>
+			<name>Assert statement</name>
+			<predicate-name>assert_statement(id, "parent", "expression", "message", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an assert statement.</description>
+		</predicate>
+		<predicate>
+			<name>Break statement</name>
+			<predicate-name>break_statement(id, "parent", "label", "body_declaration","type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a statement that uses the break keyword.</description>
+		</predicate>
+		<predicate>
+			<name>Continue statement</name>
+			<predicate-name>continue_statement(id, "parent", "label", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a statemen that uses the continue keyword.</description>
+		</predicate>
+		<predicate>
+			<name>Labeled statement</name>
+			<predicate-name>labeled_statement(id, "parent", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a labeled statement.</description>
+		</predicate>
+		<predicate>
+			<name>Synchronized statement</name>
+			<predicate-name>synchronized_statement(id, "parent", "synchronized", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a synchronized statement. The synchronized parameter represents the variable or field synchronized.</description>
+		</predicate>
+		<predicate>
+			<name>Throw statement</name>
+			<predicate-name>throw_statement(id, "parent", "throw", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a throw statement in the block of a throwable method.</description>
+		</predicate>
+		<predicate>
+			<name>Assignment</name>
+			<predicate-name>assignment(id, "parent", "operator", "left_operand", "right_operand", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an assignment.</description>
+		</predicate>
+		<predicate>
+			<name>Boolean constant</name>
+			<predicate-name>boolean_literal(id, "parent", "value", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a boolean constant value: true or false.</description>
+		</predicate>
+		<predicate>
+			<name>Character constant</name>
+			<predicate-name>character_literal(id, "parent", "value", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a character constant value: 'a' 'b' 'c'.</description>
+		</predicate>
+		<predicate>
+			<name>Null constant</name>
+			<predicate-name>null_literal(id, "parent", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a null constant value.</description>
+		</predicate>
+		<predicate>
+			<name>Numeric constant</name>
+			<predicate-name>number_literal(id, "parent", "value", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a number constant value.</description>
+		</predicate>
+		<predicate>
+			<name>String constant</name>
+			<predicate-name>string_literal(id, "parent", "value", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a string constant value.</description>
+		</predicate>
+		<predicate>
+			<name>Initializer</name>
+			<predicate-name>initializer(id, "parent", "modifiers", "body", "compilation_unit")</predicate-name>
+			<description>Represents an initializer in a variable declaration or a field declaration.</description>
+		</predicate>
+		<predicate>
+			<name>Instance creation</name>
+			<predicate-name>class_instance_creation(id, "parent", "type", "type_arguments", "constructor", "arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a class instance creation by using the new keyword.</description>
+		</predicate>
+		<predicate>
+			<name>Constructor invocation</name>
+			<predicate-name>constructor_invocation(id, "parent", "constructor", "arguments", "type_arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a constructor invocation. For example, when the first statement of a constructor body invokes another constructor.</description>
+		</predicate>
+		<predicate>
+			<name>Creation reference</name>
+			<predicate-name>creation_reference(id, "parent", "type", "constructor", "arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a creation reference: Type::new.</description>
+		</predicate>
+		<predicate>
+			<name>Array access</name>
+			<predicate-name>array_access(id, "parent", "array", "index", "body_declaration","type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a Java array access to a specific index.</description>
+		</predicate>
+		<predicate>
+			<name>Array creation</name>
+			<predicate-name>array_creation(id, "parent", "type", "dimensions", "initializer","body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents the creation of a Java array.</description>
+		</predicate>
+		<predicate>
+			<name>Array initializer</name>
+			<predicate-name>array_initializer(id, "parent", "expressions", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents the initializer of a Java array.</description>
+		</predicate>
+		<predicate>
+			<name>Cast expression</name>
+			<predicate-name>cast_expression(id, "parent", "type", "expression", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a cast of an expression to a specific type.</description>
+		</predicate>
+		<predicate>
+			<name>Conditional expression</name>
+			<predicate-name>conditional_expression(id, "parent", "condition", "then", "else", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a condition expression, like: condition ? then : else. </description>
+		</predicate>
+		<predicate>
+			<name>InstanceOf expression</name>
+			<predicate-name>instanceof_expression(id, "parent", "expression", "type", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a statement that uses the keyword instanceOf.</description>
+		</predicate>
+		<predicate>
+			<name>Lambda expression</name>
+			<predicate-name>lambda_expression(id, "parent", "parameters", "body", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a lambda expression.</description>
+		</predicate>
+		<predicate>
+			<name>This expression</name>
+			<predicate-name>this_expression(id, "parent", "expression", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a this expression by using the keyword this.</description>
+		</predicate>
+		<predicate>
+			<name>Field access</name>
+			<predicate-name>field_access(id, "parent", "expression", "field", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a field access.</description>
+		</predicate>
+		<predicate>
+			<name>Super constructor invocation</name>
+			<predicate-name>super_constructor_invocation(id, "parent", "expression", "constructor", "arguments", "type_arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an invocation to a constructor of a super class.</description>
+		</predicate>
+		<predicate>
+			<name>Super field access</name>
+			<predicate-name>super_field_access(id, "parent", "field", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an access to a field of a super class.</description>
+		</predicate>
+		<predicate>
+			<name>Super method invocation</name>
+			<predicate-name>super_method_invocation(id, "parent", "method", "arguments", "type_arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents an invocation to a method of a super class.</description>
+		</predicate>
+		<predicate>
+			<name>Method invocation</name>
+			<predicate-name>method_invocation(id, "parent", "expression", "method", "arguments", "type_arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a method invocation.</description>
+		</predicate>
+		<predicate>
+			<name>Super method reference</name>
+			<predicate-name>super_method_reference(id, "parent", "method", "arguments", "type_arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a super method reference: super::identifier.</description>
+		</predicate>
+		<predicate>
+			<name>Expression method reference</name>
+			<predicate-name>expression_method_reference(id, "parent", "expression", "method", "arguments", "type_arguments", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a method reference: Type::identifier.</description>
+		</predicate>
+		<predicate>
+			<name>Type method reference</name>
+			<predicate-name>type_method_reference(id, "parent", "type", "method", "arguments", "body_declarations", "type_declarations", "compilation_unit")</predicate-name>
+			<description>Represents a method reference: Type::identifier. #TODO Â¿what is the difference with expression method reference?</description>
+		</predicate>
+		<predicate>
+			<name>Intersection type</name>
+			<predicate-name>intersection_type(id, "types")</predicate-name>
+			<description>Represents the intersection of types: Type &amp; Type2.</description>
+		</predicate>
+		<predicate>
+			<name>Union type</name>
+			<predicate-name>union_type(id, "types")</predicate-name>
+			<description>Represents the union of types: Type | Type2.</description>
+		</predicate>
+		<predicate>
+			<name>Primitive type</name>
+			<predicate-name>primitive_type(id, "code")</predicate-name>
+			<description>Represents a primitive type: int, long, void, double, char, etc.</description>
+		</predicate>
+		<predicate>
+			<name>Array type</name>
+			<predicate-name>array_type(id, "array_of", "dimensions")</predicate-name>
+			<description>Represents an array type by the use of: [ ].</description>
+		</predicate>
+		<predicate>
+			<name>Literal type</name>
+			<predicate-name>literal_type(id, "parent",  "type", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a literal type: Type.class.</description>
+		</predicate>
+		<predicate>
+			<name>Parameterized type</name>
+			<predicate-name>parameterized_type(id, "fqn", "parameters")</predicate-name>
+			<description>Represents an external parameterized type (not defined by the user). </description>
+		</predicate>
+		<predicate>
+			<name>Type parameter</name>
+			<predicate-name>type_parameter(id, "parent", "name", "modifiers", "bounds", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a bounded type parameter, such as &lt;U extends Number&gt;.</description>
+		 </predicate>
+		<predicate>
+			<name>Wildcard type</name>
+			<predicate-name>wildcard_type(id, "bound", "is_upper_bound")</predicate-name>
+			<description>Represents a wildcard type by using â€œ?â€.</description>
+		</predicate>
+		<predicate>
+			<name>Qualified name</name>
+			<predicate-name>qualified_name(id, "parent", "qualified", "name", "body_declaration", "type_declaration", "compilation_unit")</predicate-name>
+			<description>Represents a qualified name by using dots, such as: a_variable.an_internal_variable.</description>
+		</predicate>
+		<predicate>
+			<name>Type</name>
+			<predicate-name>type(id, "name")</predicate-name>
+			<description>Represents an external type (not defined by the user), such as â€œStringâ€, â€œObjectâ€, etc. </description>
+		</predicate>
+		<predicate>
+			<name>Variable</name>
+			<predicate-name>variable(id, "name", "type")</predicate-name>
+			<description>Represents an external variable (not defined by the user), such as System.out. </description>
+		</predicate>
+		<predicate>
+			<name>Method</name>
+			<predicate-name>method(id, "name", "type", "return_type")</predicate-name>
+			<description>Represents an external method (not defined by the user), such as System.out.print(). </description>
+		</predicate>
+		<predicate>
+			<name>Annotation</name>
+			<predicate-name>annotation(id, "name")</predicate-name>
+			<description>Represents an annotation by the using of @, like @Override.</description>
+		</predicate>
+		<predicate>
+			<name>Member value pair</name>
+			<predicate-name>member_value_pair(id, "name")</predicate-name>
+			<description>Represents a member value pair in an annotation.</description>
+		</predicate>
+	</predicates>
+</predicate-names>
