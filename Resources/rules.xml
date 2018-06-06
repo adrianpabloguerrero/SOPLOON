@@ -140,7 +140,7 @@ absence_of_methods(ID):-&#xd;
     ),&#xd;
     model_unit(UNIT).&#xd;
 </predicates>
-      <active>true</active>
+      <active>false</active>
     </simple-rule>
     <simple-rule>
       <type>Unimplemented interface</type>
@@ -655,15 +655,10 @@ type_attribute(ID):-&#xd;
       <query>class_name_contains_number</query>
       <predicates>/* Class name contains number */&#xd;
 /* This is not necessary an error, but it can be related to one */&#xd;
-/* For example:&#xd;
-The class &quot;Discount10&quot; makes a disccount of 10% in a purchase.&#xd;
-The class &quot;Discount20&quot; makes a disccount of 20% in a purchase.&#xd;
-Student should have programmed one single class &quot;Disccount&quot; with a field &quot;percentage_disccount&quot; */&#xd;
 &#xd;
 class_name_contains_number(ID):-&#xd;
     class_declaration(ID, _, CLASS_NAME, _, _, _, _, _, _, _, compilation_unit(UNIT)),&#xd;
-    atom_codes(CLASS_NAME,CLASS_NAME_CODES),&#xd;
-    contains_number(CLASS_NAME_CODES),&#xd;
+    contains_number(CLASS_NAME),&#xd;
     model_unit(UNIT).</predicates>
       <active>true</active>
     </simple-rule>
