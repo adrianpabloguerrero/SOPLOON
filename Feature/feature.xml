@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="Soploon"
+      label="Soploon"
+      version="1.0"
+      provider-name="ISISTAN">
+
+   <description url="http://si.isistan.unicen.edu.ar/soploon/">
+      Soploon is a tool for assisting teachers in the students&apos; source code assesment task. The tool automatically detects object-oriented error in the students&apos; source codes and notifies the teacher about them. Moreover, Soploon is customizable, so the teacher can specify the particular errors that his/her students are used to making in order to detect them. After detecting an error, Soploon is capable of locating and highlighting the code fragment containing the error. By using this tool, teachers can reduce the number of overlooked errors. Thus, students receive a more complete and exhaustive feedback about their errors and misconceptions, improving the students learning process.
+   </description>
+
+   <copyright>
+      Soploon is an open-access tool developed for educational purposes.
+   </copyright>
+
+   <license url="">
+      Soploon is an open-access tool developed for educational purposes.
+   </license>
+
+   <url>
+      <update label="Soploon" url="http://si.isistan.unicen.edu.ar/soploon/p2/"/>
+   </url>
+
+   <plugin
+         id="Soploon"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
