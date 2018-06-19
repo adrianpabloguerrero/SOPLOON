@@ -19,3 +19,4 @@ Bundle-ClassPath: .,
 Import-Package: 
  org.eclipse.jdt.core,
  org.eclipse.jdt.core.dom
+Bundle-Vendor: Isistan
