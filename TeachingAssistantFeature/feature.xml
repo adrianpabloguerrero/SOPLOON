@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="TeachingAssistantFeature"
+      label="TeachingAssistantFeature"
+      version="1.0.0.qualifier"
+      provider-name="Isistan">
+
+   <description url="http://si.isistan.unicen.edu.ar/asistente-virtual/">
+      Asistente virtual para la cátedra de Programación Orientada a Objetos.
+   </description>
+
+   <copyright>
+      Herramienta de distribución libre y gratuita con fines educativos.
+   </copyright>
+
+   <license url="">
+      Herramienta de distribución libre y gratuita con fines educativos.
+   </license>
+
+   <url>
+      <update label="Asistente Virtual" url="http://si.isistan.unicen.edu.ar/asistente-virtual/p2/"/>
+   </url>
+
+   <plugin
+         id="AyudanteVirtual"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+</feature>

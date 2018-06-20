@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <bundle id="AyudanteVirtual" version="1.0.0">
+      <category name="Educación"/>
+   </bundle>
+   <category-def name="Educación" label="Ayudante Virtual"/>
+</site>
