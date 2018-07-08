@@ -1,6 +1,6 @@
 package soploon.analyzer;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -8,17 +8,17 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class RuleSet {
 
 	@XStreamAlias("rules")
-	private Vector<Rule> rules;
+	private ArrayList<Rule> rules;
 
 	public RuleSet() {
-		
+		this.rules = new ArrayList<Rule>();
 	}
 	
-	public Vector<Rule> getRules() {
+	public ArrayList<Rule> getRules() {
 		return rules;
 	}
 
-	public void setRules(Vector<Rule> rules) {
+	public void setRules(ArrayList<Rule> rules) {
 		this.rules = rules;
 	}
 	

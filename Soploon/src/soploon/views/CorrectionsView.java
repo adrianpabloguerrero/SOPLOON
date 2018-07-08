@@ -36,7 +36,7 @@ public class CorrectionsView extends ViewPart {
 
 		createColumns(viewer);
 
-		final Tree tree = viewer.getTree();
+		Tree tree = viewer.getTree();
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
 

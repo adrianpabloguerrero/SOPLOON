@@ -11,9 +11,9 @@ public class PredicateSet {
 	private ArrayList<Predicate> predicates;
 
 	public PredicateSet() {
-
+		this.predicates = new ArrayList<Predicate>();
 	}
-	
+
 	public ArrayList<Predicate> getPredicates() {
 		return predicates;
 	}
@@ -21,7 +21,7 @@ public class PredicateSet {
 	public void setPredicates(ArrayList<Predicate> predicates) {
 		this.predicates = predicates;
 	}
-	
+
 	public void addPredicate(Predicate predicate) {
 		this.predicates.add(predicate);
 	}
