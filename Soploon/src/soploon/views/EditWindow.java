@@ -159,30 +159,21 @@ public class EditWindow {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String msg = EditWindow.this.teacher.getAnalyzer()
-						.validateProlog(EditWindow.this.predicate_predicates_text.getText());
+				String msg = EditWindow.this.teacher.getAnalyzer().validateProlog(EditWindow.this.predicate_predicates_text.getText());
 				if (msg != null) {
-					MessageDialog.openInformation(null, "Soploon",
-							"Error in Prolog code:" + System.lineSeparator() + msg);
+					MessageDialog.openInformation(null, "Soploon","Error in Prolog code:" + System.lineSeparator() + msg);
 				} else {
 					EditWindow.this.selected_predicate.setTitle(EditWindow.this.predicate_type_text.getText());
-					EditWindow.this.selected_predicate
-							.setDescription(EditWindow.this.predicate_description_text.getText());
-					EditWindow.this.selected_predicate
-							.setPredicates(EditWindow.this.predicate_predicates_text.getText());
-					if (!EditWindow.this.teacher.getAnalyzer().getPredicateSet().getPredicates()
-							.contains(EditWindow.this.selected_predicate)) {
-						EditWindow.this.teacher.getAnalyzer().getPredicateSet()
-								.addPredicate(EditWindow.this.selected_predicate);
+					EditWindow.this.selected_predicate.setDescription(EditWindow.this.predicate_description_text.getText());
+					EditWindow.this.selected_predicate.setPredicates(EditWindow.this.predicate_predicates_text.getText());
+					if (!EditWindow.this.teacher.getAnalyzer().getPredicateSet().getPredicates().contains(EditWindow.this.selected_predicate)) {
+						EditWindow.this.teacher.getAnalyzer().getPredicateSet().addPredicate(EditWindow.this.selected_predicate);
 						EditWindow.this.addPredicate(EditWindow.this.selected_predicate);
 						EditWindow.this.predicates_left_scroll.layout(true, true);
-						EditWindow.this.predicates_left_scroll
-								.setMinSize(EditWindow.this.predicates_grid.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						EditWindow.this.predicates_left_scroll.setMinSize(EditWindow.this.predicates_grid.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 						EditWindow.this.predicates_left_scroll.setOrigin(0, Integer.MAX_VALUE);
 					} else {
-						Label label = (Label) EditWindow.this.predicates_grid
-								.getChildren()[(EditWindow.this.teacher.getAnalyzer().getPredicateSet().getPredicates()
-										.indexOf(EditWindow.this.selected_predicate) + 1) * 3 + 1];
+						Label label = (Label) EditWindow.this.predicates_grid.getChildren()[(EditWindow.this.teacher.getAnalyzer().getPredicateSet().getPredicates().indexOf(EditWindow.this.selected_predicate) + 1) * 3 + 1];
 						label.setText(EditWindow.this.selected_predicate.getTitle());
 						EditWindow.this.predicates_grid.layout(true, true);
 					}
@@ -250,10 +241,7 @@ public class EditWindow {
 				Predicate predicate = new Predicate();
 				predicate.setTitle("New Predicate Set");
 				predicate.setDescription("Please write a description for this set of predicates");
-				predicate.setPredicates("/* this is a comment */" + System.lineSeparator() + System.lineSeparator()
-						+ "new_predicate(PARAM) :- fail. " + System.lineSeparator() + "new_predicate_2(PARAM) :- fail. "
-						+ System.lineSeparator() + System.lineSeparator()
-						+ "/* here you can define as many predicates as you want */");
+				predicate.setPredicates("/* this is a comment */" + System.lineSeparator() + System.lineSeparator() + "new_predicate(PARAM) :- fail. " + System.lineSeparator() + "new_predicate_2(PARAM) :- fail. " + System.lineSeparator() + System.lineSeparator() + "/* here you can define as many predicates as you want */");
 				selectPredicate(predicate);
 			}
 
@@ -318,28 +306,22 @@ public class EditWindow {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String msg = EditWindow.this.teacher.getAnalyzer()
-						.validateProlog(EditWindow.this.rule_predicates_text.getText());
+				String msg = EditWindow.this.teacher.getAnalyzer().validateProlog(EditWindow.this.rule_predicates_text.getText());
 				if (msg != null) {
-					MessageDialog.openInformation(null, "Soploon",
-							"Error in Prolog code:" + System.lineSeparator() + msg);
+					MessageDialog.openInformation(null, "Soploon", "Error in Prolog code:" + System.lineSeparator() + msg);
 				} else {
 					EditWindow.this.selected_rule.setType(EditWindow.this.rule_type_text.getText());
 					EditWindow.this.selected_rule.setQuery(EditWindow.this.rule_query_text.getText());
 					EditWindow.this.selected_rule.setDescription(EditWindow.this.rule_description_text.getText());
 					EditWindow.this.selected_rule.setPredicates(EditWindow.this.rule_predicates_text.getText());
-					if (!EditWindow.this.teacher.getAnalyzer().getRuleSet().getRules()
-							.contains(EditWindow.this.selected_rule)) {
+					if (!EditWindow.this.teacher.getAnalyzer().getRuleSet().getRules().contains(EditWindow.this.selected_rule)) {
 						EditWindow.this.teacher.getAnalyzer().getRuleSet().addRule(EditWindow.this.selected_rule);
 						EditWindow.this.addRule(EditWindow.this.selected_rule);
 						EditWindow.this.rules_left_scroll.layout(true, true);
-						EditWindow.this.rules_left_scroll
-								.setMinSize(EditWindow.this.rules_grid.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						EditWindow.this.rules_left_scroll.setMinSize(EditWindow.this.rules_grid.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 						EditWindow.this.rules_left_scroll.setOrigin(0, Integer.MAX_VALUE);
 					} else {
-						Label label = (Label) EditWindow.this.rules_grid.getChildren()[(EditWindow.this.teacher
-								.getAnalyzer().getRuleSet().getRules().indexOf(EditWindow.this.selected_rule) + 1) * 3
-								+ 1];
+						Label label = (Label) EditWindow.this.rules_grid.getChildren()[(EditWindow.this.teacher.getAnalyzer().getRuleSet().getRules().indexOf(EditWindow.this.selected_rule) + 1) * 3 + 1];
 						label.setText(EditWindow.this.selected_rule.getType());
 						EditWindow.this.rules_grid.layout(true, true);
 					}
@@ -357,11 +339,11 @@ public class EditWindow {
 		this.rules_grid = new Composite(rules_left_scroll, SWT.NONE);
 		this.rules_grid.setLayout(new GridLayout(3, false));
 		this.rules_grid.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
-
+		
 		Label active_label = new Label(this.rules_grid, SWT.CENTER);
 		active_label.setText("Active");
 		active_label.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
-
+		
 		Label rule_label = new Label(this.rules_grid, SWT.CENTER);
 		rule_label.setText("Rule");
 		rule_label.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
@@ -409,8 +391,7 @@ public class EditWindow {
 				rule.setType("New rule");
 				rule.setDescription("Please write a description for this rule");
 				rule.setQuery("new_rule");
-				rule.setPredicates("/* this is a comment */" + System.lineSeparator() + System.lineSeparator()
-						+ "new_rule(ID) :- fail. ");
+				rule.setPredicates("/* this is a comment */" + System.lineSeparator() + System.lineSeparator() + "new_rule(ID) :- fail. ");
 				rule.setActive(true);
 				selectRule(rule);
 			}
