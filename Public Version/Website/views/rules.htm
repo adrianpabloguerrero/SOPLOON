@@ -1,0 +1,35 @@
+<body>
+	<div class="row" style="margin-top: 20px;">
+    <div class="col-xs-0 col-md-2"></div>
+  		<div class="col-xs-12 col-md-8">
+        <div class="row" style="margin-bottom: 10px;">
+          <div class="col-xs-12">
+            <div class="input-group">
+                <input ng-model="search.type['#text']" type="text" class="form-control" placeholder="Search rule..."></input>
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">Search</button>
+                </span>
+            </div>
+          </div>
+        </div >
+
+        <uib-accordion close-others="false">
+          <div ng-repeat="rule in rules | filter:search" style="margin-bottom: 5px;">
+            <div uib-accordion-group="" class="panel-default" heading="{{rule.type['#text'].trim()}}">
+              <h4>Description</h4>
+              {{ rule.description["#text"].trim() }}
+              <hr/>
+              <h4>Main query</h4>
+              <code>{{ rule.query["#text"].trim() }}</code>
+              <hr/>
+              <h4>Prolog code</h4>
+              <code class="col-xs-12 wordwrap">{{ rule.predicates["#text"].trim() }}</code>
+            </div>
+          </div>
+         </uib-accordion>
+      </div>
+    <div class="col-xs-0 col-md-2"></div>
+	</div>
+</body>
+
+

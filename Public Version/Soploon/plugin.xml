@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="Soploon.toolbar"
+               label="Soploon">
+                 <command
+                  commandId="Soploon.check"
+                  icon="icons/lupa.png"
+                  style="push"
+                  tooltip="Check code">
+            </command>
+                 <command
+                       commandId="Soploon.edit"
+                       icon="icons/edit.png"
+                       style="push"
+                       tooltip="Edit Soploon">
+                 </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="soploon.handlers.CheckHandler"
+            id="Soploon.check"
+            name="CheckCommand">
+      </command>
+      <command
+            defaultHandler="soploon.handlers.EditHandler"
+            id="Soploon.edit"
+            name="EditCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="Soploon.category"
+            name="Soploon">
+      </category>
+      <view
+            category="Soploon.category"
+            class="soploon.views.CorrectionsView"
+            icon="icons/icon.png"
+            id="Soploon.corrections"
+            name="Corrections">
+      </view>
+      <view
+            category="Soploon.category"
+            class="soploon.views.TranslationView"
+            icon="icons/translate.png"
+            id="Soploon.translation"
+            name="Translation">
+      </view>
+   </extension>
+
+
+</plugin>
