@@ -196,7 +196,7 @@ public class Teacher {
 				}
 
 				result = this.prolog_analyzer.process(this.model_generator.getMapper(),
-						this.model_generator.getCheckCode(), this.model_generator.getFactory(), monitor, logger) * 30;
+						this.model_generator.getCheckCode(), this.model_generator.getFactory(), monitor) * 30;
 
 				if (result < 0) { // Error
 					logger.close();

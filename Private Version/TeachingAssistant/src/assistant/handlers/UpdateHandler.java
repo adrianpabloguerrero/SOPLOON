@@ -1,11 +1,8 @@
 package assistant.handlers;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.thoughtworks.xstream.XStream;
 
+import assistant.analyzer.PredicateSet;
 import assistant.analyzer.PrologAnalyzer;
 import assistant.analyzer.RuleSet;
 import assistant.teacher.Teacher;
@@ -32,44 +30,32 @@ public class UpdateHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) {
 		try {
-			String rulesxml = getURL("http://si.isistan.unicen.edu.ar:8080/assistant/api/xml");
-			if (rulesxml == null && event.getTrigger() != null) {
-				MessageDialog.openInformation(null, "Teaching Assistant",
-						"No se pudo actualizar el Ayudante Virtual (servidor inalcanzable)");
+			
+			String rules_xml = getURL("http://si.isistan.unicen.edu.ar:8080/asistente-virtual/api/rules");
+			String predicates_xml = getURL("http://si.isistan.unicen.edu.ar:8080/asistente-virtual/api/predicates");
+			
+			if ((rules_xml == null || predicates_xml == null) && event.getTrigger() != null) {
+				MessageDialog.openInformation(null, "Asistente Virtual", "El Ayudante no pudo comunicarse con el servidor.");
 				return null;
 			}
+			
 			XStream xstream = new XStream();
 			xstream.processAnnotations(RuleSet.class);
-			RuleSet remote_rules = (RuleSet) xstream.fromXML(rulesxml);
+			xstream.processAnnotations(PredicateSet.class);
+			RuleSet remote_rules = (RuleSet) xstream.fromXML(rules_xml);
+			PredicateSet remote_predicates = (PredicateSet) xstream.fromXML(predicates_xml);
 
 			PrologAnalyzer analyzer = Teacher.getInstance().getAnalyzer();
-			RuleSet local_rules = analyzer.getRules();
+			
+			RuleSet local_rules = analyzer.getRuleSet();
+			
 			if (local_rules == null || !local_rules.getVersion().equals(remote_rules.getVersion())) {
-				String auxiliary = getURL("http://si.isistan.unicen.edu.ar:8080/assistant/api/auxiliary");
-				String rules = getURL("http://si.isistan.unicen.edu.ar:8080/assistant/api/rules");
-
-				if ((auxiliary == null || rules == null)) {
-					if (event.getTrigger() != null)
-						MessageDialog.openInformation(null, "Ayudante Virtual",
-								"No se pudo actualizar el Ayudante Virtual (servidor inalcanzable)");
-				} else {
-					if (analyzer.setRules(remote_rules, auxiliary, rules)) {
-						File dir = new File(PrologAnalyzer.BASE_PATH);
-						if (!dir.exists())
-							dir.mkdirs();
-						saveToFile(rulesxml, PrologAnalyzer.RULES_PATH);
-						saveToFile(auxiliary, PrologAnalyzer.AUXILIARY_PREDICATES_PATH);
-						saveToFile(rules, PrologAnalyzer.ERROR_PREDICATES_PATH);
-						if (event.getTrigger() != null)
-							MessageDialog.openInformation(null, "Ayudante Virtual", "Ayudante actualizado!");
-					} else if (event.getTrigger() != null) {
-						MessageDialog.openInformation(null, "Ayudante Virtual",
-								"No se pudo actualizar el Ayudante Virtual (error en la actualización)");
-					}
-				}
+				analyzer.setRules(remote_rules);
+				analyzer.setPredicates(remote_predicates);
+				if (event.getTrigger() != null)
+					MessageDialog.openInformation(null, "Ayudante Virtual", "Ayudante actualizado!");
 			} else if (event.getTrigger() != null) {
-				MessageDialog.openInformation(null, "Ayudante Virtual",
-						"Usted ya dispone de la última version del Ayudante!");
+				MessageDialog.openInformation(null, "Ayudante Virtual", "Usted ya dispone de la última version del Ayudante!");
 			}
 
 			return null;
@@ -100,19 +86,6 @@ public class UpdateHandler extends AbstractHandler {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			return null;
-		}
-	}
-
-	private boolean saveToFile(String content, String path) {
-		try {
-			PrintWriter out;
-			out = new PrintWriter(path);
-			out.write(content);
-			out.flush();
-			out.close();
-			return true;
-		} catch (FileNotFoundException e) {
-			return false;
 		}
 	}
 

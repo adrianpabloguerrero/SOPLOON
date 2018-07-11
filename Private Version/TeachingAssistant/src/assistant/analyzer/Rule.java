@@ -23,16 +23,21 @@ import assistant.modeler.Mapper;
 import assistant.modeler.converters.NodeConverterFactory;
 
 @XStreamAlias("simple-rule")
-public class Rule {
+public class Rule implements Comparable<Rule>{
     
 	private String type;
     private String description;
-    private String priority;
     private String query;
+    private String predicates;
+    private boolean active;
     private String uri;
     
     public Rule() {
-        this.type = this.getClass().getName();
+        this.type = null;
+        this.query = null;
+        this.description = null;
+        this.predicates = null;
+        this.active = false;
     }
 
     public String getType() {
@@ -49,14 +54,6 @@ public class Rule {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public String getPriority() {
-        return this.priority;
     }
 
 	public String getQuery() {
@@ -117,6 +114,35 @@ public class Rule {
 		for (String id : nodes_ids)
 			nodes.add(mapper.getNode(id));
 		return nodes;
+	}
+
+	@Override
+	public int compareTo(Rule rule) {
+		return this.getType().compareTo(rule.getType());
+	}
+
+	public String getPredicates() {
+		return predicates;
+	}
+
+	public void setPredicates(String predicates) {
+		this.predicates = predicates;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (o == this)
+			return true;
+		return false;
 	}
 
 	public String getUri() {

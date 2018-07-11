@@ -1,6 +1,6 @@
 package assistant.analyzer;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -8,22 +8,26 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class RuleSet {
 
 	@XStreamAlias("rules")
-	private Vector<Rule> rules;
+	private ArrayList<Rule> rules;
 	@XStreamAlias("version")
 	private String version;
-
+	
 	public RuleSet() {
-		
+		this.rules = new ArrayList<Rule>();
 	}
 	
-	public Vector<Rule> getRules() {
+	public ArrayList<Rule> getRules() {
 		return rules;
 	}
 
-	public void setRules(Vector<Rule> rules) {
+	public void setRules(ArrayList<Rule> rules) {
 		this.rules = rules;
 	}
-
+	
+	public void addRule(Rule rule) {
+		this.rules.add(rule);
+	}
+	
 	public String getVersion() {
 		return version;
 	}
@@ -34,6 +38,6 @@ public class RuleSet {
 	
 	public String toString() {
 		return "RuleSet: " + this.version;
-	}
+}
 
 }

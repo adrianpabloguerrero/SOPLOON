@@ -1,30 +1,27 @@
-
 package assistant.analyzer;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
+import assistant.Activator;
 import assistant.analyzer.bugs.Bug;
 import assistant.modeler.Mapper;
 import assistant.modeler.PrologCode;
@@ -32,136 +29,161 @@ import assistant.modeler.converters.NodeConverterFactory;
 
 public class PrologAnalyzer {
 
-	private static final String MONITOR_TITLE = "Analizando el Código Prolog";
-	private static final String MONITOR_TITLE_PRE = "Preparando Analisis";
-	private static final String LOG_HEADER = System.lineSeparator() + "Analizando el Modelo Prolog"
-			+ System.lineSeparator();
-	private static final String LOG_FOOTER = System.lineSeparator() + "Modelo Prolog Analizado Correctamente"
-			+ System.lineSeparator();
-	private static final String LOG_ERROR = System.lineSeparator() + "Error:" + System.lineSeparator();
-	private static final String LOG_BUGS_HEADER = "===== Errores Detectados =====" + System.lineSeparator();
-	private static final String LOG_BUGS_FOOTER = System.lineSeparator() + "==============================";
+	private static final String MONITOR_TITLE = "Analyzing the Prolog representation";
+	private static final String MONITOR_TITLE_PRE = "Creating threads for analysis";
+	private static final String FOLDER_NAME = "config";
+	private static final String RULES_FILE_NAME = "rules.xml";
+	private static final String PREDICATES_FILE_NAME = "predicates.xml";
 
 	private RuleSet rule_set;
+	private PredicateSet predicate_set;
 	private List<Bug> bugs;
-	private Theory auxiliary_theory;
-	private Theory rules_theory;
-	private boolean inited;
 
-	public static final String BASE_PATH = Platform.getInstallLocation().getURL().getPath() + File.separator + "dropins"
-			+ File.separator + "plugins" + File.separator + "resources" + File.separator;
-	
-	public static final String RULES_PATH = BASE_PATH + "rules.xml";
-	public static final String AUXILIARY_PREDICATES_PATH = BASE_PATH + "auxiliary_predicates.pl";
-	public static final String ERROR_PREDICATES_PATH = BASE_PATH + "rules.pl";
+	private String base_path;
+	private String rules_path;
+	private String predicates_path;
 
 	public PrologAnalyzer() {
-		this.bugs = new Vector<Bug>();
-		this.readRules();
-		this.inited = false;
+		IPath path = Activator.getDefault().getStateLocation();
+		this.base_path = path.toOSString() + File.separator + FOLDER_NAME;
+
+		File root = new File(this.base_path);
+		if (!root.exists())
+			root.mkdirs();
+
+		this.rules_path = this.base_path + File.separator + RULES_FILE_NAME;
+		this.predicates_path = this.base_path + File.separator + PREDICATES_FILE_NAME;
+
+		File rules = new File(rules_path);
+		if (!rules.exists()) {
+			this.rule_set = new RuleSet();
+			this.saveRules();
+		}
+
+		File predicates = new File(predicates_path);
+		if (!predicates.exists()) {
+			this.predicate_set = new PredicateSet();
+			this.savePredicates();
+		}
+
+		this.bugs = new ArrayList<Bug>();
+		this.init();
 	}
 
 	public void init() {
-		if (!this.inited) {
-			this.inited = true;
-			this.updateRules();
+		if (this.rule_set == null || this.predicate_set == null) {
+
+			RuleSet aux_rules = this.readRules(this.rules_path);
+			if (aux_rules != null)
+				this.rule_set = aux_rules;
+
+			PredicateSet aux_predicates = this.readPredicates(this.predicates_path);
+			if (aux_predicates != null)
+				this.predicate_set = aux_predicates;
 		}
 	}
 
-	public RuleSet getRules() {
+	public RuleSet getRuleSet() {
 		return this.rule_set;
+	}
+
+	public PredicateSet getPredicateSet() {
+		return predicate_set;
 	}
 
 	public List<Bug> getBugs() {
 		return this.bugs;
 	}
 
-	public boolean setRules(RuleSet remote_rules, String auxiliary, String rules) {
+	public RuleSet readRules(String path) {
 		try {
-			Theory new_auxiliary = new Theory(auxiliary);
-			Theory new_rules = new Theory(rules);
-			this.rule_set = remote_rules;
-			this.auxiliary_theory = new_auxiliary;
-			this.rules_theory = new_rules;
-			return true;
-		} catch (InvalidTheoryException e) {
-			return false;
-		}
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] { RuleSet.class, Rule.class });
+			xstream.processAnnotations(RuleSet.class);
 
+			return (RuleSet) xstream.fromXML(new FileInputStream(path));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
-	private String readFile(String path) {
-		BufferedReader reader = null;
+	private PredicateSet readPredicates(String path) {
 		try {
-			File file = new File(path);
-			reader = new BufferedReader(new FileReader(file));
-			String line = null;
-			StringBuilder stringBuilder = new StringBuilder();
-			String ls = System.getProperty("line.separator");
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] { PredicateSet.class, Predicate.class });
+			xstream.processAnnotations(PredicateSet.class);
 
-			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line);
-				stringBuilder.append(ls);
-			}
+			return (PredicateSet) xstream.fromXML(new FileInputStream(path));
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
-			return stringBuilder.toString();
+	public void saveRules() {
+		try {
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] { RuleSet.class, Rule.class });
+			xstream.processAnnotations(RuleSet.class);
+
+			String rules_xml = xstream.toXML(this.rule_set);
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(rules_path), StandardCharsets.UTF_8);
+			out.write(rules_xml);
+			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if (reader != null)
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
-		return null;
-	}
-
-	public void readRules() {
-		try {
-			XStream xstream = new XStream();
-			xstream.processAnnotations(RuleSet.class);
-			this.rule_set = (RuleSet) xstream.fromXML(new FileInputStream(RULES_PATH));
-
-			this.auxiliary_theory = new Theory(readFile(AUXILIARY_PREDICATES_PATH));
-			this.rules_theory = new Theory(readFile(ERROR_PREDICATES_PATH));
-
-		} catch (FileNotFoundException | InvalidTheoryException e) {
-
 		}
 	}
 
-	public void updateRules() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
+	public void savePredicates() {
 		try {
-			handlerService.executeCommand("Soploon.update", null);
+			XStream xstream = new XStream(new DomDriver("UTF-8"));
+			XStream.setupDefaultSecurity(xstream);
+			xstream.allowTypes(new Class[] { PredicateSet.class, Predicate.class });
+			xstream.processAnnotations(PredicateSet.class);
+
+			String predicates_xml = xstream.toXML(this.predicate_set);
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(predicates_path),
+					StandardCharsets.UTF_8);
+			out.write(predicates_xml);
+			out.close();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
-	public int process(Mapper mapper, PrologCode code, NodeConverterFactory converter_factory, IProgressMonitor monitor,
-			PrintWriter logger) {
+	public int process(Mapper mapper, PrologCode code, NodeConverterFactory converter_factory, IProgressMonitor monitor) {
 		this.bugs.clear();
 		try {
-			logger.println(LOG_HEADER);
-
-			logger.println(this.rule_set.toString());
-
 			Theory code_theory = new Theory(code.toString());
+
+			String rules_predicates = new String();
+
+			List<Rule> rules = new Vector<Rule>();
+			for (Rule rule : this.rule_set.getRules())
+				if (rule.isActive()) {
+					rules.add(rule);
+					rules_predicates += rule.getPredicates() + System.lineSeparator();
+				}
+
+			String auxiliary_predicates = new String();
+			for (Predicate predicate : this.predicate_set.getPredicates()) {
+				auxiliary_predicates += predicate.getPredicates() + System.lineSeparator();
+			}
+
+			Theory rule_theory = new Theory(rules_predicates);
+			Theory auxiliary_theory = new Theory(auxiliary_predicates);
 
 			int cores = Runtime.getRuntime().availableProcessors();
 			Vector<RuleRunnable> runnables = new Vector<RuleRunnable>();
-			List<Rule> rules = new Vector<Rule>(this.rule_set.getRules());
-
 			monitor.beginTask(MONITOR_TITLE_PRE, cores);
 
 			for (int i = 0; i < cores; i++) {
 				Prolog engine = new Prolog();
-				engine.addTheory(this.auxiliary_theory);
-				engine.addTheory(this.rules_theory);
+				engine.addTheory(rule_theory);
+				engine.addTheory(auxiliary_theory);
 				engine.addTheory(code_theory);
 				runnables.add(new RuleRunnable(monitor, engine, mapper, converter_factory, rules, bugs));
 				monitor.worked(1);
@@ -191,30 +213,57 @@ public class PrologAnalyzer {
 				} catch (InterruptedException e) {
 					thread_pool.shutdownNow();
 					monitor.done();
-					logger.println(LOG_ERROR);
-					logger.println(e.toString());
 					return -1;
 				}
 			}
-
-			logger.println(LOG_FOOTER);
-
-			logger.println(LOG_BUGS_HEADER);
-
-			for (Bug bug : this.bugs)
-				logger.println(bug.toString());
-
-			logger.println(LOG_BUGS_FOOTER);
 
 			return 0;
 
 		} catch (Exception e) {
 			monitor.done();
-			logger.println(LOG_ERROR);
-			logger.println(e.toString());
 			return -1;
 		}
 
+	}
+
+	public String validateProlog(String code) {
+		try {
+			Prolog engine = new Prolog();
+			engine.addTheory(new Theory(code));
+			return null;
+		} catch (InvalidTheoryException e) {
+			return e.getMessage();
+		}
+	}
+
+	public boolean setRules(String path) {
+		RuleSet aux = this.readRules(path);
+		if (aux != null) {
+			this.rule_set = aux;
+			this.saveRules();
+			return true;
+		}
+		return false;
+	}
+
+	public void setRules(RuleSet rules_set) {
+		this.rule_set = rules_set;
+		this.saveRules();
+	}
+	
+	public boolean setPredicates(String path) {
+		PredicateSet aux = this.readPredicates(path);
+		if (aux != null) {
+			this.predicate_set = aux;
+			this.savePredicates();
+			return true;
+		}
+		return false;
+	}
+
+	public void setPredicates(PredicateSet predicate_set) {
+		this.predicate_set = predicate_set;
+		this.savePredicates();
 	}
 
 }
