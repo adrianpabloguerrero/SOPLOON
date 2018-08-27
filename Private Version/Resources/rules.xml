@@ -1,31 +1,82 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <rules-set>
-  	<version>estandar-1.0</version>
-  	<rules>
+    <version>estandar-1.0</version>
+    <rules>
       <!-- Encapsulation -->
       <simple-rule>
-		  <type>Atributo publico.</type>
-          <description>Los atributos publicos pueden ser modificado desde el exterior, rompiendo encapsulamiento. Declara el atributo como private o protected</description>
-          <query>public_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20p%c3%bablico.htm</uri>
+        <type>Atributo publico.</type>
+        <description>Los atributos publicos pueden ser modificado desde el exterior, rompiendo encapsulamiento. Declara el atributo como private o protected</description>
+        <query>public_attribute</query>
+        <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Atributo%20p%c3%bablico.htm</uri>
+        <predicates>public_attribute(ID):-
+    field_declaration(ID, _, _, _, _, _, _, compilation_unit(UNIT)),
+    public_field(ID),
+  not(final_field(ID)),
+    not(static_field(ID)),
+  model_unit(UNIT).</predicates>
+        <active>true</active>
       </simple-rule>
       <simple-rule>
-          <type>Coleccion retornada</type>
-          <description>Retorna una coleccion sin clonarla, rompiendo encapsulamiento. Clonar/copiar la coleccion antes de retornarla es buena practica.</description>
-          <query>returned_collection</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Colecci%c3%b3n%20retornada.htm</uri>
+        <type>Coleccion retornada</type>
+        <description>Retorna una coleccion sin clonarla, rompiendo encapsulamiento. Clonar/copiar la coleccion antes de retornarla es buena practica.</description>
+        <query>returned_collection</query>
+        <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Colecci%c3%b3n%20retornada.htm</uri>
+        <predicates>returned_collection(ID):-
+    return_statement(ID, _, expression(EXP), body_declaration(METHOD), _, compilation_unit(UNIT)),
+    public_method(METHOD),
+    field_access(EXP,FIELD),
+    (
+        field_declaration(FIELD, _, _, type(TYPE), _, _, _, _);
+        not(returned_collection_checked(ID)),
+        method_declaration(METHOD, _, _, _, _, _, return_type(TYPE), _, _, _, _)
+    ),
+    collection_type(TYPE),
+    not(public_field(FIELD)),
+    not(final_field(FIELD)),
+    model_unit(UNIT),
+    assert(returned_collection_checked(ID)).</predicates>
+        <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Coleccion asignada</type>
           <description>Estan asignando una coleccion que reciben por parametro, rompiendo encapsulamiento. Clonar/copiar la coleccion antes de retornarla es buena practica.</description>
           <query>assigned_collection</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Colecci%c3%b3n%20retornada.htm</uri>
-	  </simple-rule>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Colecci%c3%b3n%20retornada.htm</uri>
+    <predicates>assigned_collection(ID):-
+    assignment(ID, _, operator('ASSIGN'), left_operand(LO), right_operand(RO), body_declaration(METHOD), _, compilation_unit(UNIT)),
+    method_declaration(METHOD, _, _, _, parameters(PARAMETERS), _, _, _, _, _, _),
+    public_method(METHOD),
+    field_access(LO,FIELD),
+    var_access(RO,VAR),
+    member(VAR,PARAMETERS),
+    not(public_field(FIELD)),
+    (
+        field_declaration(FIELD, _, _, type(TYPE), _, _, _, _);
+        not(assigned_collection_checked(ID)),
+        variable_declaration(VAR , _, _, type(TYPE), _, _, initializer(null), _, _, _)
+    ),
+    collection_type(TYPE),
+    model_unit(UNIT),
+    assert(assigned_collection_checked(ID)).</predicates>
+    <active>true</active>
+    </simple-rule>
       <simple-rule>
           <type>Acceso directo a atributo</type>
           <description>Se esta accediendo directamente al atributo de otro objeto, rompiendo encapsulamiento. Acceder siempre mediante los metodos getter/setter que ofrece el objeto.</description>
           <query>direct_access_to_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Acceso%20directo%20a%20atributo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Acceso%20directo%20a%20atributo.htm</uri>
+      <predicates>direct_access_to_attribute(ID):-
+    field_access(ID, _, expression(NOT_THIS), field(FIELD), _, _, compilation_unit(UNIT)),
+    not(this_expression(NOT_THIS, _, _, _, _, _)),
+    field_declaration(FIELD, _, _, _, _, _, _, _),
+    not(public_field(FIELD)),
+    model_unit(ID).
+
+direct_access_to_attribute(ID):-
+    qualified_name(ID, _, _, name(FIELD), _, _, compilation_unit(UNIT)),
+    field_declaration(FIELD, _, _, _, _, _, _, _),
+    not(public_field(FIELD)),
+    model_unit(ID).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Design --> 
@@ -33,94 +84,313 @@
           <type>Clase abstracta sin metodos abstractos</type>
           <description>Esta clase abstracta no tiene metodos abstractos. ¿Porque se declaro la clase como abstracta?</description>
           <query>abstract_class_without_abstract_method</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20sin%20m%c3%a9todos%20abstractos.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20sin%20m%c3%a9todos%20abstractos.htm</uri>
+      <predicates>abstract_class_without_abstract_method(ID):-
+    class_declaration(ID, _, _, _, _, super_type(ST), implements(IMPLEMENTS), _, methods(METHODS), _, compilation_unit(UNIT)),
+    abstract_class(ID),
+    not(length(METHODS,0)),
+    length(IMPLEMENTS,0),
+    not(
+        (
+            ST \= null,
+            (
+                abstract_class(ST);
+                not(class_declaration(ST, _, _, _, _, _, _, _, _, _, _))
+            )
+        )
+    ),
+    not(
+        (
+            method_declaration(METHOD, parent(ID), _, _, _, _, _, _, _, _, _),
+            abstract_method(METHOD)
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Clase o interfaz sin metodos</type>
           <description>Esta clase/interfaz no posee metodos. ¿Porque se declaro esta clase/interfaz?</description>
           <query>absence_of_methods</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Ausencia%20de%20m%c3%a9todos.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Ausencia%20de%20m%c3%a9todos.htm</uri>
+      <predicates>absence_of_methods(ID):-
+    ( 
+        class_declaration(ID, _, _, _, _, super_type(ST), implements(IMPLEMENTS), _, methods(METHODS), _, compilation_unit(UNIT));
+        interface_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT))
+    ),
+    (
+        length(METHODS,0);
+        (
+            not(length(METHODS,0)),
+            filter_methods(METHODS,AUX),
+            length(AUX,0),
+            not(
+                (
+                    abstract_class(ID),
+                    ST \= null
+                )
+            )
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Interfaz no implementada</type>
           <description>Esta interfaz no es implementada por ninguna otra clase. ¿Deberia eliminarse?</description>
           <query>unimplemented_interface</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Interfaz%20innecesaria.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Interfaz%20innecesaria.htm</uri>
+      <predicates>unimplemented_interface(ID):-
+    interface_declaration(ID, _, _, _, _, _, _, _, _, _, _),
+    not(
+        (
+            (
+                interface_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _);
+                class_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _)
+            ),
+            member(ID,IMPLEMENTS)
+        )
+    ).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Clase abstracta no extendida</type>
           <description>Esta clase abstracta no es extendida por nadie. ¿Deberia eliminarse?</description>
           <query>non_extended_abstract_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20innecesaria.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20innecesaria.htm</uri>
+      <predicates>non_extended_abstract_class(ID):-
+    abstract_class(ID),
+    not(class_declaration(C1, _, _, _, _, super_type(ID), _, _, _, _, _)).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Interfaz innecesaria</type>
           <description>Esta interfaz es implementada por una unica clase/interfaz. Tal vez sea innecesaria ¿Deberia eliminarse?</description>
           <query>unnecessary_interface</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Interfaz%20innecesaria.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Interfaz%20innecesaria.htm</uri>
+      <predicates>unnecessary_interface(ID):-
+    interface_declaration(ID, _, _, _, _, _, _, _, _, _, _),
+    (
+        interface_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _);
+        class_declaration(C1, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, _)
+    ),
+    member(ID,IMPLEMENTS),
+    not(
+        (
+            (
+                interface_declaration(C2, _, _, _, _, _, implements(IMPLEMENTS_2), _, _, _, _);
+                class_declaration(C2, _, _, _, _, _, implements(IMPLEMENTS_2), _, _, _, _)
+            ),
+            C2 \= C1,
+            member(ID,IMPLEMENTS_2)
+        )
+    ).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Clase abstracta innecesaria</type>
           <description>Esta clase abstracta es extendida por una unica clase. Tal vez sea innecesaria ¿Deberia eliminarse?</description>
           <query>unnecessary_abstract_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20innecesaria.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20innecesaria.htm</uri>
+      <predicates>unnecessary_abstract_class(ID):-
+    abstract_class(ID),
+    class_declaration(C1, _, _, _, _, super_type(ID), _, _, _, _, _),
+    not(
+        (
+            class_declaration(C2, _, _, _, _, super_type(ID), _, _, _, _, _),
+            C1 \= C2
+        )
+    ).
+</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Atributo no abstraido</type>
           <description>Algunas clases hermanas definen el mismo atributo. ¿Deberia abstraerse el atributo?</description>
           <query>non_abstracted_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20no%20abstra%c3%addo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Atributo%20no%20abstra%c3%addo.htm</uri>
+      <predicates>non_abstracted_attribute(ID):-
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), _, _, _, _, compilation_unit(UNIT)),
+    SUPER_CLASS \= null,
+    model_unit(UNIT),
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),
+    not(non_abstracted_attribute_checked(FIELD)),
+    assert(non_abstracted_attribute_checked(FIELD)),
+    not(redefined_attribute(FIELD)),
+    findall(SIMILAR,non_abstracted_attribute_aux(FIELD,SIMILAR),LIST),
+    not(length(LIST,0)),
+    append([FIELD],LIST,ID).
+
+non_abstracted_attribute_aux(FIELD,SIMILAR):-
+    field_declaration(FIELD, parent(CLASS), NAME, type(TYPE), _, extra_dimensions(D), _, _),
+    field_declaration(SIMILAR, parent(CLASS_2), NAME, type(TYPE), _, extra_dimensions(D), _, _),
+    not(non_abstracted_attribute_checked(SIMILAR)),
+    common_super(CLASS,CLASS_2,CLASS_3),
+    CLASS_3 \= CLASS,
+    CLASS_3 \= CLASS_2,
+    CLASS \= CLASS_2,
+    (
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)
+    ),
+    assert(non_abstracted_attribute_checked(SIMILAR)).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Metodo no abstraido</type>
           <description>Algunas clases hermanas definen el mismo metodo. ¿Deberia abstraerse el atributo?</description>
           <query>non_abstracted_method</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20no%20abstra%c3%addo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20no%20abstra%c3%addo.htm</uri>
+      <predicates>non_abstracted_method(ID):-
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), implements(IMPLEMENTS), _, _, _, compilation_unit(UNIT)),
+    (
+        SUPER_CLASS \= null;
+        not(length(IMPLEMENTS,0))
+    ),
+    model_unit(UNIT),
+    method_declaration(METHOD, parent(CLASS), _, _, _, _, _, _, _, _, _),
+    not(object_method(METHOD)),
+    not(non_abstracted_method_checked(METHOD)),
+    assert(non_abstracted_method_checked(METHOD)),
+    not(redefine_method(METHOD,_)),
+    findall(SIMILAR,non_abstracted_method_aux(METHOD,SIMILAR),LIST),
+    not(length(LIST,0)),
+    append([METHOD],LIST,ID).
+
+no_abstracted_method_aux(METHOD,SIMILAR):-
+    method_declaration(METHOD, parent(CLASS), NAME, _, _, parameters_types(TYPES), return_type(RETURN_TYPE), dimensions(D), _, _, _),
+    method_declaration(SIMILAR, parent(CLASS_2), NAME, _, _, parameters_types(TYPES), return_type(RETURN_TYPE), dimensions(D), _, _, _),
+    METHOD \= SIMILAR,
+    not(non_abstracted_method_checked(SIMILAR)),
+    public_method(SIMILAR),
+    common_super(CLASS,CLASS_2,CLASS_3),
+    CLASS_3 \= CLASS,
+    CLASS_3 \= CLASS_2,
+    CLASS \= CLASS_2,
+    (
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)
+    ),
+    assert(non_abstracted_method_checked(SIMILAR)).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Clase vaga (o lazy class)</type>
           <description>Esta clase no define comportamiento (solo getters y setters). Quizas deba asignarsele alguna responsabilidad</description>
           <query>lazy_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20diccionario.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clase%20diccionario.htm</uri>
+      <predicates>lazy_class(ID):-
+    class_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT)),
+    not (abstract_class(ID)),
+    filter_methods(METHODS,JUST_METHODS),
+    filter_public_methods(JUST_METHODS,PUBLIC_METHODS),
+    not(length(PUBLIC_METHODS,0)),
+    filter_behaviours(PUBLIC_METHODS,BEHAVIOURS),
+    length(BEHAVIOURS,0),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
- 	  <simple-rule>
+    <!-- TODO PAGINAS --> 
+    <simple-rule>
           <type>Clase abstracta que podria ser interfaz</type>
           <description>Esta clase no define atributos ¿Quizas podria ser una interfaz? </description>
           <query>abstract_class_may_be_interface</query>
+      <predicates>abstract_class_may_be_interface(ID):-
+    class_declaration(ID, _, _, _, _, super_type(null), _, _, _, _, compilation_unit(UNIT)),
+    abstract_class(ID),
+    not(
+        (
+            field_declaration(FIELD, parent(ID), _, _, _, _, _, _),
+            not(static_field(FIELD))
+        )
+    ),
+    not(
+        (
+            method_declaration(METHOD, parent(ID), _, _, _, _, _, _, _, _, _),
+            not(abstract_method(METHOD))
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Inheritance --> 
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Atributo redefinido</type>
           <description>Esta clase define un atributo igual al de una clase ancestro, en lugar de simplemente heredar el atributo del ancestro.</description>
           <query>redefined_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Redefinici%c3%b3n%20de%20atributo%20heredado.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Redefinici%c3%b3n%20de%20atributo%20heredado.htm</uri>
+      <predicates>redefined_attribute(ID):-
+    field_declaration(ID, parent(CLASS), NAME, type(TYPE), _, _, _, compilation_unit(UNIT)),
+    field_declaration(ID_2, parent(SUPER_CLASS), NAME, type(TYPE), _, _, _, _),
+    ID \= ID_2,
+    is_super(SUPER_CLASS,CLASS),
+    not(redefined_attribute(ID_2)),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Uso de super para invocar metodo</type>
           <description>No es necesario utilizar super para invocar un metodo ya heredado (a no ser que se lo este redefiniendo).</description>
           <query>super_in_method_invocation</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20del%20super%20para%20acceder%20a%20un%20m%c3%a9todo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Uso%20del%20super%20para%20acceder%20a%20un%20m%c3%a9todo.htm</uri>
+      <predicates>super_in_method_invocation(ID):-
+    super_method_invocation(ID, _, method(SUPER), arguments(ARGUMENTS), body_declaration(METHOD), _, compilation_unit(UNIT)),
+    (
+        method_declaration(SUPER, _, NAME, _, _, _, _, _, _, _, _);
+        method(SUPER, name(NAME), _, _)
+    ),
+    not(method_declaration(METHOD, _, NAME, _, parameters(ARGUMENTS), _, _, _, _, _, _)),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Uso de super para acceder a un atributo</type>
           <description>No es necesario utilizar super para acceder a un atributo ya heredado.</description>
           <query>super_in_field_access</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20del%20super%20para%20acceder%20a%20un%20atributo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Uso%20del%20super%20para%20acceder%20a%20un%20atributo.htm</uri>
+      <predicates>super_in_field_access(ID):-
+    super_field_access(ID, _, _, _, _, compilation_unit(UNIT)),
+    model_unit(UNIT).
+</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Metodo redefenido solo con super</type>
           <description>Redefinir un metodo ya heredado, simplemente invocando al super, es redundante.</description>
           <query>redefine_with_super</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20redefinido%20simplemente%20invocando%20el%20super.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20redefinido%20simplemente%20invocando%20el%20super.htm</uri>
+      <predicates>redefine_with_super(ID):-
+    super_method_invocation(INVOCATION, parent(PARENT), method(SUPER_METHOD), _, body_declaration(ID), _, compilation_unit(UNIT)),
+    method_declaration(ID, _, _, _, _, _, _, _, body(BODY), _, _),
+    (
+        block(BODY, _, statements([INVOCATION]), _, _, _);
+        (
+            block(BODY, _, statements([RETURN]), _, _, _),
+            return_statement(RETURN, _, expression(INVOCATION), _, _, _)
+        )
+    ),
+    redefine_method(ID,SUPER_METHOD),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
-	  <simple-rule>
+    <!-- TODO PAGINAS --> 
+    <simple-rule>
           <type>Metodo redefinido como abstracto</type>
           <description>Redefinir un metodo como abstracto es innecesario.</description>
           <query>method_redefined_as_abstract</query>
+      <predicates>method_redefined_as_abstract(ID):-
+    method_declaration(ID, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),
+    abstract_method(ID),
+    (
+        object_method(ID);
+        redefine_method(ID,_)
+    ),
+    model_unit(UNIT),
+    not(method_redefined_as_abstract_checked(ID)),
+    assert(method_redefined_as_abstract_checked(ID)).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Composite -->
@@ -128,13 +398,46 @@
           <type>Referencia a clase hermana</type>
           <description>La clase tiene una referencia a una clase hermana. Quizas deberia referenciar al padre que tienen en comun, para lograr mayor flexibilidad.</description>
           <query>reference_to_sister_class_instead_of_father</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Composite%20limitado.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Composite%20limitado.htm</uri>
+      <predicates>reference_to_sister_class_instead_of_father(ID):-
+    field_declaration(ID, parent(CLASS), NAME, type(TYPE), _, _, _, compilation_unit(UNIT)),
+    plain_types(TYPE,LIST),
+    member(CLASS_2,LIST),
+    class_declaration(CLASS_2, _, _, _, _, _, _, _, _, _, _),  
+    CLASS \= CLASS_2,
+    common_super(CLASS,CLASS_2,SUPER),
+    SUPER \= CLASS_2,
+    SUPER \= CLASS,
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Falta de delegacion</type>
           <description>Es posible que este elemento compuesto no este delegando funcionalidad a sus objetos hijos en este metodo.</description>
           <query>lack_of_delegation</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Falta%20de%20delegaci%c3%b3n.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Falta%20de%20delegaci%c3%b3n.htm</uri>
+      <predicates>lack_of_delegation(ID):-
+    field_declaration(FIELD, parent(CLASS), _, type(TYPE), _, _, _, compilation_unit(UNIT)),
+    plain_types(TYPE,LIST),
+    member(CLASS_2,LIST),
+    common_super(CLASS,CLASS_2,SUPER),
+    method_declaration(ID, parent(CLASS), NAME, _, _, parameters_types(PARAMETER_TYPES), return_type(RETURN), dimensions(D), _, _, _),
+    define_behaviour(ID),
+    (
+        (
+            method_declaration(METHOD_2, _, NAME, _, _, parameters_types(PARAMETER_TYPES), return_type(RETURN), dimensions(D), _, _, _),
+            has_method(CLASS_2,METHOD_2),
+            not(delegation(ID,METHOD_2))
+        );
+        (
+            object_method(ID),
+            not(delegation(ID,FIELD,CLASS_2))
+        )
+    ),
+    not(delegation_checked(ID)),
+    model_unit(UNIT),
+    assert(delegation_checked(ID)).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Cohesion --> 
@@ -142,19 +445,47 @@
           <type>Muchas interfaces implementadas</type>
           <description>Esta clase implementa muchas interfaces. Es posible que se le hayan asignado muchas responsabilidades.</description>
           <query>many_implements</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Muchas%20interfaces%20implementadas.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Muchas%20interfaces%20implementadas.htm</uri>
+      <predicates>many_implements(ID):-
+    class_declaration(ID, _, _, _, _, _, implements(IMPLEMENTS), _, _, _, compilation_unit(UNIT)),
+    length(IMPLEMENTS,LENGTH),
+    LENGTH > 2,
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Baja cohesion</type>
           <description>Esta clase implementa muchos comportamientos. Es posible que se le hayan asignado muchas responsabilidades.</description>
           <query>low_cohesion</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Baja%20cohesi%c3%b3n.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Baja%20cohesi%c3%b3n.htm</uri>
+      <predicates>low_cohesion(ID):-
+    ( 
+        class_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT));
+        interface_declaration(ID, _, _, _, _, _, _, _, methods(METHODS), _, compilation_unit(UNIT))
+    ),
+    filter_methods(METHODS,JUST_METHODS),
+    filter_public_methods(JUST_METHODS,PUBLIC_METHODS),
+    filter_behaviours(PUBLIC_METHODS,BEHAVIOURS),
+    length(BEHAVIOURS,LENGTH),
+    LENGTH > 9, /* Maximum number of public behaviours */
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Clase dios (o clase sistema)</type>
           <description>Esta clase es muy larga, mientras que el resto de las clases son muy cortas. Es posible que esta clase este acaparando todas las responsabilidades.</description>
           <query>god_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20Dios.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clase%20Dios.htm</uri>
+      <predicates>god_class(ID):-
+    findall(CID,class_declaration(CID, _, _, _, _, _, _, _, _, _, _),LIST),
+    findall(SHORT,short_class(SORT),LIST_OF_SHORTS),
+    length(LIST,T),
+    length(LIST_OF_SHORTS,N),
+    N is T - 1,
+    long_class(ID),
+    class_declaration(ID, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Polymorphism --> 
@@ -162,37 +493,110 @@
           <type>Uso del instanceOf</type>
           <description>Usar instanceOf fuera del metodo equals generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>use_of_instanceof</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20de%20instanceof.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Uso%20de%20instanceof.htm</uri>
+      <predicates>use_of_instanceof(ID):-
+    (
+        instanceof_expression(ID, _, _, _, body_declaration(METHOD), _, compilation_unit(UNIT));
+        (
+            method(IS_INSTANCE, name('isInstance'), _, _),
+            method_invocation(ID, _, _, method(IS_INSTANCE), arguments([]), body_declaration(METHOD), _, compilation_unit(UNIT))
+        )
+    ),
+    not(is_equals(METHOD)),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Boolean como tipo</type>
-		  <description>Usar un atributo boolean para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
+      <description>Usar un atributo boolean para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>boolean_as_type</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Boolean%20como%20tipo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Boolean%20como%20tipo.htm</uri>
+      <predicates>boolean_as_type(ID):-
+    field_declaration(FIELD, parent(CLASS), _, type(BOOLEAN), _, _, _, compilation_unit(UNIT)),
+    (
+        primitive_type(BOOLEAN, code('boolean'));
+        type(BOOLEAN , name('Boolean'))
+    ),
+    model_unit(UNIT),
+    findall(IF,boolean_as_type_aux(FIELD,IF),ID),
+    not(length(ID,0)).
+
+boolean_as_type_aux(FIELD,IF):-
+    field_declaration(FIELD, parent(CLASS), _, type(BOOLEAN), _, _, _, _),
+    if_statement(IF, _, condition(CONDITION), then(THEN), else(ELSE), _, type_declaration(CLASS), _),
+    THEN \= null,
+    ELSE \= null,
+    (
+        field_access(CONDITION,FIELD);
+        (
+            prefix_expression(CONDITION, _, _, operand(OPERAND), _, _, _),
+            field_access(OPERAND,FIELD)
+        );
+        (
+            (
+                infix_expression(CONDITION, _, _, left_operand(OPERAND), right_operand(LITERAL), extended_operands([]), _, _, _);
+                infix_expression(CONDITION, _, _, left_operand(LITERAL), right_operand(OPERAND), extended_operands([]), _, _, _)
+            ),
+            field_access(OPERAND,FIELD),
+            boolean_literal(LITERAL, _, _, _, _, _)
+        )
+    ).
+</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Atributo en switch</type>
-		  <description>Usar un atributo en un switch para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
+      <description>Usar un atributo en un switch para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>switch_of_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Uso%20de%20Switch%20en%20lugar%20de%20polimorfismo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Uso%20de%20Switch%20en%20lugar%20de%20polimorfismo.htm</uri>
+      <predicates>switch_of_attribute(ID):-
+    field_declaration(FIELD, _, _, _, _, _, _, compilation_unit(UNIT)),
+    model_unit(UNIT),
+    findall(SWITCH,switch_of_attribute_aux(FIELD,SWITCH),ID),
+    not(length(ID,0)).
+
+switch_of_attribute_aux(FIELD,SWITCH):-
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),
+    switch_statement(SWITCH, _, switch(EXP), _, _, type_declaration(CLASS), _),
+    field_access(EXP,FIELD).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Parametro en un switch</type>
-		  <description>Usar un parametro en un switch para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
+      <description>Usar un parametro en un switch para decidir el comportamiento que debe tener el objeto generalmente es un indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>switch_of_param</query>
+      <predicates>switch_of_param(ID):-
+    switch_statement(ID, _, switch(SWITCH), _, body_declaration(METHOD), type_declaration(CLASS), compilation_unit(UNIT)),
+    method_declaration(METHOD, _, _, _, parameters(PARAMS), _, _, _, _, _, _),
+    variable_declaration(SWITCH, _, _, type(TYPE), _, _, _, _, _, _),
+    member(SWITCH,PARAMS),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Atributo 'tipo'</type>
-		  <description>Un atributo llamado 'tipo' o 'type' suele ser indicador de que no se esta tomando ventaja del polimorfismo.</description>
+      <description>Un atributo llamado 'tipo' o 'type' suele ser indicador de que no se esta tomando ventaja del polimorfismo.</description>
           <query>type_attribute</query>
+      <predicates>type_attribute(ID):-
+    field_declaration(ID, _, FIELD_NAME, _, _, _, _, compilation_unit(UNIT)),
+    atom_codes(FIELD_NAME,FIELD_NAME_CODES),
+    contains_word_type(FIELD_NAME_CODES),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Nombre de clase con numeros</type>
-		  <description>Los numeros en el nombre de clase suelen ser indicadores de que no se esta tomando ventaja del polimorfismo.</description>
+      <description>Los numeros en el nombre de clase suelen ser indicadores de que no se esta tomando ventaja del polimorfismo.</description>
           <query>class_name_contains_number</query>
+      <predicates>class_name_contains_number(ID):-
+    class_declaration(ID, _, CLASS_NAME, _, _, _, _, _, _, _, compilation_unit(UNIT)),
+    atom_codes(CLASS_NAME,CLASS_NAME_CODES),
+    contains_number(CLASS_NAME_CODES),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
 
 
@@ -201,13 +605,31 @@
           <type>System out print</type>
           <description>El metodo esta imprimiendo por consola. ¿Imprimir por consola es responsabilidad de esta clase?</description>
           <query>system_out_print</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Impresi%c3%b3n%20por%20Pantalla.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Impresi%c3%b3n%20por%20Pantalla.htm</uri>
+      <predicates>system_out_print(ID):-
+    is_print(PRINT),
+    method_invocation(PRINT, _, _, _, _, body_declaration(ID), _, compilation_unit(UNIT)),
+    not(system_out_print_checked(ID)),
+    assert(system_out_print_checked(ID)),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Main como parte del modelo</type>
           <description>La clase Main no deberia ser parte del modelo del a solucion (no deberia heredar ni ser heredada por nadie).</description>
           <query>main_class_as_model_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Main%20como%20parte%20del%20modelo.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Main%20como%20parte%20del%20modelo.htm</uri>
+      <predicates>main_class_as_model_class(ID):-
+    main_class(ID),
+    (
+        class_declaration(ID_2, _, _, _, _, _, _, _, _, _, _);
+        interface_declaration(ID_2, _, _, _, _, _, _, _, _, _, _)
+    ),
+    ID \= ID_2,
+    common_super(ID,ID_2,_),
+    not(main_class_as_model_class_checked(ID)),
+    assert(main_class_as_model_class_checked(ID)).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Others --> 
@@ -215,31 +637,77 @@
           <type>Uso de == en lugar de equals</type>
           <description>Utilizar "==" solo sirve para comparar datos primitivos. Para comparar objetos debe utilizarse el metodo equals.</description>
           <query>not_use_of_equals</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20equals%20vs.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20equals%20vs.htm</uri>
+      <predicates>not_use_of_equals(ID):-
+    infix_expression(ID, _, operator('EQUALS'), left_operand(LO), right_operand(RO), _, _, _, compilation_unit(UNIT)),
+    resolve_expression(LO,LO_RESOLVED),
+    resolve_expression(RO,RO_RESOLVED),
+    not(null_literal(LO_RESOLVED,_,_,_,_)),
+    not(null_literal(RO_RESOLVED,_,_,_,_)),
+    (
+        need_equals(LO_RESOLVED);
+        (
+            not(need_equals(LO_RESOLVED)),
+            need_equals(RO_RESOLVED)
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Metodo abstracto en interfaz</type>
           <description>Por defecto todos los metodos de la interfaz son abstractos, por lo que declarar explicitamente un metodo como abstracto es redundante.</description>
           <query>abstract_method_in_interface</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Interfaz%20con%20m%c3%a9todo%20abstracto.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Interfaz%20con%20m%c3%a9todo%20abstracto.htm</uri>
+      <predicates>abstract_method_in_interface(ID):-
+    interface_declaration(INTERFACE, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),
+    method_declaration(ID, parent(INTERFACE), _, _, _, _, _, _, _, _, _),
+    abstract_method(ID),
+    model_unit(UNIT).
+</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Constructor publico en clase abstracta</type>
           <description>El constructor de una clase abstracta solo puede ser invocado por las clases hijas, por lo que podria declararse como protected.</description>
           <query>public_constructor_in_abstract_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20con%20constructor%20p%c3%bablico.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clase%20abstracta%20con%20constructor%20p%c3%bablico.htm</uri>
+      <predicates>public_constructor_in_abstract_class(ID):-
+    abstract_class(CLASS),
+    constructor_declaration(ID, parent(CLASS), _, _, _, _, _, _, _, _, compilation_unit(UNIT)),
+    public_method(ID),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Metodo que siempre retorna null</type>
           <description>Este metodo siempre retorna null ¿Es correcto?</description>
           <query>method_always_returns_null</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20que%20siempre%20retorna%20null.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todo%20que%20siempre%20retorna%20null.htm</uri>
+      <predicates>method_always_returns_null(ID):-
+    method_declaration(ID, _, _, _, _, _, return_type(TYPE), _, body(B), _, compilation_unit(UNIT)),
+    B \= null,
+    not(primitive_type(TYPE, code('void'))),
+    not(
+        (
+            return_statement(_, _, expression(LITERAL), body_declaration(ID), _, _),
+            not(null_literal(LITERAL, _, _, _, _))
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Metodo vacio </type>
           <description>Este metodo esta vacio.</description>
           <query>empty_method</query>
+      <predicates>empty_method(ID):-
+    method_declaration(ID, _, _, _, _, _, _, _, body(B), _, compilation_unit(UNIT)),
+    B \= null,
+    block(B, _, statements([]), _, _, _),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Constants --> 
@@ -247,37 +715,119 @@
           <type>Constante en invocacion a metodo</type>
           <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_invocation</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20como%20par%c3%a1metro.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Constante%20como%20par%c3%a1metro.htm</uri>
+      <predicates>constant_in_invocation(LITERAL):-
+    (
+        boolean_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT));
+        character_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT));
+        number_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT));
+        string_literal(LITERAL,parent(INVOCATION),value(VAL),_,_,compilation_unit(UNIT))
+    ),
+    not(valid_literal(VAL)),
+    (
+        (
+            method_invocation(INVOCATION, _, _, _, _, _, _, _),
+            not(is_print(INVOCATION))
+        );
+        constructor_invocation(INVOCATION, _, _, _, _, _, _);
+        class_instance_creation(INVOCATION, _, _, _, _, _, _, _);
+        super_method_invocation(INVOCATION, _, _, _, _, _, _);
+        super_constructor_invocation(INVOCATION, _, _, _, _, _, _, _)
+    ),
+    not(dinamic_attribute(LITERAL)),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Constante en asignacion</type>
           <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_assignment</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20asignaci%c3%b3n.htm</uri>
-	</simple-rule>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20asignaci%c3%b3n.htm</uri>
+  <predicates>constant_in_assignment(LITERAL):-
+    (
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        string_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))
+    ),
+    not(valid_literal(VAL)),
+    (
+        variable_declaration(PARENT, _, _, _, _, _, initializer(LITERAL), _, _, _);
+        assignment(PARENT, _, _, _, right_operand(LITERAL), _, _, _)
+    ),
+    model_unit(UNIT).</predicates>
+  <active>true</active>
+  </simple-rule>
       <simple-rule>
           <type>Constante en comparacion</type>
           <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_comparision</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20comparaci%c3%b3n.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20comparaci%c3%b3n.htm</uri>
+      <predicates>constant_in_comparision(LITERAL):-
+    (
+        boolean_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        string_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))
+    ),
+    not(valid_literal(VAL)),
+    infix_expression(PARENT, _, operator(O), _, _, _, _, _, _),
+    comparision_operator(O),
+    model_unit(UNIT).
+</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Constante en operacion aritmetica</type>
           <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_operation</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20operaci%c3%b3n.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20operaci%c3%b3n.htm</uri>
+      <predicates>constant_in_operation(LITERAL):-
+    (
+        boolean_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))
+     ),
+    not(valid_literal(VAL)),
+    infix_expression(PARENT, _, operator(O), _, _, _, _, _, _),
+    (
+        arithmetic_operator(O);
+        bit_operator(O)
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Constante en return</type>
           <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_in_return</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20retorno.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Constante%20en%20retorno.htm</uri>
+      <predicates>constant_in_return(LITERAL):-
+    return_statement(RETURN, _, expression(LITERAL), _, _, compilation_unit(UNIT)),
+    (
+        character_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        number_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT));
+        string_literal(LITERAL,parent(PARENT),value(VAL),_,_,compilation_unit(UNIT))
+    ),
+    not(valid_literal(VAL)),
+    model_unit(UNIT).
+</predicates>
+      <active>true</active>
       </simple-rule>   
       <simple-rule>
           <type>Constante String</type>
           <description>¿Deberia reemplazarse la constante por una variable para que el codigo sea mas flexible?</description>
           <query>constant_string_in_operation</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/String%20Constante.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/String%20Constante.htm</uri>
+      <predicates>constant_string_in_operation(METHOD):-
+    string_literal(LITERAL,parent(PARENT),value(VAL),body_declaration(METHOD),_,_),
+    not(valid_literal(VAL)),
+    infix_expression(PARENT, _, operator(O), _, _, _, _, _, compilation_unit(UNIT)),
+    not(is_tostring(METHOD)),
+    arithmetic_operator(O),
+    model_unit(UNIT),
+    not(constant_string_in_operation_checked(METHOD)),
+    assert(constant_string_in_operation_checked(METHOD)).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Dynamic attributes -->
@@ -285,13 +835,56 @@
           <type>Atributo no dinamico</type>
           <description>El atributo no parece tener un significado especial ¿Deberia ser un atributo dinamico?</description>
           <query>not_dinamic_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20no%20din%c3%a1mico%20y%20sin%20comportamiento%20especial.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Atributo%20no%20din%c3%a1mico%20y%20sin%20comportamiento%20especial.htm</uri>
+      <predicates>not_dinamic_attribute(ID):-
+    field_declaration(FIELD, parent(CLASS), _, type(HASHMAP), _, extra_dimensions(D), _, compilation_unit(UNIT)),
+    map_type(HASHMAP),
+    parameterized_type(HASHMAP, _, parameters([STRING,OTHER])),
+    type(STRING, name('String')),
+    field_declaration(ID, parent(CLASS), _, type(TYPE), _, _, _, _),
+    ID \= FIELD,
+    (
+        (
+            OTHER = STRING,
+            TYPE = STRING
+        );
+        type(OTHER, name('Object'))
+    ),
+    not(
+        (
+            var_reference(ID,METHOD,CLASS,_),
+            method_declaration(METHOD, _, _, _, _, _, _, _, _, _, _),
+            define_behaviour(METHOD)
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Atributo dinamico</type>
           <description>El atributo dinamico parece tener un significado especial ¿Deberia ser declarado como un atributo normal?</description>
           <query>dinamic_attribute</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Atributo%20din%c3%a1mico%20y%20con%20comportamiento%20especial.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Atributo%20din%c3%a1mico%20y%20con%20comportamiento%20especial.htm</uri>
+      <predicates>dinamic_attribute(ID):-
+    method_invocation(INVOCATION, _, expression(EXP), method(METHOD), arguments([ID]), _, type_declaration(CLASS), _),
+    string_literal(ID, _, _, _, _, _),
+    (
+        (
+            field_access(EXP,FIELD),
+            method(METHOD, name('get'), _, _),
+            field_declaration(FIELD, parent(CLASS), _, type(HASHMAP), _, _, _, compilation_unit(UNIT)),
+            map_type(HASHMAP),
+            parameterized_type(HASHMAP, _, parameters([STRING,OTHER])),
+            type(STRING, name('String')),
+            (
+                OTHER = STRING;
+                type(OTHER, name('Object'))
+            )
+        );
+        is_hm_item_getter(METHOD)
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Duplicated code --> 
@@ -299,33 +892,213 @@
           <type>Codigo similar entre clases de la misma jerarquia</type>
           <description>¿Se esta duplicando codigo?</description>
           <query>similar_behaviour_in_classes_of_the_same_hierarchy</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/Clases%20hermanas%20con%20c%c3%b3digo%20similar.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/Clases%20hermanas%20con%20c%c3%b3digo%20similar.htm</uri>
+      <predicates>similar_behaviour_in_classes_of_the_same_hierarchy(ID):-
+    method_declaration(METHOD, parent(CLASS), _, _, _, _, _, _, body(BODY), _, _),
+    BODY \= null,
+    not(block(BODY, _, statements([]), _, _, _)),
+    not(similar_behaviour_in_sister_classes_checked(METHOD)),
+    assert(similar_behaviour_in_sister_classes_checked(METHOD)),
+    /*define_behaviour(METHOD),*/
+    hierarchy(CLASS,HIERARCHY),
+    findall(DUPLICATED,similar_behaviour_in_classes_of_the_same_hierarchy_aux(METHOD,DUPLICATED,HIERARCHY),LIST),
+    not(length(LIST,0)),
+    append([METHOD],LIST,ID).
+
+similar_behaviour_in_classes_of_the_same_hierarchy_aux(METHOD,DUPLICATED,HIERARCHY):-
+    method_declaration(METHOD, parent(TYPE1), NAME, _, _, parameters_types(PARAMETERS_1), return_type(RETURN_1), dimensions(D), body(B1), _, _),
+    member(TYPE2,HIERARCHY),
+    TYPE1 \= TYPE2,
+    method_declaration(DUPLICATED, parent(TYPE2), NAME, _, _, parameters_types(PARAMETERS_2), return_type(RETURN_2), dimensions(D), body(B2), _, _),
+    B2 \= null,
+    not(block(B2, _, statements([]), _, _, _)),
+    not(similar_behaviour_in_sister_classes_checked(DUPLICATED)),
+    similar_type(RETURN_1,RETURN_2),
+    similar_type(PARAMETERS_1,PARAMETERS_2),
+    similar_code([B1],[B2]),
+    assert(similar_behaviour_in_sister_classes_checked(DUPLICATED)).</predicates>
+      <active>true</active>
       </simple-rule>
       <simple-rule>
           <type>Codigo similar entre metodos de una misma clase</type>
           <description>¿Se esta duplicando codigo?</description>
           <query>similar_behaviour_in_methods_of_the_same_class</query>
-		  <uri>http://intranet.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todos%20de%20una%20clase%20con%20c%c3%b3digo%20similar.htm</uri>
+      <uri>http://si.isistan.unicen.edu.ar/plugin/errores/M%c3%a9todos%20de%20una%20clase%20con%20c%c3%b3digo%20similar.htm</uri>
+      <predicates>similar_behaviour_in_methods_of_the_same_class(ID):-
+    class_declaration(CLASS, _, _, _, _, _, _, _, _, _, compilation_unit(UNIT)),
+    model_unit(UNIT),
+    method_declaration(METHOD, parent(CLASS), _, _, _, _, _, _, body(BODY), _, _),
+    BODY \= null,
+    not(block(BODY, _, statements([]), _, _, _)),
+    not(similar_behaviour_in_same_class_checked(METHOD)),
+    assert(similar_behaviour_in_same_class_checked(METHOD)),
+    define_behaviour(METHOD),
+    findall(SIMILAR,similar_behaviour_in_methods_of_the_same_class_aux(METHOD,SIMILAR),LIST),
+    not(length(LIST,0)),
+    append([METHOD],LIST,ID).
+
+similar_behaviour_in_methods_of_the_same_class_aux(METHOD,SIMILAR):-
+    method_declaration(METHOD, parent(CLASS), _, _, _, parameters_types(PARAMETERS_1), return_type(RETURN_1), dimensions(D), body(B1), _, _),
+    method_declaration(SIMILAR, parent(CLASS), _, _, _, parameters_types(PARAMETERS_2), return_type(RETURN_2), dimensions(D), body(B2), _, _),
+    B2 \= null,
+    not(block(B2, _, statements([]), _, _, _)),
+    METHOD \= SIMILAR,
+    not(similar_behaviour_in_same_class_checked(SIMILAR)),
+    similar_type(PARAMETERS_1,PARAMETERS_2),
+    similar_type(RETURN_1,RETURN_2),
+    similar_code([B1],[B2]),
+    assert(similar_behaviour_in_same_class_checked(SIMILAR)).</predicates>
+      <active>true</active>
       </simple-rule>
 
       <!-- Nuevos -->
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
        <simple-rule>
           <type>Atributo similar</type>
           <description>Estas clases hermanas tienen atributos simlares (del mismo tipo). ¿Podrian abstraerse o son cosas distintas?</description>
           <query>similar_attribute</query>
+      <predicates>similar_attribute(ID):-
+    class_declaration(CLASS, _, _, _, _, super_type(SUPER_CLASS), _, _, _, _, compilation_unit(UNIT)),
+    SUPER_CLASS \= null,
+    model_unit(UNIT),
+    field_declaration(FIELD, parent(CLASS), _, _, _, _, _, _),
+    not(similar_attribute_checked(FIELD)),
+    assert(similar_attribute_checked(FIELD)),
+    not(redefined_attribute(FIELD)),
+    findall(SIMILAR,similar_attribute_aux(FIELD,SIMILAR),LIST),
+    not(length(LIST,0)),
+    append([FIELD],LIST,ID).
+
+similar_attribute_aux(FIELD,SIMILAR):-
+    field_declaration(FIELD, parent(CLASS), NAME, type(TYPE), _, extra_dimensions(D), _, _),
+    field_declaration(SIMILAR, parent(CLASS_2), NAME_2, type(TYPE), _, extra_dimensions(D), _, _),
+    not(similar_attribute_checked(SIMILAR)),
+    not(similar_attribute_checked(FIELD,CLASS_2)),
+    NAME_2 \= NAME,
+    common_super(CLASS,CLASS_2,CLASS_3),
+    CLASS_3 \= CLASS,
+    CLASS_3 \= CLASS_2,
+    CLASS \= CLASS_2,
+    not(field_declaration(_, parent(CLASS), NAME_2, type(TYPE), _, extra_dimensions(D), _, _)),
+    not(field_declaration(_, parent(CLASS_2), NAME, type(TYPE), _, extra_dimensions(D), _, _)),
+    (
+        class_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _);
+        interface_declaration(CLASS_3, _, _, _, _, _, _, _, _, _, _)
+    ),
+    assert(similar_attribute_checked(SIMILAR)),
+    assert(similar_attribute_checked(FIELD,CLASS_2)).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Metodo solitario</type>
           <description>Este metodo no utiliza ningun atributo de la clase. ¿Deberia ser estatico?</description>
           <query>lonely_method</query>
+      <predicates>lonely_method(ID):-
+    method_declaration(ID, parent(CLASS), _, _, parameters(PARAMETERS), _, return_type(RETURN_TYPE), _, body(BODY), _, compilation_unit(UNIT)),
+    field_declaration(_, parent(CLASS), _, _, _, _, _, _),
+    not(lonely_method_checked(ID)),
+    assert(lonely_method_checked(ID)),
+    BODY \= null,
+    block(BODY, _, statements(STM), _, _, _),
+    not(length(STM,0)),
+    not(length(PARAMETERS,0)),
+    not(static_method(ID)),
+    not(
+        (
+            field_declaration(FIELD, parent(P), _, _, _, _, _, _),
+            has_field(CLASS,FIELD),
+            var_reference(FIELD,ID,CLASS,NOT_QUALIFIED),
+            not(qualified_name(NOT_QUALIFIED, _, _, name(FIELD), body_declaration(METHOD), _, _))
+        )
+    ),
+    not(
+        (
+            (
+                (
+                    method_invocation(_, _, expression(EXP), method(METHOD), _, body_declaration(ID), _, _),
+                    METHOD \= ID,
+                    (
+                        EXP = null;
+                        this_expression(EXP, _, _, _, _, _)
+                    )
+                );
+                super_method_invocation(_, _, method(METHOD), _, body_declaration(ID), _, _)
+            ),
+            not(static_method(METHOD))
+        )
+    ),
+    not(
+        (
+            this_expression(EXP, parent(PARENT), _, body_declaration(ID), _, _),
+            not(
+                (
+                    method_invocation(PARENT, _, expression(EXP), _, _, _, _, _);
+                    field_access(PARENT, _, _, _, _, _, _)
+                )
+            )
+        )
+    ),
+    model_unit(UNIT).</predicates>
+      <active>true</active>
       </simple-rule>
-	  <!-- TODO PAGINAS --> 
+    <!-- TODO PAGINAS --> 
       <simple-rule>
           <type>Usa collecciones de Java sin definir el equals</type>
           <description>Algunos metodos de las colecciones de Java (como el contains) necesitan que los elementos que se almacenan tengan definido el equals.</description>
           <query>java_collections_without_equals</query>
+      <predicates>java_collections_without_equals(ID):-
+    method_invocation(ID, _, expression(EXP), method(METHOD), arguments([ARG]), _, _, compilation_unit(UNIT)),
+    (
+        method(METHOD, name('contains'), _, _);
+        method(METHOD, name('remove'), _, _)
+    ),
+    (
+        field_declaration(ARG, _, _, type(TYPE), _, _, _, _);
+        variable_declaration(ARG , _, _, type(TYPE), _, _, _, _, _, _)
+    ),
+    variable_declaration(ARG , _, _, type(TYPE), _, _, _, _, _, _),
+    resolve_expression(EXP,VAR),
+    (
+        field_declaration(VAR, _, _, type(COLLECTION), _, _, _, _);
+        variable_declaration(VAR , _, _, type(COLLECTION), _, _, _, _, _, _)
+    ),
+    java_collection_type(COLLECTION),
+    (
+        (
+            class_declaration(TYPE, _, _, _, _, _, _, _, _, _, _),
+            not(abstract_class(TYPE)),
+            not(
+                (
+                    method_declaration(AUX, _, _, _, _, _, _, _, _, _, _),
+                    is_equals(AUX),
+                    has_method(TYPE,AUX)
+                )
+            )
+        );
+        (
+            (
+                (
+                    class_declaration(TYPE, _, _, _, _, _, _, _, _, _, _),
+                    abstract_class(TYPE)
+                );
+                interface_declaration(TYPE, _, _, _, _, _, _, _, _, _, _)
+            ),
+            class_declaration(CHILD, _, _, _, _, _, _, _, _, _, _),
+            is_super(TYPE,CHILD),
+            not(
+                (
+                    method_declaration(AUX, _, _, _, _, _, _, _, _, _, _),
+                    is_equals(AUX),
+                    has_method(CHILD,AUX)
+                )
+            )
+        )
+    ),
+    model_unit(UNIT),
+    not(java_collections_without_equals_checked(ID)),
+    assert(java_collections_without_equals_checked(ID)).</predicates>
+      <active>true</active>
       </simple-rule>
-   	</rules>
+    </rules>
 </rules-set>

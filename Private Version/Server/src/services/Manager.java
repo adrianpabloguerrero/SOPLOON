@@ -25,29 +25,15 @@ public class Manager {
 
 	private static final String PATH = "./soploon/";
 	private static final String LOGS = PATH + "logs/";
-	private static final String AUXILIARY_PREDICATES = PATH + "auxiliary_predicates.pl";
-	private static final String RULES_PREDICATES = PATH + "rules.pl";
+	private static final String PREDICATES = PATH + "predicates.xml";
 	private static final String RULES = PATH + "rules.xml";
-
-	@GET
-	@Path("auxiliary")
-	@Produces(MediaType.TEXT_PLAIN + UTF8_CHARSET)
-	public Response getAuxiliary() {
-		try {
-			byte[] encoded = Files.readAllBytes(Paths.get(AUXILIARY_PREDICATES));
-			String out = new String(encoded, "UTF-8");
-			return Response.ok(out).build();
-		} catch (Exception e) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-	}
 
 	@GET
 	@Path("rules")
 	@Produces(MediaType.TEXT_PLAIN + UTF8_CHARSET)
 	public Response getRules() {
 		try {
-			byte[] encoded = Files.readAllBytes(Paths.get(RULES_PREDICATES));
+			byte[] encoded = Files.readAllBytes(Paths.get(RULES));
 			String out = new String(encoded, "UTF-8");
 			return Response.ok(out).build();
 		} catch (Exception e) {
@@ -56,11 +42,11 @@ public class Manager {
 	}
 
 	@GET
-	@Path("xml")
+	@Path("predicates")
 	@Produces(MediaType.TEXT_PLAIN + UTF8_CHARSET)
 	public Response getXML() {
 		try {
-			byte[] encoded = Files.readAllBytes(Paths.get(RULES));
+			byte[] encoded = Files.readAllBytes(Paths.get(PREDICATES));
 			String out = new String(encoded, "UTF-8");
 			return Response.ok(out).build();
 		} catch (Exception e) {

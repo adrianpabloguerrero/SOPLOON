@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="TeachingAssistantFeature"
-      label="TeachingAssistantFeature"
-      version="1.0.0.qualifier"
+      id="ayudante_virtual"
+      label="Ayudante Virtual"
+      version="1.2.0"
       provider-name="Isistan">
 
    <description url="http://si.isistan.unicen.edu.ar/asistente-virtual/">
@@ -25,7 +25,7 @@
          id="AyudanteVirtual"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.2.0"
          unpack="false"/>
 
 </feature>

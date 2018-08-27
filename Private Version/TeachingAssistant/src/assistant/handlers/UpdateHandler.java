@@ -31,8 +31,8 @@ public class UpdateHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) {
 		try {
 			
-			String rules_xml = getURL("http://si.isistan.unicen.edu.ar:8080/asistente-virtual/api/rules");
-			String predicates_xml = getURL("http://si.isistan.unicen.edu.ar:8080/asistente-virtual/api/predicates");
+			String rules_xml = getURL("http://si.isistan.unicen.edu.ar:8080/assistant/api/rules");
+			String predicates_xml = getURL("http://si.isistan.unicen.edu.ar:8080/assistant/api/predicates");
 			
 			if ((rules_xml == null || predicates_xml == null) && event.getTrigger() != null) {
 				MessageDialog.openInformation(null, "Asistente Virtual", "El Ayudante no pudo comunicarse con el servidor.");
@@ -48,8 +48,13 @@ public class UpdateHandler extends AbstractHandler {
 			PrologAnalyzer analyzer = Teacher.getInstance().getAnalyzer();
 			
 			RuleSet local_rules = analyzer.getRuleSet();
+
+			//MessageDialog.openInformation(null, "Asistente Virtual", local_rules == null ? "null" : "local_rules");
+			//MessageDialog.openInformation(null, "Asistente Virtual", local_rules.getVersion() == null ? "null" : "local_version");
 			
-			if (local_rules == null || !local_rules.getVersion().equals(remote_rules.getVersion())) {
+			//MessageDialog.openInformation(null, "Asistente Virtual", !local_rules.getVersion().equals(remote_rules.getVersion()) ? "distintos" : "iguales");
+
+			if (local_rules == null || local_rules.getVersion() == null || !local_rules.getVersion().equals(remote_rules.getVersion())) {
 				analyzer.setRules(remote_rules);
 				analyzer.setPredicates(remote_predicates);
 				if (event.getTrigger() != null)
@@ -60,6 +65,7 @@ public class UpdateHandler extends AbstractHandler {
 
 			return null;
 		} catch (Exception e) {
+			MessageDialog.openInformation(null, "Asistente Virtual", "Excepcion " + e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
