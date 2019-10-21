@@ -1,4 +1,4 @@
-package isistan.soploon.utils;
+package isistan.soploon.services.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

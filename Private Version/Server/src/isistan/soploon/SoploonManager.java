@@ -7,8 +7,8 @@ import javax.ws.rs.core.Application;
 import org.glassfish.hk2.api.Immediate;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.project.ProjectResource;
-import isistan.soploon.rule.RuleResource;
+import isistan.soploon.services.resources.ProjectResource;
+import isistan.soploon.services.resources.RuleResource;
 
 
 

@@ -1,4 +1,4 @@
-package isistan.soploon.rule;
+package isistan.soploon.models.rule;
 
 public class Rule {
 

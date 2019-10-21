@@ -1,4 +1,4 @@
-package isistan.soploon.utils;
+package isistan.soploon.services.utils;
 
 import java.io.IOException;
 import javax.ws.rs.container.ContainerRequestContext;

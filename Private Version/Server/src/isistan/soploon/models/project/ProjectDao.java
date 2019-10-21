@@ -1,13 +1,11 @@
-package isistan.soploon.project;
+package isistan.soploon.models.project;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
 
 import com.google.gson.Gson;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.rule.Rule;
 
 public class ProjectDao {
 	private static final String TABLE_NAME = "soploon.project";
@@ -57,7 +55,7 @@ public class ProjectDao {
 		return null;
 	}
 
-	boolean updateProject(int id, Project project) {
+	public boolean updateProject(int id, Project project) {
 		
 		Gson gson = new Gson();
 

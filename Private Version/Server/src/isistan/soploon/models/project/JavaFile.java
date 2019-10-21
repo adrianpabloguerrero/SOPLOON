@@ -1,4 +1,4 @@
-package isistan.soploon.project;
+package isistan.soploon.models.project;
 
 public class JavaFile {
 	

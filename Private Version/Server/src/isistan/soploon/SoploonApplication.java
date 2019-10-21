@@ -7,8 +7,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import isistan.soploon.utils.CORSFilter;
-import isistan.soploon.utils.GsonProvider;
+import isistan.soploon.services.utils.CORSFilter;
+import isistan.soploon.services.utils.GsonProvider;
 
 
 @ApplicationPath("/api")
