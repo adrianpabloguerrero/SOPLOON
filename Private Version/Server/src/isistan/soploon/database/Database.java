@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
 public class Database {
 
 	private String path;
@@ -65,12 +64,13 @@ public class Database {
 		}
 	}
 		
-	public int insert(String insert_query, Object... args) {
+	public int insert(String insertQuery, Object... args) {
 		if (this.connect()) {
-			try (PreparedStatement statement = this.connection.prepareStatement(insert_query);) {
+			try (PreparedStatement statement = this.connection.prepareStatement(insertQuery);) {
 				if (args != null)
 					for (int index = 0; index < args.length; index++)
 						statement.setObject(index+1, args[index]);
+				statement.getGeneratedKeys();
 				return statement.executeUpdate();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -108,5 +108,6 @@ public class Database {
 		} else
 			return null;
 	}
+
 	
 }
