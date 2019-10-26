@@ -1,5 +1,6 @@
 package isistan.soploon.services.resources;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -59,9 +60,10 @@ public class RuleResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addRule(Rule rule, @Context UriInfo uriInfo) {
-		if (rule == null || rule.getId() != 0 || !rule.isValid())
-			return Response.status(Response.Status.BAD_REQUEST).build();
-
+		//Este if valida si la la regla es valida. Lo comento para pruebas.
+		//if (rule == null || rule.getId() != 0 || !rule.isValid())
+			if (rule == null || rule.getId() != 0)
+				return Response.status(Response.Status.BAD_REQUEST).build();
 		try {
 			if (this.dao.insert(rule)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
@@ -71,6 +73,7 @@ public class RuleResource {
 				return Response.status(Status.CONFLICT).build();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.serverError().build();
 		}
 
@@ -80,11 +83,11 @@ public class RuleResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
-	public Response editRule(@PathParam("id") int id, Rule rule) {
+	public Response editRule(@PathParam("id") int id, Rule rule) throws SQLException {
 		// TODO Acomodar esto para que inserte la regla con el numero de version
 		// incrementado
-		// if (this.dao.updateRule(id, rule))
-		// return Response.ok(rule).build();
+		if (this.dao.updateRule(id,rule))
+		 return Response.ok(rule).build();
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
 

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Database {
 
@@ -22,12 +23,13 @@ public class Database {
 	public boolean connect() {
 			try {
 				if (this.connection == null || this.connection.isClosed()) {
+					Class.forName("org.postgresql.Driver");
 					this.connection = DriverManager.getConnection(this.path,this.user,this.pass);
 					return true;
 				} else {
 					return true;
 				}
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -88,7 +90,7 @@ public class Database {
 		if (this.connect()) {
 			PreparedStatement statement = null;
 			try {
-				statement = this.connection.prepareStatement(query);
+				statement = this.connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 				if (args != null) {
 					for (int index = 0; index < args.length; index++)
 						statement.setObject(index+1, args[index]);
@@ -108,6 +110,8 @@ public class Database {
 		} else
 			return null;
 	}
+	
+	
 
 	
 }
