@@ -17,6 +17,8 @@ public class UserDao {
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String SELECT_ALL_USERS = "SELECT * FROM " + TABLE_NAME + ";";
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "
+			+ "id = ? , creation_date = to_timestamp(?) , name = ? , role = ? " + CONDITION_ID;
 
 	private Database database;
 
@@ -98,5 +100,33 @@ public class UserDao {
 				connection.close();
 			}
 		}
+	}
+
+	public boolean updateUser(int id, User user) throws SQLException {
+		
+		Object[] args = new Object[5];
+		args[0] = user.getId();
+		args[1] = user.getCreationDate();
+		args[2] = user.getName();
+		args[3] = user.getRole();	
+		args[4] = id;
+
+		Connection connection = this.database.connection();
+		
+		try (PreparedStatement statement = this.database.getStatement(connection,UPDATE,args)) {
+			int modifiedRows = statement.executeUpdate();
+			if (modifiedRows == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+		
 	}
 }
