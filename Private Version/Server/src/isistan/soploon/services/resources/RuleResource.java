@@ -42,6 +42,8 @@ public class RuleResource {
 		}
 	}
 
+	
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
@@ -84,8 +86,6 @@ public class RuleResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
 	public Response editRule(@PathParam("id") int id, Rule rule) throws SQLException {
-		// TODO Acomodar esto para que inserte la regla con el numero de version
-		// incrementado
 		if (this.dao.updateRule(id,rule))
 		 return Response.ok(rule).build();
 		return Response.status(Response.Status.BAD_REQUEST).build();

@@ -21,6 +21,7 @@ public class RuleDao {
 	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME  + CONDITION_ID + LAST_VERSION + ")";
 	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?,?,?)";
 	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
+	private static final String SELECT_ACTIVATED_RULES = "SELECT * FROM " + TABLE_NAME + " WHERE activated = true;" ;
 	//private static final String UPDATE = "BEGIN; " + SET_FALSE_BY_ID + INSERT_NEW_VERSION + " COMMIT;";
 	private Database database;
 
@@ -87,11 +88,37 @@ public class RuleDao {
 		}
 	}
 
-	public ArrayList<Rule> getRules() {
+	public ArrayList<Rule> getRules() throws SQLException {
+		//Devuelvo las reglas activadas, no tengo en cuenta la version ya que solo debe estar activada la ultima
 		ArrayList<Rule> out = new ArrayList<>();
-		// TODO Obtener todas las reglas activadas y con la ultima version (las versiones previas deberian estar desactivadas)
-		return out;
+
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES,null)) {
+			ResultSet result = statement.executeQuery(); 
+			while (result.next()) {
+				Rule rule = new Rule();
+				rule.setId(result.getInt(1));
+				rule.setVersion(result.getInt(2));
+				rule.setName(result.getString(3));
+				rule.setDescription(result.getString(4));
+				rule.setLink(result.getString(5));
+				rule.setQuery(result.getString(6));
+				rule.setPredicate(result.getString(7));
+				rule.setActivated(result.getBoolean(8));
+				out.add(rule);
+			}
+			return out;
+		}
+		catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
 	}
+
+
 
 	public boolean updateRule(int id, Rule rule) throws SQLException {
 
@@ -112,16 +139,16 @@ public class RuleDao {
 
 		try {
 			connection.setAutoCommit(false);
-			
+
 			PreparedStatement statementSetFalse = this.database.getStatement(connection,SET_FALSE_BY_ID,argsSF); 
 			PreparedStatement statementInsertVersion = this.database.getStatement(connection, INSERT_NEW_VERSION, argsNV);
-			
+
 			statementSetFalse.executeUpdate();
 			statementInsertVersion.executeUpdate();
-			
+
 			ResultSet rs = statementInsertVersion.getGeneratedKeys();
 			connection.commit();
-			
+
 			if (rs.next()) {
 				rule.setId(id);
 				rule.setVersion(rs.getInt("version"));
