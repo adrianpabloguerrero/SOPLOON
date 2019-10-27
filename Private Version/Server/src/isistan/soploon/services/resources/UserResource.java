@@ -1,5 +1,7 @@
 package isistan.soploon.services.resources;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.rule.Rule;
 import isistan.soploon.models.user.User;
 import isistan.soploon.models.user.UserDao;
 
@@ -59,6 +60,19 @@ public class UserResource {
 			if (user == null)
 				return Response.status(Status.NOT_FOUND).build();
 			return Response.ok(user).build();
+		} catch (Exception e) {
+			return Response.serverError().build();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUser() {
+		try {
+			ArrayList <User> users = this.dao.getUsers();
+			if (users == null)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.ok(users).build();
 		} catch (Exception e) {
 			return Response.serverError().build();
 		}

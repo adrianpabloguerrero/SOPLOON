@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.rule.Rule;
 
 public class UserDao {
 	private static final String TABLE_NAME = "soploon.user";
@@ -16,6 +16,7 @@ public class UserDao {
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
+	private static final String SELECT_ALL_USERS = "SELECT * FROM " + TABLE_NAME + ";";
 
 	private Database database;
 
@@ -49,7 +50,7 @@ public class UserDao {
 			}
 		}
 	}
-	
+
 	public User getUser(int id) throws SQLException {
 		Connection connection = this.database.connection();
 
@@ -66,6 +67,31 @@ public class UserDao {
 				return null;
 			}
 		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	public ArrayList<User> getUsers() throws SQLException {
+		ArrayList<User> out = new ArrayList<>();
+
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ALL_USERS)) {
+			ResultSet result = statement.executeQuery(); 
+			while (result.next()) {
+				User user = new User();
+				user.setId(result.getInt(1));
+				user.setCreationDate((result.getDate(2).getTime()));
+				user.setName(result.getString(3));
+				user.setRole(result.getString(4));
+				out.add(user);
+			}
+			return out;
+		}
+		catch (SQLException e) {
 			throw e;
 		} finally {
 			if (connection != null) {
