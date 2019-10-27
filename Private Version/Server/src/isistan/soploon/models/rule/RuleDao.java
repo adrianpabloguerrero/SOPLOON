@@ -1,5 +1,6 @@
 package isistan.soploon.models.rule;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +39,8 @@ public class RuleDao {
 		args[5] = rule.getPredicate();
 		args[6] = rule.getActivated();
 
-		try (PreparedStatement statement = this.database.getStatement(SINGLE_INSERT,args)) {
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
@@ -52,11 +54,17 @@ public class RuleDao {
 			}
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
 		}
 	}
 
 	public Rule getRule(int id) throws SQLException {
-		try (PreparedStatement statement = this.database.getStatement(SELECT_BY_ID,id)) {
+		Connection connection = this.database.connection();
+
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Rule rule = new Rule();
@@ -74,6 +82,10 @@ public class RuleDao {
 			}
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
 		}
 	}
 
@@ -96,7 +108,8 @@ public class RuleDao {
 		args[7] = rule.getPredicate();
 		args[8] = rule.getActivated();	
 
-		try (PreparedStatement statement = this.database.getStatement(UPDATE,args)) {
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection,UPDATE,args)) {
 			System.out.println(UPDATE);
 			System.out.println(statement);
 			int modifiedRows = statement.executeUpdate();
@@ -110,13 +123,13 @@ public class RuleDao {
 			}
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
 		}
 
 	}
-
-
-
-
 
 
 	// Viru: Lo dejo aca por si sirve de referencia

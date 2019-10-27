@@ -1,7 +1,9 @@
 package isistan.soploon.models.project;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.google.gson.Gson;
 
@@ -38,7 +40,8 @@ public class ProjectDao {
 	}
 
 	public Project getProjectByIdUser(int idUser) {
-		try (PreparedStatement statement = this.database.getStatement(SELECT_BY_ID, idUser)) {
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, idUser)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Project project = new Project();
@@ -51,6 +54,13 @@ public class ProjectDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (connection != null)
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 		}
 		return null;
 	}

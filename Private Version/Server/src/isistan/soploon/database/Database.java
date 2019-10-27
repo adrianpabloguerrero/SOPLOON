@@ -1,74 +1,61 @@
 package isistan.soploon.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 public class Database {
 
 	private String path;
 	private String user;
 	private String pass;
-	private Connection connection;
+	private BasicDataSource dataSource;
 	
 	public Database(String path,String user, String pass) {
 		this.path = path;
 		this.user = user;
 		this.pass = pass;
-		this.connection = null;
+		this.dataSource = new BasicDataSource();
+		this.dataSource.setUrl(this.path);
+		this.dataSource.setUsername(this.user);
+		this.dataSource.setPassword(this.pass);
+		this.dataSource.setMinIdle(5);
+		this.dataSource.setMaxIdle(10);
+		this.dataSource.setMaxOpenPreparedStatements(100);
 	}
 	
 	public boolean connect() {
-			try {
-				if (this.connection == null || this.connection.isClosed()) {
-					Class.forName("org.postgresql.Driver");
-					this.connection = DriverManager.getConnection(this.path,this.user,this.pass);
-					return true;
-				} else {
-					return true;
-				}
-			} catch (SQLException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return false;
-		
+		return !this.dataSource.isClosed();		
 	}
 
 	public void disconnect() {
 		try {
-			if (this.connection != null) {
-				this.connection.close();
-			}
+			this.dataSource.close();
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 	}
 	
 	public Connection connection() {
-		if (this.connect())
-			return this.connection;
-		else
+		try {
+			if (this.connect())
+				return this.dataSource.getConnection();
+			else
+				return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return null;
-	}
-	
-	public boolean initialize(String initialize_query) {
-		if (this.connect()) {
-			try {
-				return this.connection.createStatement().execute(initialize_query);
-			} catch (Exception e) {
-				return false;
-			}
-		} else {
-			return false;
 		}
 	}
+	
 		
+	
 	public int insert(String insertQuery, Object... args) {
 		if (this.connect()) {
-			try (PreparedStatement statement = this.connection.prepareStatement(insertQuery);) {
+			Connection connection = this.connection();
+			try (PreparedStatement statement = connection.prepareStatement(insertQuery);) {
 				if (args != null)
 					for (int index = 0; index < args.length; index++)
 						statement.setObject(index+1, args[index]);
@@ -77,6 +64,12 @@ public class Database {
 			} catch (Exception e) {
 				e.printStackTrace();
 				return 0;
+			} finally {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			return 0;
@@ -85,12 +78,11 @@ public class Database {
 	
 	
 	
-
-	public PreparedStatement getStatement(String query, Object... args) {
+	public PreparedStatement getStatement(Connection connection, String query, Object... args) {
 		if (this.connect()) {
 			PreparedStatement statement = null;
 			try {
-				statement = this.connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+				statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 				if (args != null) {
 					for (int index = 0; index < args.length; index++)
 						statement.setObject(index+1, args[index]);
@@ -110,8 +102,5 @@ public class Database {
 		} else
 			return null;
 	}
-	
-	
-
-	
+		
 }
