@@ -17,12 +17,11 @@ public class RuleDao {
 	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + LAST_VERSION;
-	// TODO El UPDATE no existiria, siempre se crearía una nueva fila en la tabla, incrementando el valor de la version en 1
-	private static final String MODIFY = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID + ";";
+	private static final String SET_FALSE_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID + ";";
 	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME  + CONDITION_ID + LAST_VERSION + ")";
 	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?,?,?)";
 	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
-	private static final String UPDATE = "BEGIN; " + MODIFY + INSERT_NEW_VERSION + " COMMIT;";
+	//private static final String UPDATE = "BEGIN; " + SET_FALSE_BY_ID + INSERT_NEW_VERSION + " COMMIT;";
 	private Database database;
 
 	public RuleDao(Database database) {
@@ -41,7 +40,6 @@ public class RuleDao {
 
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
-
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -97,23 +95,33 @@ public class RuleDao {
 
 	public boolean updateRule(int id, Rule rule) throws SQLException {
 
-		Object[] args = new Object[9];
-		args[0] = id;
-		args[1] = id;
-		args[2] = id;
-		args[3] = rule.getName();
-		args[4] = rule.getDescription();
-		args[5]	= rule.getLink();
-		args[6] = rule.getQuery();
-		args[7] = rule.getPredicate();
-		args[8] = rule.getActivated();	
+		Object [] argsSF = new Object [1];
+		argsSF [0] = id;
+
+		Object[] argsNV = new Object[8];
+		argsNV[0] = id;
+		argsNV[1] = id;
+		argsNV[2] = rule.getName();
+		argsNV[3] = rule.getDescription();
+		argsNV[4] = rule.getLink();
+		argsNV[5] = rule.getQuery();
+		argsNV[6] = rule.getPredicate();
+		argsNV[7] = rule.getActivated();	
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,UPDATE,args)) {
-			System.out.println(UPDATE);
-			System.out.println(statement);
-			int modifiedRows = statement.executeUpdate();
-			ResultSet rs = statement.getGeneratedKeys();
+
+		try {
+			connection.setAutoCommit(false);
+			
+			PreparedStatement statementSetFalse = this.database.getStatement(connection,SET_FALSE_BY_ID,argsSF); 
+			PreparedStatement statementInsertVersion = this.database.getStatement(connection, INSERT_NEW_VERSION, argsNV);
+			
+			statementSetFalse.executeUpdate();
+			statementInsertVersion.executeUpdate();
+			
+			ResultSet rs = statementInsertVersion.getGeneratedKeys();
+			connection.commit();
+			
 			if (rs.next()) {
 				rule.setId(id);
 				rule.setVersion(rs.getInt("version"));
@@ -121,14 +129,17 @@ public class RuleDao {
 			} else {
 				return false;
 			}
-		} catch (SQLException e) {
-			throw e;
-		} finally {
+
+		}
+		catch (SQLException e ) {
+			throw e;   
+		}finally {
+			connection.setAutoCommit(true);
 			if (connection != null) {
 				connection.close();
 			}
-		}
 
+		}
 	}
 
 
