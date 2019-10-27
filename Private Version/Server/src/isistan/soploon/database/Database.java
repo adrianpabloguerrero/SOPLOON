@@ -17,6 +17,12 @@ public class Database {
 		this.path = path;
 		this.user = user;
 		this.pass = pass;
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.dataSource = new BasicDataSource();
 		this.dataSource.setUrl(this.path);
 		this.dataSource.setUsername(this.user);
@@ -50,32 +56,7 @@ public class Database {
 		}
 	}
 	
-		
-	
-	public int insert(String insertQuery, Object... args) {
-		if (this.connect()) {
-			Connection connection = this.connection();
-			try (PreparedStatement statement = connection.prepareStatement(insertQuery);) {
-				if (args != null)
-					for (int index = 0; index < args.length; index++)
-						statement.setObject(index+1, args[index]);
-				statement.getGeneratedKeys();
-				return statement.executeUpdate();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return 0;
-			} finally {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		} else {
-			return 0;
-		}
-	}
-	
+			
 	
 	
 	public PreparedStatement getStatement(Connection connection, String query, Object... args) {

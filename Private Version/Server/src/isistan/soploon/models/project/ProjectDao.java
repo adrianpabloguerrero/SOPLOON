@@ -36,7 +36,9 @@ public class ProjectDao {
 		args[3] = project.getRepresentation();
 		args[4] = project.getSoploonVersion();
 
-		return this.database.insert(SINGLE_INSERT, args) == 1;
+		//TODO hacer esto con getStatement
+		return false;
+	//	return this.database.insert(SINGLE_INSERT, args) == 1;
 	}
 
 	public Project getProjectByIdUser(int idUser) {
@@ -76,8 +78,9 @@ public class ProjectDao {
 		args[3] = project.getRepresentation();
 		args[4] = project.getSoploonVersion();
 		args[5] = id;
-		
-		return this.database.insert(MODIFY, args)==1;
+		//TODO hacer esto con getStatement
+		return false;
+		//return this.database.insert(MODIFY, args)==1;
 	}
 
 }
