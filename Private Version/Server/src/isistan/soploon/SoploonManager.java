@@ -8,6 +8,7 @@ import org.glassfish.hk2.api.Immediate;
 import isistan.soploon.database.Database;
 import isistan.soploon.services.resources.ProjectResource;
 import isistan.soploon.services.resources.RuleResource;
+import isistan.soploon.services.resources.UserResource;
 
 @Immediate
 @Path("/")
@@ -19,6 +20,7 @@ public class SoploonManager extends Application {
 
 	private RuleResource ruleResource;
 	private ProjectResource projectResource;
+	private UserResource userResource;
 	private Database database;
 
 	@PostConstruct
@@ -27,6 +29,7 @@ public class SoploonManager extends Application {
 		this.database.connect();
 		this.ruleResource = new RuleResource(this.database);
 		this.projectResource = new ProjectResource(this.database);
+		this.userResource = new UserResource (this.database);
 	}
 
 	@Path("/rules/")
@@ -38,5 +41,11 @@ public class SoploonManager extends Application {
 	public ProjectResource getProjectResource() {
 		return this.projectResource;
 	}
+	
+	@Path("/users/")
+	public UserResource getUserResource() {
+		return this.userResource;
+	}
+	
 
 }

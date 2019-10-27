@@ -93,7 +93,7 @@ public class RuleDao {
 		ArrayList<Rule> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES,null)) {
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = new Rule();

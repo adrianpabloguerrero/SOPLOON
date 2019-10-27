@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Project {
 
-	private int idUser;
+	
+	private int userId;
 	private long date;
 	private List<JavaFile> code;
 	private String representation;
@@ -14,11 +15,11 @@ public class Project {
 		
 	}
 	
-	public int getIdUser() {
-		return idUser;
+	public int getUserId() {
+		return userId;
 	}
-	public void setIdUser(int idUser) {
-		this.idUser = idUser;
+	public void setIdUser(int userId) {
+		this.userId = userId;
 	}
 	public long getDate() {
 		return date;

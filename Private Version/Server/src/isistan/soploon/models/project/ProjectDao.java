@@ -30,7 +30,7 @@ public class ProjectDao {
 		Gson gson = new Gson();
 
 		Object[] args = new Object[5];
-		args[0] = project.getIdUser();
+		args[0] = project.getUserId();
 		args[1] = project.getDate();
 		args[2] = gson.toJson(project.getCode());
 		args[3] = project.getRepresentation();
@@ -72,7 +72,7 @@ public class ProjectDao {
 		Gson gson = new Gson();
 
 		Object[] args = new Object[6];
-		args[0] = project.getIdUser();
+		args[0] = project.getUserId();
 		args[1] = project.getDate();
 		args[2] = gson.toJson(project.getCode());
 		args[3] = project.getRepresentation();
