@@ -11,8 +11,9 @@ import isistan.soploon.database.Database;
 
 public class ProjectDao {
 	private static final String TABLE_NAME = "soploon.project";
-	private static final String INSERT = "INSERT INTO " + TABLE_NAME + " VALUES";
-	private static final String VALUES = "(?,to_timestamp(?),to_json(?::json),?,?)";
+	private static final String COLUMNS = "(user_id,name)";
+	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
+	private static final String VALUES = "(?,?)";
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
 	private static final String CONDITION_ID = "WHERE iduser = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID;
@@ -25,22 +26,33 @@ public class ProjectDao {
 		this.database = database;
 	}
 
-	public boolean insert(Project project) {
+	public boolean insert(Project project) throws SQLException {
 
-		Gson gson = new Gson();
-
-		Object[] args = new Object[5];
+		Object[] args = new Object[2];
 		args[0] = project.getUserId();
-		args[1] = project.getDate();
-		args[2] = gson.toJson(project.getCode());
-		args[3] = project.getRepresentation();
-		args[4] = project.getSoploonVersion();
+		args[1] = project.getName();
 
-		//TODO hacer esto con getStatement
-		return false;
-	//	return this.database.insert(SINGLE_INSERT, args) == 1;
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+			int modifiedRows = statement.executeUpdate();
+			if (modifiedRows == 1) {
+				ResultSet keys = statement.getGeneratedKeys();
+				keys.next();
+				int id = keys.getInt(2);
+				project.setId(id);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
 	}
-
+/*
 	public Project getProjectByIdUser(int idUser) {
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, idUser)) {
@@ -82,5 +94,5 @@ public class ProjectDao {
 		return false;
 		//return this.database.insert(MODIFY, args)==1;
 	}
-
+*/
 }

@@ -103,7 +103,7 @@ public class UserDao {
 	}
 
 	public boolean updateUser(int id, User user) throws SQLException {
-		
+		//Tambien permito cambiar el id?
 		Object[] args = new Object[5];
 		args[0] = user.getId();
 		args[1] = user.getCreationDate();

@@ -36,7 +36,6 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addUser(User user, @Context UriInfo uriInfo) {
-		System.out.println("add user");
 			if (user == null)
 				return Response.status(Response.Status.BAD_REQUEST).build();
 		try {

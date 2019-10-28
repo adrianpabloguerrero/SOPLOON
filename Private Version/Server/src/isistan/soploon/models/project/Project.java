@@ -1,53 +1,49 @@
 package isistan.soploon.models.project;
 
-import java.util.List;
 
 public class Project {
-
 	
 	private int userId;
-	private long date;
-	private List<JavaFile> code;
-	private String representation;
-	private String soploonVersion;
-	
+	private int id;
+	private String name;
+
+
 	public Project () {
-		
+
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+
 	public int getUserId() {
 		return userId;
 	}
+	
 	public void setIdUser(int userId) {
 		this.userId = userId;
 	}
-	public long getDate() {
-		return date;
-	}
-	public void setDate(long date) {
-		this.date = date;
-	}
-	public List <JavaFile> getCode() {
-		return code;
-	}
-	public void setCodigo(List<JavaFile> code) {
-		this.code = code;
-	}
-	public String getRepresentation() {
-		return representation;
-	}
-	public void setRepresentation(String representation) {
-		this.representation = representation;
-	}
-	public String getSoploonVersion() {
-		return soploonVersion;
-	}
-	public void setSoploonVersion(String soploonVersion) {
-		this.soploonVersion = soploonVersion;
-	}
-	
-	
-	
-	
-	
+
+
+
+
+
+
 }
