@@ -53,7 +53,7 @@ public class ProjectResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{id}/")
+	@Path("/user/{id}/")
 	public Response getProjectByIdUser(@PathParam("id") int id) {
 		try {
 			ArrayList <Project> project = this.dao.getProjectByIdUser(id);
@@ -65,6 +65,19 @@ public class ProjectResource {
 		}
 	}
 	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{id}/")
+	public Response getProjectById(@PathParam("id") int id) {
+		try {
+			Project project = this.dao.getProjectById(id);
+			if (project == null)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.ok(project).build();
+		} catch (Exception e) {
+			return Response.serverError().build();
+		}
+	}
 	
 	
 	/*

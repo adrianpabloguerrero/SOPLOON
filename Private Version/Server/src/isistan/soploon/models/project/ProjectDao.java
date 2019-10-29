@@ -16,10 +16,12 @@ public class ProjectDao {
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
 	private static final String VALUES = "(?,?)";
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
-	private static final String CONDITION_ID = "WHERE user_id = ? ";
-	private static final String SELECT_BY_ID_USER = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
+	private static final String CONDITION_USER_ID = "WHERE user_id = ? ";
+	private static final String CONDITION_ID = "WHERE id = ? ";
+	private static final String SELECT_BY_ID_USER = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_USER_ID + ";";
 	private static final String MODIFY = "UPDATE " + TABLE_NAME + " SET "
 			+ "iduser = ? , date = to_timestamp(?) , code = to_json(?::json) , representation = ? , soploonVersion = ? " + CONDITION_ID;
+	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 
 	private Database database;
 
@@ -58,7 +60,7 @@ public class ProjectDao {
 		
 		ArrayList<Project> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
+ 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_USER,idUser)) {
 			ResultSet result = statement.executeQuery(); 
 
@@ -97,8 +99,26 @@ public class ProjectDao {
 	}
 */
 
-	public Project getProjectById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Project getProjectById(int id) throws SQLException {
+		Connection connection = this.database.connection();
+
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				Project project = new Project();
+				project.setIdUser(result.getInt(1));
+				project.setId(result.getInt(2));
+				project.setName(result.getString(3));
+				return project;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
 	}
 }
