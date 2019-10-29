@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
@@ -15,8 +16,8 @@ public class ProjectDao {
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
 	private static final String VALUES = "(?,?)";
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
-	private static final String CONDITION_ID = "WHERE iduser = ? ";
-	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID;
+	private static final String CONDITION_ID = "WHERE user_id = ? ";
+	private static final String SELECT_BY_ID_USER = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String MODIFY = "UPDATE " + TABLE_NAME + " SET "
 			+ "iduser = ? , date = to_timestamp(?) , code = to_json(?::json) , representation = ? , soploonVersion = ? " + CONDITION_ID;
 
@@ -52,33 +53,33 @@ public class ProjectDao {
 			}
 		}
 	}
-/*
-	public Project getProjectByIdUser(int idUser) {
+
+	public ArrayList <Project> getProjectByIdUser(int idUser) throws SQLException {
+		
+		ArrayList<Project> out = new ArrayList<>();
+
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, idUser)) {
-			ResultSet result = statement.executeQuery();
-			if (result.next()) {
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_USER,idUser)) {
+			ResultSet result = statement.executeQuery(); 
+
+			while (result.next()) {
 				Project project = new Project();
 				project.setIdUser(result.getInt(1));
-				project.setDate(result.getDate(2).getTime());
-				// project.setCode(?);
-				project.setRepresentation(result.getString(4));
-				project.setSoploonVersion(result.getString(5));
-				return project;
+				project.setId(result.getInt(2));
+				project.setName(result.getString(3));
+				out.add(project);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (connection != null)
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			return out;
 		}
-		return null;
+		catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
 	}
-
+/*
 	public boolean updateProject(int id, Project project) {
 		
 		Gson gson = new Gson();
@@ -95,4 +96,9 @@ public class ProjectDao {
 		//return this.database.insert(MODIFY, args)==1;
 	}
 */
+
+	public Project getProjectById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

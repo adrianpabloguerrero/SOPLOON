@@ -1,6 +1,7 @@
 package isistan.soploon.services.resources;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -49,13 +50,24 @@ public class ProjectResource {
 		return Response.serverError().build();
 	}
 	}
-/*	
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path ("/{id}/")
-	public Response getProjectByIdUser (@PathParam("id") int id) {
-		return Response.ok(dao.getProjectByIdUser(id)).build();	}
+	@Path("/{id}/")
+	public Response getProjectByIdUser(@PathParam("id") int id) {
+		try {
+			ArrayList <Project> project = this.dao.getProjectByIdUser(id);
+			if (project == null)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.ok(project).build();
+		} catch (Exception e) {
+			return Response.serverError().build();
+		}
+	}
 	
+	
+	
+	/*
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
