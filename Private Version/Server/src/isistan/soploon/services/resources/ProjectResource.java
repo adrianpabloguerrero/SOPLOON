@@ -80,15 +80,18 @@ public class ProjectResource {
 	}
 	
 	
-	/*
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path ("/{id}/")
 	public Response editRule (@PathParam("id") int id, Project project ) {
-		if (dao.updateProject(id, project))
-			return Response.ok(project).build();
+		try {
+			if (dao.updateProject(id, project))
+				return Response.ok(project).build();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
-*/
+
 }
