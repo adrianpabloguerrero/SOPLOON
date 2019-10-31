@@ -6,6 +6,7 @@ import javax.ws.rs.core.Application;
 import org.glassfish.hk2.api.Immediate;
 
 import isistan.soploon.database.Database;
+import isistan.soploon.services.resources.PredicateResource;
 import isistan.soploon.services.resources.ProjectResource;
 import isistan.soploon.services.resources.RuleResource;
 import isistan.soploon.services.resources.UserResource;
@@ -21,6 +22,7 @@ public class SoploonManager extends Application {
 	private RuleResource ruleResource;
 	private ProjectResource projectResource;
 	private UserResource userResource;
+	private PredicateResource predicateResorce;
 	private Database database;
 
 	@PostConstruct
@@ -30,6 +32,7 @@ public class SoploonManager extends Application {
 		this.ruleResource = new RuleResource(this.database);
 		this.projectResource = new ProjectResource(this.database);
 		this.userResource = new UserResource (this.database);
+		this.predicateResorce = new PredicateResource (this.database);
 	}
 
 	@Path("/rules/")
@@ -47,5 +50,9 @@ public class SoploonManager extends Application {
 		return this.userResource;
 	}
 	
+	@Path("/predicate/")
+	public PredicateResource getPredicateResource() {
+		return this.predicateResorce;
+	}
 
 }

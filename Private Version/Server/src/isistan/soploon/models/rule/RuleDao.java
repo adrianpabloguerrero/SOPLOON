@@ -10,8 +10,8 @@ import isistan.soploon.database.Database;
 public class RuleDao {
 
 	private static final String TABLE_NAME = "soploon.rule";
-	private static final String COLUMNS = "(version,name,description,link,query,predicate,activated)";
-	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
+	private static final String COLUMNS_INSERT = "(version,name,description,link,query,predicate,activated)";
+	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String VALUES = "(?,?,?,?,?,?,?)";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";

@@ -10,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -53,17 +54,21 @@ public class ProjectResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/user/{id}/")
-	public Response getProjectByIdUser(@PathParam("id") int id) {
+	
+	public Response getProjects(@QueryParam("user_id") Integer id) {
 		try {
-			ArrayList <Project> project = this.dao.getProjectByIdUser(id);
-			if (project == null)
-				return Response.status(Status.NOT_FOUND).build();
+			ArrayList <Project> project;
+			if (id != null)
+				project = this.dao.getProjectByIdUser(id);
+			else
+				project = this.dao.getProjects();
 			return Response.ok(project).build();
 		} catch (Exception e) {
 			return Response.serverError().build();
 		}
 	}
+	
+
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

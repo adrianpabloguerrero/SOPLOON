@@ -18,31 +18,31 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.user.User;
-import isistan.soploon.models.user.UserDao;
+import isistan.soploon.models.predicate.Predicate;
+import isistan.soploon.models.predicate.PredicateDao;
 
-public class UserResource {
-	
+public class PredicateResource {
+
 	private Database database;
-	private UserDao dao;
+	private PredicateDao dao;
 
-
-	public UserResource(Database database) {
+	public PredicateResource (Database database) {
 		this.database = database;
-		this.dao = new UserDao(this.database);
+		this.dao = new PredicateDao(this.database);
 	}
-	
+
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addUser(User user, @Context UriInfo uriInfo) {
-			if (user == null)
-				return Response.status(Response.Status.BAD_REQUEST).build();
+	public Response addProject(Predicate predicate, @Context UriInfo uriInfo) throws SQLException {
+		if (predicate == null)
+			return Response.status(Response.Status.BAD_REQUEST).build();
 		try {
-			if (this.dao.insert(user)) {
+			if (this.dao.insert(predicate)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-				uriBuilder.path(Integer.toString(user.getId()));
-				return Response.created(uriBuilder.build()).entity(user).build();
+				uriBuilder.path(Integer.toString(predicate.getId()));
+				return Response.created(uriBuilder.build()).entity(predicate).build();
 			} else {
 				return Response.status(Status.CONFLICT).build();
 			}
@@ -55,12 +55,12 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
-	public Response getUser(@PathParam("id") int id) {
+	public Response getPredicate (@PathParam("id") int id) {
 		try {
-			User user = this.dao.getUser(id);
-			if (user == null)
+			ArrayList <Predicate> predicate = this.dao.getPredicate(id);
+			if (predicate == null)
 				return Response.status(Status.NOT_FOUND).build();
-			return Response.ok(user).build();
+			return Response.ok(predicate).build();
 		} catch (Exception e) {
 			return Response.serverError().build();
 		}
@@ -68,12 +68,12 @@ public class UserResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUsers() {
+	public Response getPredicate() {
 		try {
-			ArrayList <User> users = this.dao.getUsers();
-			if (users == null)
+			ArrayList <Predicate> predicates = this.dao.getPredicates();
+			if (predicates == null)
 				return Response.status(Status.NOT_FOUND).build();
-			return Response.ok(users).build();
+			return Response.ok(predicates).build();
 		} catch (Exception e) {
 			return Response.serverError().build();
 		}
@@ -84,10 +84,14 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
-	public Response editRule(@PathParam("id") int id, User user) throws SQLException {
-		if (this.dao.updateUser(id,user))
-		 return Response.ok(user).build();
+	public Response editPredicate(@PathParam("id") int id, Predicate predicate) throws SQLException {
+		if (this.dao.updatePredicate(id, predicate))
+		 return Response.ok(predicate).build();
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
+
+	
+	
+
 
 }
