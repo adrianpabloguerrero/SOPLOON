@@ -1,12 +1,16 @@
 package isistan.soploon.models.correction;
 
+import java.util.ArrayList;
+
 public class Correction {
 	
 	private int userId;
 	private int projectId;
 	private long date;
-	private String code;
-	private String correction;
+	private SourceCode code;
+	private ArrayList<String> representation;
+	private String version;
+	
 	
 	public int getUserId() {
 		return userId;
@@ -26,19 +30,23 @@ public class Correction {
 	public void setDate(long date) {
 		this.date = date;
 	}
-	public String getCode() {
+	public SourceCode getCode() {
 		return code;
 	}
-	public void setCode(String code) {
+	public void setCode(SourceCode code) {
 		this.code = code;
 	}
-	public String getCorrection() {
-		return correction;
+	public ArrayList<String> getRepresentation() {
+		return representation;
 	}
-	public void setCorrection(String correction) {
-		this.correction = correction;
+	public void setRepresentation(ArrayList<String> representation) {
+		this.representation = representation;
 	}
-
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	
 }
-
-
