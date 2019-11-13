@@ -27,7 +27,8 @@ public class GsonProvider implements MessageBodyReader<Object>, MessageBodyWrite
 	private static final Gson GSON = new GsonBuilder()
     		//.registerTypeHierarchyAdapter(Calendar.class, (JsonDeserializer<Calendar>) (json, typeOfT, context) -> { Calendar out = Calendar.getInstance(); out.setTimeInMillis(json.getAsJsonPrimitive().getAsLong()); return out; } )
     	    //.registerTypeHierarchyAdapter(Calendar.class, (JsonSerializer<Calendar>) (date, type, jsonSerializationContext) -> { return new JsonPrimitive(date.getTimeInMillis()); })   
-    		.setLongSerializationPolicy(LongSerializationPolicy.STRING)
+    		//.setLongSerializationPolicy(LongSerializationPolicy.STRING)
+    		.excludeFieldsWithoutExposeAnnotation()
     		.create();
 
 	@Override

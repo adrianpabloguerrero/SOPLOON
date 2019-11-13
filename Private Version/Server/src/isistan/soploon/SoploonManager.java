@@ -10,7 +10,7 @@ import isistan.soploon.services.resources.CorrectionResource;
 import isistan.soploon.services.resources.PredicateResource;
 import isistan.soploon.services.resources.ProjectResource;
 import isistan.soploon.services.resources.RuleResource;
-import isistan.soploon.services.resources.UserResource;
+import isistan.soploon.services.resources.users.UserResource;
 
 @Immediate
 @Path("/")

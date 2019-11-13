@@ -1,4 +1,4 @@
-package isistan.soploon.models.user;
+package isistan.soploon.services.resources.users;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,18 +7,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import isistan.soploon.database.Database;
+import isistan.soploon.services.resources.users.User.Role;
 
 public class UserDao {
+	
 	private static final String TABLE_NAME = "soploon.user";
-	private static final String COLUMNS = "(creation_date,name,role)";
-	private static final String VALUES = "(to_timestamp(?),?,?)";
+	private static final String COLUMNS = "(creation_date,name,role,password)";
+	private static final String VALUES = "(to_timestamp(?),?,?,?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
-	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
+	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String SELECT_ALL_USERS = "SELECT * FROM " + TABLE_NAME + ";";
-	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "
-			+ "id = ? , creation_date = to_timestamp(?) , name = ? , role = ? " + CONDITION_ID;
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , creation_date = to_timestamp(?) , name = ? , role = ?, password = ? " + CONDITION_ID;
 
 	private Database database;
 
@@ -27,13 +28,14 @@ public class UserDao {
 	}
 
 	public boolean insert(User user) throws SQLException {
-		Object[] args = new Object[3];
+		Object[] args = new Object[4];
 		args[0] = user.getCreationDate();
 		args[1] = user.getName();
-		args[2] = user.getRole();
+		args[2] = user.getRole().toString();
+		args[3] = user.getPassword();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -56,14 +58,10 @@ public class UserDao {
 	public User getUser(int id) throws SQLException {
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
-				User user = new User();
-				user.setId(result.getInt(1));
-				user.setCreationDate((result.getDate(2).getTime()));
-				user.setName(result.getString(3));
-				user.setRole(result.getString(4));
+				User user = readRow(result);
 				return user;
 			} else {
 				return null;
@@ -81,19 +79,14 @@ public class UserDao {
 		ArrayList<User> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ALL_USERS)) {
-			ResultSet result = statement.executeQuery(); 
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_USERS)) {
+			ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				User user = new User();
-				user.setId(result.getInt(1));
-				user.setCreationDate((result.getDate(2).getTime()));
-				user.setName(result.getString(3));
-				user.setRole(result.getString(4));
+				User user = this.readRow(result);
 				out.add(user);
 			}
 			return out;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw e;
 		} finally {
 			if (connection != null) {
@@ -102,18 +95,19 @@ public class UserDao {
 		}
 	}
 
-	public boolean updateUser(int id, User user) throws SQLException {
-		//Tambien permito cambiar el id?
+	public boolean updateUser(User user) throws SQLException {
+
 		Object[] args = new Object[5];
 		args[0] = user.getId();
 		args[1] = user.getCreationDate();
 		args[2] = user.getName();
-		args[3] = user.getRole();	
-		args[4] = id;
-
-		Connection connection = this.database.connection();
+		args[3] = user.getRole();
+		args[4] = user.getId();
+		args[5] = user.getPassword();
 		
-		try (PreparedStatement statement = this.database.getStatement(connection,UPDATE,args)) {
+		Connection connection = this.database.connection();
+
+		try (PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				return true;
@@ -127,6 +121,17 @@ public class UserDao {
 				connection.close();
 			}
 		}
-		
+
 	}
+	
+	private User readRow(ResultSet result) throws SQLException {
+		User user = new User();
+		user.setId(result.getInt(1));
+		user.setCreationDate((result.getDate(2).getTime()));
+		user.setName(result.getString(3));
+		user.setRole(Role.valueOf(result.getString(4)));
+		user.setPassword(result.getString(5));
+		return user;
+	}
+	
 }

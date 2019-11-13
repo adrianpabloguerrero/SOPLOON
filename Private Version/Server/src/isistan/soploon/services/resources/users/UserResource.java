@@ -1,6 +1,5 @@
-package isistan.soploon.services.resources;
+package isistan.soploon.services.resources.users;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -18,26 +17,25 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.user.User;
-import isistan.soploon.models.user.UserDao;
 
 public class UserResource {
-	
+
 	private Database database;
 	private UserDao dao;
-
 
 	public UserResource(Database database) {
 		this.database = database;
 		this.dao = new UserDao(this.database);
 	}
-	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addUser(User user, @Context UriInfo uriInfo) {
-			if (user == null)
-				return Response.status(Response.Status.BAD_REQUEST).build();
+
+		if (user == null || user.getId() != 0 || !user.check())
+			return Response.status(Response.Status.BAD_REQUEST).build();
+
 		try {
 			if (this.dao.insert(user)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
@@ -51,13 +49,13 @@ public class UserResource {
 			return Response.serverError().build();
 		}
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{id}/")
-	public Response getUser(@PathParam("id") int id) {
+	@Path("/{user_id}/")
+	public Response getUser(@PathParam("user_id") int userId) {
 		try {
-			User user = this.dao.getUser(id);
+			User user = this.dao.getUser(userId);
 			if (user == null)
 				return Response.status(Status.NOT_FOUND).build();
 			return Response.ok(user).build();
@@ -65,12 +63,12 @@ public class UserResource {
 			return Response.serverError().build();
 		}
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers() {
 		try {
-			ArrayList <User> users = this.dao.getUsers();
+			ArrayList<User> users = this.dao.getUsers();
 			if (users == null)
 				return Response.status(Status.NOT_FOUND).build();
 			return Response.ok(users).build();
@@ -78,16 +76,25 @@ public class UserResource {
 			return Response.serverError().build();
 		}
 	}
-	
-	
+
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/{id}/")
-	public Response editRule(@PathParam("id") int id, User user) throws SQLException {
-		if (this.dao.updateUser(id,user))
-		 return Response.ok(user).build();
-		return Response.status(Response.Status.BAD_REQUEST).build();
+	@Path("/{user_id}/")
+	public Response editRule(@PathParam("user_id") int userId, User user) {
+		if (user == null || user.getId() != userId || !user.check())
+			return Response.status(Response.Status.BAD_REQUEST).build();
+
+		try {
+			if (this.dao.updateUser(user))
+				return Response.ok(user).build();
+			else
+				return Response.status(Response.Status.BAD_REQUEST).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+
 	}
 
 }

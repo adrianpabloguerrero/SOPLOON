@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.user.User;
 
 public class ProjectDao {
 	private static final String TABLE_NAME = "soploon.project";
@@ -18,8 +17,7 @@ public class ProjectDao {
 	private static final String CONDITION_USER_ID = "WHERE user_id = ? ";
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID_USER = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_USER_ID + ";";
-	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "
-			+ "user_id = ? , id = ? , name = ? " + CONDITION_ID;
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET " + "user_id = ? , id = ? , name = ? " + CONDITION_ID;
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String SELECT_ALL_PROJECTS = "SELECT * FROM " + TABLE_NAME + ";";
 
@@ -36,7 +34,7 @@ public class ProjectDao {
 		args[1] = project.getName();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -56,13 +54,13 @@ public class ProjectDao {
 		}
 	}
 
-	public ArrayList <Project> getProjectByIdUser(int idUser) throws SQLException {
+	public ArrayList<Project> getProjectByIdUser(int idUser) throws SQLException {
 
 		ArrayList<Project> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_USER,idUser)) {
-			ResultSet result = statement.executeQuery(); 
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_USER, idUser)) {
+			ResultSet result = statement.executeQuery();
 
 			while (result.next()) {
 				Project project = new Project();
@@ -72,8 +70,7 @@ public class ProjectDao {
 				out.add(project);
 			}
 			return out;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw e;
 		} finally {
 			if (connection != null) {
@@ -90,10 +87,9 @@ public class ProjectDao {
 		args[2] = project.getName();
 		args[3] = id;
 
-
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,UPDATE,args)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				return true;
@@ -110,12 +106,10 @@ public class ProjectDao {
 
 	}
 
-
-
 	public Project getProjectById(int id) throws SQLException {
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Project project = new Project();
@@ -139,7 +133,7 @@ public class ProjectDao {
 		ArrayList<Project> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ALL_PROJECTS)) {		
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PROJECTS)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Project project = new Project();
@@ -147,7 +141,7 @@ public class ProjectDao {
 				project.setId(result.getInt(2));
 				project.setName(result.getString(3));
 				out.add(project);
-			} 
+			}
 			return out;
 		} catch (SQLException e) {
 			throw e;
