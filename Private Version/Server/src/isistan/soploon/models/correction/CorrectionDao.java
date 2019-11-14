@@ -25,9 +25,6 @@ public class CorrectionDao {
 	public CorrectionDao(Database database) {
 		this.database = database;
 	}
-
-
-	
 	
 	public boolean insert(Correction correction) throws SQLException {
 		Gson gson = new Gson();
@@ -56,7 +53,6 @@ public class CorrectionDao {
 			}
 		}
 	}
-
 
 
 } 

@@ -59,14 +59,13 @@ public class User {
 		this.password = password;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", creationDate=" + creationDate + ", name=" + name + ", role=" + role + ", password="
-				+ password + "]";
-	}
-
 	public boolean check() {
 		return this.role != null && (this.role != Role.profesor || this.password != null);
+	}
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", creationDate=" + creationDate + ", name=" + name + ", role=" + role + ", password=" + password + "]";
 	}
 
 }

@@ -1,14 +1,17 @@
-package isistan.soploon.models.project;
+package isistan.soploon.services.resources.projects;
 
+import com.google.gson.annotations.Expose;
 
 public class Project {
-	
+
+	@Expose
 	private int userId;
+	@Expose
 	private int id;
+	@Expose
 	private String name;
 
-
-	public Project () {
+	public Project() {
 
 	}
 
@@ -32,18 +35,16 @@ public class Project {
 		this.userId = userId;
 	}
 
-
 	public int getUserId() {
 		return userId;
 	}
-	
+
 	public void setIdUser(int userId) {
 		this.userId = userId;
 	}
-
-
-
-
-
+	
+	public boolean check() {
+		return this.name != null;
+	}
 
 }

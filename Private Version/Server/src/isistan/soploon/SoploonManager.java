@@ -8,8 +8,8 @@ import org.glassfish.hk2.api.Immediate;
 import isistan.soploon.database.Database;
 import isistan.soploon.services.resources.CorrectionResource;
 import isistan.soploon.services.resources.PredicateResource;
-import isistan.soploon.services.resources.ProjectResource;
 import isistan.soploon.services.resources.RuleResource;
+import isistan.soploon.services.resources.projects.ProjectResource;
 import isistan.soploon.services.resources.users.UserResource;
 
 @Immediate
@@ -43,10 +43,10 @@ public class SoploonManager extends Application {
 		return this.ruleResource;
 	}
 
-	@Path("/projects/")
+	/*@Path("/projects/")
 	public ProjectResource getProjectResource() {
 		return this.projectResource;
-	}
+	}*/
 	
 	@Path("/users/")
 	public UserResource getUserResource() {
@@ -58,10 +58,10 @@ public class SoploonManager extends Application {
 		return this.predicateResorce;
 	}
 
-	@Path("/correction/")
+	/*@Path("/correction/")
 	public CorrectionResource getCorrectionResource() {
 		return this.correctionResource;
-	}
+	}*/
 	
 	
 }

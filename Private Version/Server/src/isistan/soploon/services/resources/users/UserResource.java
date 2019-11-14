@@ -17,84 +17,80 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
+import isistan.soploon.services.resources.projects.ProjectResource;
 
 public class UserResource {
 
 	private Database database;
 	private UserDao dao;
+	private ProjectResource projectResource;
 
 	public UserResource(Database database) {
 		this.database = database;
 		this.dao = new UserDao(this.database);
+		this.projectResource = new ProjectResource(this.database);
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addUser(User user, @Context UriInfo uriInfo) {
-
+	public Response addUser(User user, @Context UriInfo uriInfo) throws Exception {
 		if (user == null || user.getId() != 0 || !user.check())
-			return Response.status(Response.Status.BAD_REQUEST).build();
+			return Response.status(Status.BAD_REQUEST).build();
 
-		try {
-			if (this.dao.insert(user)) {
-				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-				uriBuilder.path(Integer.toString(user.getId()));
-				return Response.created(uriBuilder.build()).entity(user).build();
-			} else {
-				return Response.status(Status.CONFLICT).build();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().build();
+		if (this.dao.insert(user)) {
+			UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+			uriBuilder.path(Integer.toString(user.getId()));
+			return Response.created(uriBuilder.build()).entity(user).build();
+		} else {
+			return Response.status(Status.BAD_REQUEST).build();
 		}
+
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{user_id}/")
-	public Response getUser(@PathParam("user_id") int userId) {
-		try {
-			User user = this.dao.getUser(userId);
-			if (user == null)
-				return Response.status(Status.NOT_FOUND).build();
-			return Response.ok(user).build();
-		} catch (Exception e) {
-			return Response.serverError().build();
-		}
+	public Response getUser(@PathParam("user_id") int userId) throws Exception {
+		User user = this.dao.getUser(userId);
+		if (user == null)
+			return Response.status(Status.NOT_FOUND).build();
+		return Response.ok(user).build();
+
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUsers() {
-		try {
-			ArrayList<User> users = this.dao.getUsers();
-			if (users == null)
-				return Response.status(Status.NOT_FOUND).build();
-			return Response.ok(users).build();
-		} catch (Exception e) {
-			return Response.serverError().build();
-		}
+	public Response getUsers() throws Exception {
+		ArrayList<User> users = this.dao.getUsers();
+		return Response.ok(users).build();
+
 	}
 
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{user_id}/")
-	public Response editRule(@PathParam("user_id") int userId, User user) {
-		if (user == null || user.getId() != userId || !user.check())
-			return Response.status(Response.Status.BAD_REQUEST).build();
+	public Response editUser(@PathParam("user_id") int userId, User updatedUser) throws Exception {
+		if (updatedUser == null || updatedUser.getId() != userId || !updatedUser.check())
+			return Response.status(Status.BAD_REQUEST).build();
 
-		try {
-			if (this.dao.updateUser(user))
-				return Response.ok(user).build();
-			else
-				return Response.status(Response.Status.BAD_REQUEST).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().build();
-		}
+		User user = this.dao.getUser(userId);
+		if (user == null)
+			return Response.status(Status.NOT_FOUND).build();
 
+		if (this.dao.updateUser(updatedUser))
+			return Response.ok(updatedUser).build();
+		else
+			return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@Path("/{user_id}/projects")
+	public ProjectResource projects(@PathParam("user_id") int userId) throws Exception {
+		User user = this.dao.getUser(userId);
+		if (user == null)
+			return null;
+		return this.projectResource;
 	}
 
 }
