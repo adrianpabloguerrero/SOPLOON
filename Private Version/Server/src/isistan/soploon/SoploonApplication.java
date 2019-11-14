@@ -8,6 +8,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import isistan.soploon.services.utils.CORSFilter;
+import isistan.soploon.services.utils.ExceptionCatcher;
 import isistan.soploon.services.utils.GsonProvider;
 
 
@@ -19,6 +20,7 @@ public class SoploonApplication extends ResourceConfig {
 	        ServiceLocatorUtilities.enableImmediateScope(locator);
 	        this.register(CORSFilter.class);
 	        this.register(GsonProvider.class);
+	        this.register(ExceptionCatcher.class);
 	        this.register(SoploonManager.class);    
 	    }
 }
