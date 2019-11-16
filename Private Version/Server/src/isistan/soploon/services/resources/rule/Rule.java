@@ -1,18 +1,28 @@
-package isistan.soploon.models.rule;
+package isistan.soploon.services.resources.rule;
+
+import com.google.gson.annotations.Expose;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
 
 public class Rule {
-
+	
+	@Expose
 	private int id;
+	@Expose
 	private int version;
+	@Expose
 	private String name;
+	@Expose
 	private String description;
+	@Expose
 	private String link;
+	@Expose
 	private String query;
+	@Expose
 	private String predicate;
+	@Expose
 	private boolean activated;
 
 	public Rule() {

@@ -1,4 +1,4 @@
-package isistan.soploon.models.rule;
+package isistan.soploon.services.resources.rule;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +22,7 @@ public class RuleDao {
 	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?,?,?)";
 	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
 	private static final String SELECT_ACTIVATED_RULES = "SELECT * FROM " + TABLE_NAME + " WHERE activated = true;" ;
-	//private static final String UPDATE = "BEGIN; " + SET_FALSE_BY_ID + INSERT_NEW_VERSION + " COMMIT;";
+
 	private Database database;
 
 	public RuleDao(Database database) {
@@ -66,15 +66,7 @@ public class RuleDao {
 		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
-				Rule rule = new Rule();
-				rule.setId(result.getInt(1));
-				rule.setVersion(result.getInt(2));
-				rule.setName(result.getString(3));
-				rule.setDescription(result.getString(4));
-				rule.setLink(result.getString(5));
-				rule.setQuery(result.getString(6));
-				rule.setPredicate(result.getString(7));
-				rule.setActivated(result.getBoolean(8));
+				Rule rule = this.readRow(result);
 				return rule;
 			} else {
 				return null;
@@ -97,15 +89,7 @@ public class RuleDao {
 		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
-				Rule rule = new Rule();
-				rule.setId(result.getInt(1));
-				rule.setVersion(result.getInt(2));
-				rule.setName(result.getString(3));
-				rule.setDescription(result.getString(4));
-				rule.setLink(result.getString(5));
-				rule.setQuery(result.getString(6));
-				rule.setPredicate(result.getString(7));
-				rule.setActivated(result.getBoolean(8));
+				Rule rule = this.readRow(result);
 				out.add(rule);
 			}
 			return out;
@@ -118,8 +102,6 @@ public class RuleDao {
 			}
 		}
 	}
-
-
 
 	public boolean updateRule(int id, Rule rule) throws SQLException {
 
@@ -169,35 +151,18 @@ public class RuleDao {
 
 		}
 	}
-
-
-	// Viru: Lo dejo aca por si sirve de referencia
-	/*
-	 * 
-	public boolean insert(List<Activity> activities) {
-		Gson gson = new Gson();
-
-		String query = INSERT;
-		Object[] args = new Object[4*activities.size()];
-
-		int index = 0;
-		for (Activity activity: activities) {
-			args[index+0] = activity.getId();
-			args[index+1] = activity.getTime();
-			args[index+2] = activity.getElapsedTime();
-			args[index+3] = gson.toJson(activity.getActivities());
-			if (index != 0)
-				query += ", " + VALUES;
-			else 
-				query += " " + VALUES;
-			index += 4;
-		}
-
-		query += ";";
-
-		return this.database.insert(query, args) == activities.size();
+	
+	private Rule readRow (ResultSet result) throws SQLException {
+		Rule rule = new Rule();
+		rule.setId(result.getInt(1));
+		rule.setVersion(result.getInt(2));
+		rule.setName(result.getString(3));
+		rule.setDescription(result.getString(4));
+		rule.setLink(result.getString(5));
+		rule.setQuery(result.getString(6));
+		rule.setPredicate(result.getString(7));
+		rule.setActivated(result.getBoolean(8));
+		return rule;
 	}
-	 */
-
 
 }

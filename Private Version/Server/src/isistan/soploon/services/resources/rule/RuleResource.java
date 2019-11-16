@@ -1,4 +1,4 @@
-package isistan.soploon.services.resources;
+package isistan.soploon.services.resources.rule;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,8 +18,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.rule.Rule;
-import isistan.soploon.models.rule.RuleDao;
 
 public class RuleResource {
 
@@ -42,8 +40,6 @@ public class RuleResource {
 		}
 	}
 
-	
-	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
@@ -57,6 +53,22 @@ public class RuleResource {
 			return Response.serverError().build();
 		}
 	}
+	
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{id}/version")
+	public Response getRuleVersion(@PathParam("id") int id) {
+		try {
+			Rule rule = this.dao.getRule(id);
+			if (rule == null)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.ok(rule).build();
+		} catch (Exception e) {
+			return Response.serverError().build();
+		}
+	}
+	
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
