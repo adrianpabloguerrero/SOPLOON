@@ -8,7 +8,7 @@ import org.glassfish.hk2.api.Immediate;
 import isistan.soploon.database.Database;
 import isistan.soploon.services.resources.CorrectionResource;
 import isistan.soploon.services.resources.PredicateResource;
-import isistan.soploon.services.resources.RuleResource;
+import isistan.soploon.services.resources.rule.RuleResource;
 import isistan.soploon.services.resources.projects.ProjectResource;
 import isistan.soploon.services.resources.users.UserResource;
 

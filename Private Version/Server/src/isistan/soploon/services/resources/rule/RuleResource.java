@@ -57,13 +57,11 @@ public class RuleResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{id}/version")
+	@Path("/{id}/versions/")
 	public Response getRuleVersion(@PathParam("id") int id) {
 		try {
-			Rule rule = this.dao.getRule(id);
-			if (rule == null)
-				return Response.status(Status.NOT_FOUND).build();
-			return Response.ok(rule).build();
+			ArrayList<Rule> rules = this.dao.getRuleVersions(id);
+			return Response.ok(rules).build();
 		} catch (Exception e) {
 			return Response.serverError().build();
 		}
