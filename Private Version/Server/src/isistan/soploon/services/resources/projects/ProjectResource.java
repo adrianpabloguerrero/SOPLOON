@@ -16,7 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.services.resources.CorrectionResource;
+import isistan.soploon.services.resources.correction.CorrectionResource;
 
 public class ProjectResource {
 

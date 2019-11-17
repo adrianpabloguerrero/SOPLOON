@@ -13,8 +13,8 @@ public class ErrorDao {
 
 	
 	private static final String TABLE_NAME = "soploon.error";
-	private static final String COLUMNS_INSERT = "(user_id,project_id,date,id_rule,version_rule,code_location,representation_location)";
-	private static final String VALUES = "(?,?,to_timestamp(?),?,?,to_json(?::json),to_json(?::json))";
+	private static final String COLUMNS_INSERT = "(user_id,project_id,date,id_rule,version_rule,code_location,representation_location,reviewed)";
+	private static final String VALUES = "(?,?,to_timestamp(?),?,?,to_json(?::json),to_json(?::json),?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id = ? ";
@@ -39,6 +39,7 @@ public class ErrorDao {
 		args[4] = error.getVersionRule();
 		args[5] = gson.toJson(error.getCodeLocation());
 		args[6] = gson.toJson(error.getRepresentationLocation());
+		args[7] = error.getReviewed();
 
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {

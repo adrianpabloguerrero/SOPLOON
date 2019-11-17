@@ -1,7 +1,6 @@
-package isistan.soploon.services.resources;
+package isistan.soploon.services.resources.correction;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,8 +15,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.correction.Correction;
-import isistan.soploon.models.correction.CorrectionDao;
+
 
 // TODO, HACER LOS METODOS HTTP DE ESTA CLASE, SOLO INSERT Y GET, NO HAY UPDATE
 // NOTA: EL INSERT DEBERIA TRAER CONSIGO TODA LA LISTA DE ERRORES, NO TIENE SENTIDO INSERTAR DE A UN ERROR
@@ -43,22 +41,19 @@ public class CorrectionResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addProject(Correction correction, @Context UriInfo uriInfo) throws SQLException {
+	public Response addProject(Correction correction, @Context UriInfo uriInfo) throws Exception {
 		if (correction == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
-		try {
-			if (this.dao.insert(correction)) {
+		if (this.dao.insert(correction)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
 				uriBuilder.path(Integer.toString(correction.getUserId())+Integer.toString(correction.getProjectId())+Long.toString(correction.getDate()));
 				return Response.created(uriBuilder.build()).entity(correction).build();
 			} else {
 				return Response.status(Status.CONFLICT).build();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().build();
 		}
-	}
-	
 	
 }
+	
+	
+

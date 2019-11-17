@@ -2,17 +2,28 @@ package isistan.soploon.services.resources.error;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.Expose;
+
 public class Error {
 
+	@Expose
 	private int id;
+	@Expose
 	private int userId;
+	@Expose
 	private int projectId;
+	@Expose
 	private long date;
+	@Expose
 	private int idRule;
+	@Expose
 	private int versionRule;
+	@Expose
 	private ArrayList <CodeLocation> codeLocation;
+	@Expose
 	private ArrayList <Integer> representationLocation;
-
+	@Expose
+	private int reviewed;
 
 	public int getId() {
 		return id;
@@ -61,6 +72,12 @@ public class Error {
 	}
 	public void setRepresentationLocation(ArrayList<Integer> representationLocation) {
 		this.representationLocation = representationLocation;
+	}
+	public int getReviewed() {
+		return reviewed;
+	}
+	public void setReviewed(int reviewed) {
+		this.reviewed = reviewed;
 	}
 
 	

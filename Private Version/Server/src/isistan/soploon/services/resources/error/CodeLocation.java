@@ -1,9 +1,14 @@
 package isistan.soploon.services.resources.error;
 
+import com.google.gson.annotations.Expose;
+
 public class CodeLocation {
 	
+	@Expose
 	private String Path;
+	@Expose
 	private String startChar;
+	@Expose
 	private String endChar;
 	
 	

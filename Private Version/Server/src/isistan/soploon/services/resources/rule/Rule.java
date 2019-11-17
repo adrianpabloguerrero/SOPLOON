@@ -21,6 +21,7 @@ public class Rule {
 	@Expose
 	private String query;
 	@Expose
+	//TODO Esto no deberia ser el identificador y version de un predicate? Sino estoy duplicando info. 
 	private String predicate;
 	@Expose
 	private boolean activated;

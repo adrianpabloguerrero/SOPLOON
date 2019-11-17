@@ -6,7 +6,7 @@ import javax.ws.rs.core.Application;
 import org.glassfish.hk2.api.Immediate;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.services.resources.CorrectionResource;
+import isistan.soploon.services.resources.correction.CorrectionResource;
 import isistan.soploon.services.resources.predicate.PredicateResource;
 import isistan.soploon.services.resources.rule.RuleResource;
 import isistan.soploon.services.resources.projects.ProjectResource;

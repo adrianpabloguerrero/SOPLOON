@@ -1,14 +1,22 @@
-package isistan.soploon.models.correction;
+package isistan.soploon.services.resources.correction;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.Expose;
+
 public class Correction {
 	
+	@Expose
 	private int userId;
+	@Expose
 	private int projectId;
-	private long date;
+	@Expose
+	private long date;	
+	@Expose
 	private SourceCode code;
+	@Expose
 	private ArrayList<String> representation;
+	@Expose
 	private String version;
 	
 	

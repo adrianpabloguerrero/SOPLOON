@@ -1,4 +1,4 @@
-package isistan.soploon.models.correction;
+package isistan.soploon.services.resources.correction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
