@@ -1,4 +1,4 @@
-package isistan.soploon.services.resources;
+package isistan.soploon.services.resources.predicate;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,8 +18,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.predicate.Predicate;
-import isistan.soploon.models.predicate.PredicateDao;
 
 public class PredicateResource {
 
@@ -31,25 +29,19 @@ public class PredicateResource {
 		this.dao = new PredicateDao(this.database);
 	}
 
-
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addProject(Predicate predicate, @Context UriInfo uriInfo) throws SQLException {
+	public Response addPredicate(Predicate predicate, @Context UriInfo uriInfo) throws Exception {
 		if (predicate == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
-		try {
-			if (this.dao.insert(predicate)) {
+		if (this.dao.insert(predicate)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
 				uriBuilder.path(Integer.toString(predicate.getId()));
 				return Response.created(uriBuilder.build()).entity(predicate).build();
 			} else {
-				return Response.status(Status.CONFLICT).build();
+				return Response.status(Status.BAD_REQUEST).build();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().build();
-		}
 	}
 	
 	@GET
@@ -57,7 +49,7 @@ public class PredicateResource {
 	@Path("/{id}/")
 	public Response getPredicate (@PathParam("id") int id) {
 		try {
-			ArrayList <Predicate> predicate = this.dao.getPredicate(id);
+			Predicate predicate = this.dao.getPredicate(id);
 			if (predicate == null)
 				return Response.status(Status.NOT_FOUND).build();
 			return Response.ok(predicate).build();
@@ -68,7 +60,19 @@ public class PredicateResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPredicate() {
+	@Path("/{id}/versions/")
+	public Response getPredicateVersions(@PathParam("id") int id) {
+		try {
+			ArrayList<Predicate> predicates = this.dao.getPredicateVersions(id);
+			return Response.ok(predicates).build();
+		} catch (Exception e) {
+			return Response.serverError().build();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPredicates() {
 		try {
 			ArrayList <Predicate> predicates = this.dao.getPredicates();
 			if (predicates == null)
@@ -78,7 +82,6 @@ public class PredicateResource {
 			return Response.serverError().build();
 		}
 	}
-	
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)

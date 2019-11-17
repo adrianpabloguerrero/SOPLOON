@@ -7,7 +7,7 @@ import org.glassfish.hk2.api.Immediate;
 
 import isistan.soploon.database.Database;
 import isistan.soploon.services.resources.CorrectionResource;
-import isistan.soploon.services.resources.PredicateResource;
+import isistan.soploon.services.resources.predicate.PredicateResource;
 import isistan.soploon.services.resources.rule.RuleResource;
 import isistan.soploon.services.resources.projects.ProjectResource;
 import isistan.soploon.services.resources.users.UserResource;
@@ -53,7 +53,7 @@ public class SoploonManager extends Application {
 		return this.userResource;
 	}
 	
-	@Path("/predicate/")
+	@Path("/predicates/")
 	public PredicateResource getPredicateResource() {
 		return this.predicateResorce;
 	}

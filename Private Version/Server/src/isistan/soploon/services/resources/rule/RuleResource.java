@@ -58,7 +58,7 @@ public class RuleResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/versions/")
-	public Response getRuleVersion(@PathParam("id") int id) {
+	public Response getRuleVersions(@PathParam("id") int id) {
 		try {
 			ArrayList<Rule> rules = this.dao.getRuleVersions(id);
 			return Response.ok(rules).build();

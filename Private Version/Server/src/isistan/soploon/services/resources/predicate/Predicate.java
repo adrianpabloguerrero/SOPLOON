@@ -1,12 +1,21 @@
-package isistan.soploon.models.predicate;
+package isistan.soploon.services.resources.predicate;
+
+import com.google.gson.annotations.Expose;
 
 public class Predicate {
 
+	@Expose
 	private int id;
+	@Expose
 	private int version;
+	@Expose
 	private String name;
+	@Expose
 	private String description;
+	@Expose
 	private String code;
+	@Expose
+	private boolean activated;
 	
 	public Predicate (){
 		this.id = 0;
@@ -44,6 +53,14 @@ public class Predicate {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public boolean getActivated() {
+		return activated;
+	}
+	
+	public void setActivated(boolean activated) {
+		this.activated = activated;
 	}
 	
 }

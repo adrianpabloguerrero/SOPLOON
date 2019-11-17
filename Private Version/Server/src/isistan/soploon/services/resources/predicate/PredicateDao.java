@@ -1,53 +1,54 @@
-package isistan.soploon.services.resources.rule;
-
+package isistan.soploon.services.resources.predicate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import isistan.soploon.database.Database;
+import isistan.soploon.services.resources.rule.Rule;
 
-public class RuleDao {
-
-	private static final String TABLE_NAME = "soploon.rule";
-	private static final String COLUMNS_INSERT = "(name,description,link,query,predicate,activated)";
+public class PredicateDao {
+	private static final String TABLE_NAME = "soploon.predicate ";
+	private static final String COLUMNS_INSERT = "(name,description,code,activated)";
+	private static final String VALUES = "(?,?,?,?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
-	private static final String VALUES = "(?,?,?,?,?,?)";
-	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
-	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";
-	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME ;
-	private static final String SELECT_BY_ID = SIMPLE_SELECT + " " + CONDITION_ID + LAST_VERSION;
+	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
+	private static final String CONDITION_ID = " WHERE id = ? ";
+	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";
+	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + LAST_VERSION + ";";
 	private static final String SET_FALSE_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID + ";";
 	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME  + CONDITION_ID + LAST_VERSION + ")";
-	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?,?,?)";
+	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?)";
+	private static final String SELECT_ACTIVATED_PREDICATES = SIMPLE_SELECT + " WHERE activated = true;" ;
 	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
-	private static final String SELECT_ACTIVATED_RULES = SIMPLE_SELECT + " WHERE activated = true;" ;
 	private static final String SELECT_BY_ID_VERSIONS = SIMPLE_SELECT + CONDITION_ID;
 
+	
 	private Database database;
 
-	public RuleDao(Database database) {
+
+	public PredicateDao(Database database) {
 		this.database = database;
 	}
 
-	public boolean insert(Rule rule) throws SQLException {
-		Object[] args = new Object[6];
-		args[0] = rule.getName();
-		args[1] = rule.getDescription();
-		args[2]	= rule.getLink();
-		args[3] = rule.getQuery();
-		args[4] = rule.getPredicate();
-		args[5] = rule.getActivated();
+	public boolean insert(Predicate predicate) throws SQLException {
+		Object[] args = new Object[4];
+		args[0] = predicate.getName();
+		args[1] = predicate.getDescription();
+		args[2]	= predicate.getCode();
+		args[3] = predicate.getActivated();
 
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
+				System.out.println("dasda");
 				ResultSet keys = statement.getGeneratedKeys();
 				keys.next();
 				int id = keys.getInt(1);
-				rule.setId(id);
+				predicate.setId(id);
 				return true;
 			} else {
 				return false;
@@ -61,14 +62,15 @@ public class RuleDao {
 		}
 	}
 
-	public Rule getRule(int id) throws SQLException {
+	public Predicate getPredicate(int id) throws SQLException {
+
 		Connection connection = this.database.connection();
 
 		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
-				Rule rule = this.readRow(result);
-				return rule;
+				Predicate predicate = this.readRow(result);
+				return predicate;
 			} else {
 				return null;
 			}
@@ -81,16 +83,16 @@ public class RuleDao {
 		}
 	}
 
-	public ArrayList<Rule> getRules() throws SQLException {
-		ArrayList<Rule> out = new ArrayList<>();
+	public ArrayList<Predicate> getPredicates() throws SQLException {
+		ArrayList<Predicate> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES)) {
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_PREDICATES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
-				Rule rule = this.readRow(result);
-				out.add(rule);
+				Predicate predicate = this.readRow(result);
+				out.add(predicate);
 			}
 			return out;
 		}
@@ -103,22 +105,20 @@ public class RuleDao {
 		}
 	}
 
-	public boolean updateRule(int id, Rule rule) throws SQLException {
+	public boolean updatePredicate (int id, Predicate predicate) throws SQLException {
 
 		//SET FALSE
 		Object [] argsSF = new Object [1];
 		argsSF [0] = id;
 
 		//NEW VERSION
-		Object[] argsNV = new Object[8];
+		Object[] argsNV = new Object[6];
 		argsNV[0] = id;
 		argsNV[1] = id;
-		argsNV[2] = rule.getName();
-		argsNV[3] = rule.getDescription();
-		argsNV[4] = rule.getLink();
-		argsNV[5] = rule.getQuery();
-		argsNV[6] = rule.getPredicate();
-		argsNV[7] = rule.getActivated();	
+		argsNV[2] = predicate.getName();
+		argsNV[3] = predicate.getDescription();
+		argsNV[4] = predicate.getCode();
+		argsNV[5] = predicate.getActivated();
 
 		Connection connection = this.database.connection();
 
@@ -135,8 +135,8 @@ public class RuleDao {
 			connection.commit();
 
 			if (rs.next()) {
-				rule.setId(id);
-				rule.setVersion(rs.getInt("version"));
+				predicate.setId(id);
+				predicate.setVersion(rs.getInt("version"));
 				return true;
 			} else {
 				return false;
@@ -150,18 +150,30 @@ public class RuleDao {
 				connection.close();
 			}
 		}
+
 	}
 
-	public ArrayList<Rule> getRuleVersions(int id) throws SQLException {
-		ArrayList<Rule> out = new ArrayList<>();
+	private Predicate readRow (ResultSet result) throws SQLException {
+		Predicate predicate = new Predicate();
+		predicate.setId(result.getInt(1));
+		predicate.setVersion(result.getInt(2));
+		predicate.setName(result.getString(3));
+		predicate.setDescription(result.getString(4));
+		predicate.setCode(result.getString(5));
+		predicate.setActivated(result.getBoolean(6));
+		return predicate;
+	}
+
+	public ArrayList<Predicate> getPredicateVersions(int id) throws SQLException {
+		ArrayList<Predicate> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
 
 		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_VERSIONS,id)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
-				Rule rule = this.readRow(result);
-				out.add(rule);
+				Predicate predicate = this.readRow(result);
+				out.add(predicate);
 			}
 			return out;
 		}
@@ -173,21 +185,4 @@ public class RuleDao {
 			}
 		}
 	}
-
-
-	private Rule readRow (ResultSet result) throws SQLException {
-		Rule rule = new Rule();
-		rule.setId(result.getInt(1));
-		rule.setVersion(result.getInt(2));
-		rule.setName(result.getString(3));
-		rule.setDescription(result.getString(4));
-		rule.setLink(result.getString(5));
-		rule.setQuery(result.getString(6));
-		rule.setPredicate(result.getString(7));
-		rule.setActivated(result.getBoolean(8));
-		return rule;
-	}
-
-
-
 }
