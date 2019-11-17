@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.services.resources.rule.Rule;
 
 public class PredicateDao {
 	private static final String TABLE_NAME = "soploon.predicate ";

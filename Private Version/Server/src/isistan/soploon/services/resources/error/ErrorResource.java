@@ -1,6 +1,4 @@
-package isistan.soploon.services.resources;
-
-import java.sql.SQLException;
+package isistan.soploon.services.resources.error;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -13,8 +11,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import isistan.soploon.database.Database;
-import isistan.soploon.models.error.ErrorDao;
-import isistan.soploon.models.error.Error;
+
 
 
 public class ErrorResource {
@@ -31,10 +28,9 @@ public class ErrorResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addProject(Error error, @Context UriInfo uriInfo) throws SQLException {
+	public Response addProject(Error error, @Context UriInfo uriInfo) throws Exception {
 		if (error == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
-		try {
 			if (this.dao.insert(error)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
 				uriBuilder.path(Integer.toString(error.getId()));
@@ -42,12 +38,7 @@ public class ErrorResource {
 			} else {
 				return Response.status(Status.CONFLICT).build();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().build();
-		}
 	}
-
 }
 
 

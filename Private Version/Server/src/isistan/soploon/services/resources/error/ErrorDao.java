@@ -1,4 +1,4 @@
-package isistan.soploon.models.error;
+package isistan.soploon.services.resources.error;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,10 +60,4 @@ public class ErrorDao {
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
 }
