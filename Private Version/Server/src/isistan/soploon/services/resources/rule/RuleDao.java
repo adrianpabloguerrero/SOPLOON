@@ -10,7 +10,7 @@ import isistan.soploon.database.Database;
 public class RuleDao {
 
 	private static final String TABLE_NAME = "soploon.rule";
-	private static final String COLUMNS_INSERT = "(name,description,link,query,predicate,activated)";
+	private static final String COLUMNS_INSERT = "(name,description,link,query,code,activated)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String VALUES = "(?,?,?,?,?,?)";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
@@ -37,7 +37,7 @@ public class RuleDao {
 		args[1] = rule.getDescription();
 		args[2]	= rule.getLink();
 		args[3] = rule.getQuery();
-		args[4] = rule.getPredicate();
+		args[4] = rule.getCode();
 		args[5] = rule.getActivated();
 
 		Connection connection = this.database.connection();
@@ -117,7 +117,7 @@ public class RuleDao {
 		argsNV[3] = rule.getDescription();
 		argsNV[4] = rule.getLink();
 		argsNV[5] = rule.getQuery();
-		argsNV[6] = rule.getPredicate();
+		argsNV[6] = rule.getCode();
 		argsNV[7] = rule.getActivated();	
 
 		Connection connection = this.database.connection();
@@ -183,7 +183,7 @@ public class RuleDao {
 		rule.setDescription(result.getString(4));
 		rule.setLink(result.getString(5));
 		rule.setQuery(result.getString(6));
-		rule.setPredicate(result.getString(7));
+		rule.setCode(result.getString(7));
 		rule.setActivated(result.getBoolean(8));
 		return rule;
 	}

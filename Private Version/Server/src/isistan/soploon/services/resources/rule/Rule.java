@@ -21,8 +21,7 @@ public class Rule {
 	@Expose
 	private String query;
 	@Expose
-	//TODO Esto no deberia ser el identificador y version de un predicate? Sino estoy duplicando info. 
-	private String predicate;
+	private String code;
 	@Expose
 	private boolean activated;
 
@@ -33,7 +32,7 @@ public class Rule {
 		this.description = null;
 		this.link = null;
 		this.query = null;
-		this.predicate = null;
+		this.code = null;
 		this.activated = false;
 	}
 
@@ -77,12 +76,12 @@ public class Rule {
 		this.query = query;
 	}
 
-	public String getPredicate() {
-		return this.predicate;
+	public String getCode() {
+		return this.code;
 	}
 
-	public void setPredicate(String predicate) {
-		this.predicate = predicate;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public Boolean getActivated() {
@@ -108,7 +107,7 @@ public class Rule {
 				this.description != null && 
 				this.link != null
 				&& this.query != null && 
-				this.predicate != null && 
+				this.code != null && 
 				this.isPrologValid();
 	}
 
@@ -116,7 +115,7 @@ public class Rule {
 		try {
 			Prolog engine = new Prolog();
 			engine.addTheory(new Theory(this.query));
-			engine.addTheory(new Theory(this.predicate));
+			engine.addTheory(new Theory(this.code));
 			return true;
 		} catch (InvalidTheoryException e) {
 			return false;
