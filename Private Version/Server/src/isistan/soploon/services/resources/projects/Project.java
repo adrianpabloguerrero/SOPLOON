@@ -5,9 +5,9 @@ import com.google.gson.annotations.Expose;
 public class Project {
 
 	@Expose
-	private int userId;
-	@Expose
 	private int id;
+	@Expose
+	private int userId;
 	@Expose
 	private String name;
 

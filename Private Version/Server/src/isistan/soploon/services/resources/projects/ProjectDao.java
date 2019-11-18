@@ -11,12 +11,12 @@ import isistan.soploon.database.Database;
 public class ProjectDao {
 
 	private static final String TABLE_NAME = "soploon.project";
-	private static final String COLUMNS = "(user_id,name)";
+	private static final String COLUMNS = "(id_user,name)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
 	private static final String VALUES = "(?,?)";
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
-	private static final String CONDITION_USER_ID = "WHERE user_id = ? ";
-	private static final String CONDITION_ID = " WHERE user_id = ? AND id = ?";
+	private static final String CONDITION_USER_ID = "WHERE id_user = ? ";
+	private static final String CONDITION_ID = " WHERE id_user = ? AND id = ?";
 	private static final String SELECT_BY_ID_USER = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_USER_ID + ";";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String SELECT_ALL_PROJECTS = "SELECT * FROM " + TABLE_NAME + ";";
@@ -39,7 +39,7 @@ public class ProjectDao {
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
 				keys.next();
-				int id = keys.getInt(2);
+				int id = keys.getInt(1);
 				project.setId(id);
 				return true;
 			} else {
@@ -117,8 +117,8 @@ public class ProjectDao {
 	
 	private Project readRow(ResultSet result) throws SQLException {
 		Project project = new Project();
-		project.setIdUser(result.getInt(1));
-		project.setId(result.getInt(2));
+		project.setId(result.getInt(1));
+		project.setIdUser(result.getInt(2));
 		project.setName(result.getString(3));
 		return project;
 	}
