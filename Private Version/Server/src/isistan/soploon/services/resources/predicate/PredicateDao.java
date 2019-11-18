@@ -43,7 +43,6 @@ public class PredicateDao {
 		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
-				System.out.println("dasda");
 				ResultSet keys = statement.getGeneratedKeys();
 				keys.next();
 				int id = keys.getInt(1);

@@ -97,14 +97,15 @@ public class UserDao {
 
 	public boolean updateUser(User user) throws SQLException {
 
-		Object[] args = new Object[5];
+
+		Object[] args = new Object[6];
 		args[0] = user.getId();
 		args[1] = user.getCreationDate();
 		args[2] = user.getName();
-		args[3] = user.getRole();
-		args[4] = user.getId();
-		args[5] = user.getPassword();
-		
+		args[3] = user.getRole().toString();
+		args[4] = user.getPassword();
+		args[5] = user.getId();
+
 		Connection connection = this.database.connection();
 
 		try (PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
