@@ -1,9 +1,4 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import isistan.soploon.database.Database;
+import ar.edu.unicen.isistan.si.soploon.server.client.WebClient;
 
 public class Main {
 
@@ -13,30 +8,10 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		
-		Database database = new Database(URL,USER,PASS);
-		
-		database.connect();
-		
-		Connection c = database.connection();
-		try {
-			Statement s = c.createStatement();
-			ResultSet res = s.executeQuery("SELECT * FROM soploon.rule");
-			
-			while (res.next()) {
-				System.out.println(res.getInt(1));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				c.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		database.disconnect();
+		WebClient wclient = new WebClient("http://localhost:8080/soploon/api/");
+		System.out.println(wclient.getUsers());
+		System.out.println(wclient.getUser(1));
+		System.out.println(wclient.getProjects(1));
 	}
 
 }
