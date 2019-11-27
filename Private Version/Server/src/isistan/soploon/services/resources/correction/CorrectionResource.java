@@ -1,6 +1,7 @@
 package isistan.soploon.services.resources.correction;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -34,16 +35,18 @@ public class CorrectionResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCorrections(@PathParam("user_id") int userId, @PathParam("project_id") int projectId) throws Exception {
-		// TODO Aca hacer un get de todas las correcciones del projecto en cuestion
-		return Response.ok("Hola, todavia me tienen que hacer").build();
+		ArrayList <Correction> corrections = this.dao.getProjects();
+		return Response.ok(corrections).build();
 	}
-
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addProject(Correction correction, @Context UriInfo uriInfo) throws Exception {
-		if (correction == null)
-			return Response.status(Response.Status.BAD_REQUEST).build();
+	public Response addCorrection(@PathParam("user_id") int userId, @PathParam("project_id") int projectId,Correction correction, @Context UriInfo uriInfo) throws Exception {
+
+		if (correction == null || userId == 0 || projectId == 0|| correction.getUserId() != userId || correction.getProjectId() != projectId )
+			return Response.status(Status.BAD_REQUEST).build();
+
 		if (this.dao.insert(correction)) {
 				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
 				uriBuilder.path(Integer.toString(correction.getUserId())+Integer.toString(correction.getProjectId())+Long.toString(correction.getDate()));
