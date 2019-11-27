@@ -62,5 +62,11 @@ public class Predicate {
 	public void setActivated(boolean activated) {
 		this.activated = activated;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Predicate [id=" + id + ", version=" + version + ", name=" + name + ", description=" + description
+				+ ", code=" + code + ", activated=" + activated + "]";
+	}
+
 }

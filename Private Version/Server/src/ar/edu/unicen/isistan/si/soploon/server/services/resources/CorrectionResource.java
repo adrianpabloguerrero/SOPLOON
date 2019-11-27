@@ -1,5 +1,7 @@
 package ar.edu.unicen.isistan.si.soploon.server.services.resources;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,24 +36,26 @@ public class CorrectionResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCorrections(@PathParam("user_id") int userId, @PathParam("project_id") int projectId) throws Exception {
-		// TODO Aca hacer un get de todas las correcciones del projecto en cuestion
-		return Response.ok("Hola, todavia me tienen que hacer").build();
+		ArrayList<Correction> corrections = this.dao.getCorrectionsByProject(userId, projectId);
+		if (corrections == null)
+			return Response.status(Status.NOT_FOUND).build();
+		return Response.ok(corrections).build();
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addProject(Correction correction, @Context UriInfo uriInfo) throws Exception {
+	public Response addCorrection(Correction correction, @Context UriInfo uriInfo) throws Exception {
 		if (correction == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		if (this.dao.insert(correction)) {
-				UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-				uriBuilder.path(Integer.toString(correction.getUserId())+Integer.toString(correction.getProjectId())+Long.toString(correction.getDate()));
-				return Response.created(uriBuilder.build()).entity(correction).build();
-			} else {
-				return Response.status(Status.CONFLICT).build();
-			}
+			UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+			uriBuilder.path(Integer.toString(correction.getUserId())+Integer.toString(correction.getProjectId())+Long.toString(correction.getDate()));
+			return Response.created(uriBuilder.build()).entity(correction).build();
+		} else {
+			return Response.status(Status.CONFLICT).build();
 		}
+	}
 	
 }
 	

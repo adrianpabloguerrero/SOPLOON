@@ -122,4 +122,10 @@ public class Rule {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Rule [id=" + id + ", version=" + version + ", name=" + name + ", description=" + description + ", link="
+				+ link + ", query=" + query + ", code=" + code + ", activated=" + activated + "]";
+	}
+
 }

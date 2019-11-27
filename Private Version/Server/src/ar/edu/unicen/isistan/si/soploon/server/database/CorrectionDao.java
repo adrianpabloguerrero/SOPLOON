@@ -4,20 +4,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
+import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
 
 public class CorrectionDao {
 
-
 	private static final String TABLE_NAME = "soploon.correction";
-	private static final String COLUMNS_INSERT = "(user_id,project_id,date,code,representation,version)";
+	private static final String COLUMNS_INSERT = "(id_user,id_project,date,code,representation,version)";
 	private static final String VALUES = "(?,?,to_timestamp(?),to_json(?::json),to_json(?::json),?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id = ? ";
+	private static final String CONDITION_PROJECT = " WHERE id_user = ? AND id_project = ?";
+	private static final String SELECT_BY_PROJECT = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_PROJECT + ";";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	
 	private Database database;
@@ -54,7 +58,39 @@ public class CorrectionDao {
 		}
 	}
 
+	public ArrayList<Correction> getCorrectionsByProject(int userId, int projectId) throws SQLException {
+		ArrayList<Correction> out = new ArrayList<>();
 
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
+			ResultSet result = statement.executeQuery();
+
+			while (result.next()) {
+				Correction correction = readRow(result);
+				out.add(correction);
+			}
+			return out;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	private Correction readRow(ResultSet result) throws SQLException {
+		Gson gson = new Gson();
+		Correction correction = new Correction();
+		correction.setUserId(result.getInt(1));
+		correction.setProjectId(result.getInt(2));
+		correction.setDate(result.getInt(3));
+		correction.setCode(gson.fromJson(result.getString(4), SourceCode.class));
+		correction.setRepresentation(gson.fromJson(result.getString(5), new TypeToken<ArrayList<String>>() {}.getType()));
+		correction.setVersion(result.getString(6));
+		return correction;
+	}
+	
 } 
 
 

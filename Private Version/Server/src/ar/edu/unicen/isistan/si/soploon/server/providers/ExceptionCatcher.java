@@ -11,6 +11,7 @@ public class ExceptionCatcher extends Throwable implements ExceptionMapper<Throw
 
 	@Override
 	public Response toResponse(Throwable exception) {
+		exception.printStackTrace();
 		return Response.serverError().build();
 	}
 }
