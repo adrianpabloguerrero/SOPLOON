@@ -1,9 +1,6 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import isistan.soploon.database.Database;
+import ar.edu.unicen.isistan.si.soploon.server.client.WebClient;
+import ar.edu.unicen.isistan.si.soploon.server.models.User;
+import ar.edu.unicen.isistan.si.soploon.server.models.User.Role;
 
 public class Main {
 
@@ -13,30 +10,35 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		WebClient wclient = new WebClient("http://localhost:8080/soploon/api/");
+		// Users
+		System.out.println(wclient.getUsers());
+		System.out.println(wclient.getUser(1));
+		//User user = new User();
+		//user.setName("mi nombre");
+		//user.setRole(Role.student);
+		//System.out.println(wclient.postUser(user));
 		
-		Database database = new Database(URL,USER,PASS);
+		// Proyectos	
+		System.out.println(wclient.getProjects(1));
+		System.out.println(wclient.getProject(1,1));
+		// POST de proyecto
 		
-		database.connect();
+		// Correcciones
 		
-		Connection c = database.connection();
-		try {
-			Statement s = c.createStatement();
-			ResultSet res = s.executeQuery("SELECT * FROM soploon.rule");
-			
-			while (res.next()) {
-				System.out.println(res.getInt(1));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				c.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		database.disconnect();
+		// Errores
+		
+		
+		// Reglas
+		System.out.println(wclient.getRules());
+		System.out.println(wclient.getRule(1));
+		System.out.println(wclient.getRuleHistory(1));
+
+		// Predicados
+		System.out.println(wclient.getPredicates());
+		System.out.println(wclient.getPredicate(2));
+		System.out.println(wclient.getPredicateHistory(2));
+
 	}
 
 }
