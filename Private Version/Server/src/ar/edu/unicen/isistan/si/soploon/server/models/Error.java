@@ -9,9 +9,9 @@ public class Error {
 	@Expose
 	private int id;
 	@Expose
-	private int userId;
+	private int idProject;
 	@Expose
-	private int projectId;
+	private int idUser;
 	@Expose
 	private long date;
 	@Expose
@@ -24,24 +24,25 @@ public class Error {
 	private ArrayList <Integer> representationLocation;
 	@Expose
 	private int reviewed;
-
+	
+	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getUserId() {
-		return userId;
+	public int getIdProject() {
+		return idProject;
 	}
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setIdProject(int idProject) {
+		this.idProject = idProject;
 	}
-	public int getProjectId() {
-		return projectId;
+	public int getIdUser() {
+		return idUser;
 	}
-	public void setProjectId(int projectId) {
-		this.projectId = projectId;
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
 	}
 	public long getDate() {
 		return date;
@@ -79,7 +80,6 @@ public class Error {
 	public void setReviewed(int reviewed) {
 		this.reviewed = reviewed;
 	}
-
 	
 }
 
