@@ -1,12 +1,8 @@
 package isistan.soploon.services.resources.correction;
 
-import com.google.gson.annotations.Expose;
-
 public class SourceCode {
 	
-	@Expose
 	private String path;
-	@Expose
 	private String code;
 	
 	public String getPath() {
