@@ -17,7 +17,7 @@ public class Correction {
 	@Expose
 	private ArrayList<String> representation;
 	@Expose
-	private String version;
+	private String versionSoploon;
 	
 	
 	public int getUserId() {
@@ -50,11 +50,12 @@ public class Correction {
 	public void setRepresentation(ArrayList<String> representation) {
 		this.representation = representation;
 	}
-	public String getVersion() {
-		return version;
+	public String getVersionSoploon() {
+		return versionSoploon;
 	}
-	public void setVersion(String version) {
-		this.version = version;
+	public void setVersionSoploon(String versionSoploon) {
+		this.versionSoploon = versionSoploon;
 	}
+	
 	
 }

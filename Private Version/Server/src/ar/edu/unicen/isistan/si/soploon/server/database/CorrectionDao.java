@@ -15,7 +15,7 @@ import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
 public class CorrectionDao {
 
 	private static final String TABLE_NAME = "soploon.correction";
-	private static final String COLUMNS_INSERT = "(id_user,id_project,date,code,representation,version)";
+	private static final String COLUMNS_INSERT = "(id_user,id_project,date,code,representation,version_soploon)";
 	private static final String VALUES = "(?,?,to_timestamp(?),to_json(?::json),to_json(?::json),?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
@@ -39,7 +39,7 @@ public class CorrectionDao {
 		args[2] = correction.getDate();
 		args[3] = gson.toJson(correction.getCode());
 		args[4] = gson.toJson(correction.getRepresentation());
-		args[5] = correction.getVersion();
+		args[5] = correction.getVersionSoploon();
 		
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
@@ -87,7 +87,7 @@ public class CorrectionDao {
 		correction.setDate(result.getInt(3));
 		correction.setCode(gson.fromJson(result.getString(4), SourceCode.class));
 		correction.setRepresentation(gson.fromJson(result.getString(5), new TypeToken<ArrayList<String>>() {}.getType()));
-		correction.setVersion(result.getString(6));
+		correction.setVersionSoploon(result.getString(6));
 		return correction;
 	}
 	
