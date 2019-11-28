@@ -9,13 +9,13 @@ public class Error {
 	@Expose
 	private int id;
 	@Expose
-	private int idProject;
+	private int projectId;
 	@Expose
-	private int idUser;
+	private int userId;
 	@Expose
 	private long date;
 	@Expose
-	private int idRule;
+	private int ruleId;
 	@Expose
 	private int versionRule;
 	@Expose
@@ -25,24 +25,23 @@ public class Error {
 	@Expose
 	private int reviewed;
 	
-	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getIdProject() {
-		return idProject;
+	public int getProjectId() {
+		return projectId;
 	}
-	public void setIdProject(int idProject) {
-		this.idProject = idProject;
+	public void setProjectId(int projectId) {
+		this.projectId = projectId;
 	}
-	public int getIdUser() {
-		return idUser;
+	public int getUserId() {
+		return userId;
 	}
-	public void setIdUser(int idUser) {
-		this.idUser = idUser;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	public long getDate() {
 		return date;
@@ -50,11 +49,11 @@ public class Error {
 	public void setDate(long date) {
 		this.date = date;
 	}
-	public int getIdRule() {
-		return idRule;
+	public int getRuleId() {
+		return ruleId;
 	}
-	public void setIdRule(int idRule) {
-		this.idRule = idRule;
+	public void setRuleId(int ruleId) {
+		this.ruleId = ruleId;
 	}
 	public int getVersionRule() {
 		return versionRule;
@@ -81,6 +80,8 @@ public class Error {
 		this.reviewed = reviewed;
 	}
 	
+	
+		
 }
 
 

@@ -5,18 +5,17 @@ import com.google.gson.annotations.Expose;
 public class CodeLocation {
 	
 	@Expose
-	private String Path;
+	private String path;
 	@Expose
 	private String startChar;
 	@Expose
 	private String endChar;
 	
-	
 	public String getPath() {
-		return Path;
+		return path;
 	}
 	public void setPath(String path) {
-		Path = path;
+		this.path = path;
 	}
 	public String getStartChar() {
 		return startChar;
@@ -30,7 +29,7 @@ public class CodeLocation {
 	public void setEndChar(String endChar) {
 		this.endChar = endChar;
 	}
-
+	
 	
 	
 }

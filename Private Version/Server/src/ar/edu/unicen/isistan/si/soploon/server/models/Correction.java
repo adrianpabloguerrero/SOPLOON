@@ -1,6 +1,7 @@
 package ar.edu.unicen.isistan.si.soploon.server.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
@@ -13,13 +14,11 @@ public class Correction {
 	@Expose
 	private long date;	
 	@Expose
-	private SourceCode code;
+	private ArrayList<SourceCode> code;
 	@Expose
 	private ArrayList<String> representation;
 	@Expose
 	private String versionSoploon;
-	
-	
 	public int getUserId() {
 		return userId;
 	}
@@ -38,10 +37,10 @@ public class Correction {
 	public void setDate(long date) {
 		this.date = date;
 	}
-	public SourceCode getCode() {
+	public ArrayList<SourceCode> getCode() {
 		return code;
 	}
-	public void setCode(SourceCode code) {
+	public void setCode(ArrayList<SourceCode> code) {
 		this.code = code;
 	}
 	public ArrayList<String> getRepresentation() {
@@ -56,6 +55,8 @@ public class Correction {
 	public void setVersionSoploon(String versionSoploon) {
 		this.versionSoploon = versionSoploon;
 	}
+	
+	
 	
 	
 }

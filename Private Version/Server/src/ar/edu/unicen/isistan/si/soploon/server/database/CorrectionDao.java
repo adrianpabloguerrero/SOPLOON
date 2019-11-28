@@ -66,7 +66,7 @@ public class CorrectionDao {
 			ResultSet result = statement.executeQuery();
 
 			while (result.next()) {
-				Correction correction = readRow(result);
+				Correction correction = this.readRow(result);
 				out.add(correction);
 			}
 			return out;
@@ -82,10 +82,10 @@ public class CorrectionDao {
 	private Correction readRow(ResultSet result) throws SQLException {
 		Gson gson = new Gson();
 		Correction correction = new Correction();
-		correction.setUserId(result.getInt(1));
-		correction.setProjectId(result.getInt(2));
-		correction.setDate(result.getInt(3));
-		correction.setCode(gson.fromJson(result.getString(4), SourceCode.class));
+		correction.setProjectId(result.getInt(1));
+		correction.setUserId(result.getInt(2));
+		correction.setDate(result.getDate(3).getTime());
+		correction.setCode(gson.fromJson(result.getString(4), new TypeToken<ArrayList<SourceCode>>() {}.getType()));
 		correction.setRepresentation(gson.fromJson(result.getString(5), new TypeToken<ArrayList<String>>() {}.getType()));
 		correction.setVersionSoploon(result.getString(6));
 		return correction;
