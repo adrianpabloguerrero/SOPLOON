@@ -55,14 +55,14 @@ public class ErrorDao {
 		}
 		
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (PreparedStatement statement = this.database.getStatement(connection,query,args)) {
 			int modifiedRows = statement.executeUpdate();
-			if (modifiedRows > 1) {
+			if (modifiedRows >= 1) {
 				ResultSet keys = statement.getGeneratedKeys();
 				for (Error error: errors) {
-				keys.next();
-				int id = keys.getInt(1);
-				error.setId(id);
+					keys.next();
+					int id = keys.getInt(1);
+					error.setId(id);
 				}
 				return true;
 			} else {
