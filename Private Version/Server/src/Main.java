@@ -25,19 +25,22 @@ public class Main {
 		// POST de proyecto
 		
 		// Correcciones
+		System.out.println(wclient.getCorrections(2, 3));
+		System.out.println(wclient.getCorrection(2, 3, 1569294000000L));
 		
 		// Errores
-		
+		System.out.println(wclient.getErrors(2, 3, 1569294000000L));
+		System.out.println(wclient.getError(2, 3, 1569294000000L,6));
 		
 		// Reglas
-		System.out.println(wclient.getRules());
-		System.out.println(wclient.getRule(1));
-		System.out.println(wclient.getRuleHistory(1));
+		//System.out.println(wclient.getRules());
+		//System.out.println(wclient.getRule(1));
+		//System.out.println(wclient.getRuleHistory(1));
 
 		// Predicados
-		System.out.println(wclient.getPredicates());
-		System.out.println(wclient.getPredicate(2));
-		System.out.println(wclient.getPredicateHistory(2));
+		//System.out.println(wclient.getPredicates());
+		//System.out.println(wclient.getPredicate(2));
+		//System.out.println(wclient.getPredicateHistory(2));
 
 	}
 

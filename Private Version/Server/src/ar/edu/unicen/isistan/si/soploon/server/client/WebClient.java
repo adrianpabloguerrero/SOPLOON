@@ -12,19 +12,23 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientConfig;
 
+import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
 import ar.edu.unicen.isistan.si.soploon.server.models.Project;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
+import ar.edu.unicen.isistan.si.soploon.server.models.Error;
 import ar.edu.unicen.isistan.si.soploon.server.providers.GsonProvider;
 
 public class WebClient {
 
-	private static final String USERS = "users/";
-	private static final String PROJECTS = "projects/";
-	private static final String RULES = "rules/";
-	private static final String VERSIONS = "versions/";
-	private static final String PREDICATES = "predicates/";
+	private static final String USERS = "users";
+	private static final String PROJECTS = "projects";
+	private static final String RULES = "rules";
+	private static final String VERSIONS = "versions";
+	private static final String PREDICATES = "predicates";
+	private static final String CORRECTIONS = "corrections";
+	private static final String ERRORS = "errors";
 
 	private String basePath;
 
@@ -60,7 +64,7 @@ public class WebClient {
 	 * @return Usuario
 	 */
 	public User getUser(int userId) {
-		WebTarget target = client.target(this.basePath).path(USERS + userId);
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId));
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
 			return response.readEntity(User.class);		
@@ -97,7 +101,7 @@ public class WebClient {
 	 * @return Lista de proyectos
 	 */
 	public List<Project> getProjects(int userId) {
-		WebTarget target = client.target(this.basePath).path(USERS + userId).path(PROJECTS);
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
 			return response.readEntity(new GenericType<List<Project>>() {});		
@@ -129,6 +133,44 @@ public class WebClient {
 	public Project getProject(User user, int projectId) {
 		return this.getProject(user.getId(),projectId);
 	}
+	
+
+	public List<Correction> getCorrections(int userId, int projectId) {
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS);
+		Response response = target.request(MediaType.APPLICATION_JSON).get();
+		if (response.getStatus() == Response.Status.OK.getStatusCode())
+			return response.readEntity(new GenericType<List<Correction>>() {});		
+		else
+			return null;
+	}
+	
+	public Correction getCorrection(int userId, int projectId, long correctionTime) {
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(correctionTime));
+		Response response = target.request(MediaType.APPLICATION_JSON).get();
+		if (response.getStatus() == Response.Status.OK.getStatusCode())
+			return response.readEntity(Correction.class);		
+		else
+			return null;
+	}
+	
+	public List<Error> getErrors(int userId, int projectId, long time) {
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS);
+		Response response = target.request(MediaType.APPLICATION_JSON).get();
+		if (response.getStatus() == Response.Status.OK.getStatusCode())
+			return response.readEntity(new GenericType<List<Error>>() {});		
+		else
+			return null;
+	}
+	
+	public Error getError(int userId, int projectId, long time, int errorId) {
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS).path(String.valueOf(errorId));
+		Response response = target.request(MediaType.APPLICATION_JSON).get();
+		if (response.getStatus() == Response.Status.OK.getStatusCode())
+			return response.readEntity(Error.class);		
+		else
+			return null;
+	}
+	
 	
 	/**
 	 * Lista todas las reglas activas.
