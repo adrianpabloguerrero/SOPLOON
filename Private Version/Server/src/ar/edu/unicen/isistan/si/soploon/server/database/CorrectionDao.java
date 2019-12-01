@@ -1,6 +1,7 @@
 package ar.edu.unicen.isistan.si.soploon.server.database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +20,7 @@ public class CorrectionDao {
 	private static final String VALUES = "(?,?,to_timestamp(?),to_json(?::json),to_json(?::json),?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
-	private static final String CONDITION_ID = " WHERE id = ? ";
+	private static final String CONDITION_ID = " WHERE id_user = ? AND id_project = ? AND date = ?";
 	private static final String CONDITION_PROJECT = " WHERE id_user = ? AND id_project = ?";
 	private static final String SELECT_BY_PROJECT = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_PROJECT + ";";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
@@ -79,6 +80,24 @@ public class CorrectionDao {
 		}
 	}
 
+	public Correction getCorrection(int userId, int projectId, long time) throws SQLException {
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId,new Date(time))) {
+			ResultSet result = statement.executeQuery();
+
+			if (result.next())
+				return this.readRow(result);
+			else
+				return null;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+	
 	private Correction readRow(ResultSet result) throws SQLException {
 		Gson gson = new Gson();
 		Correction correction = new Correction();

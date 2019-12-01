@@ -18,7 +18,6 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.CorrectionDao;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
-import ar.edu.unicen.isistan.si.soploon.server.models.Project;
 
 
 // TODO, HACER LOS METODOS HTTP DE ESTA CLASE, SOLO INSERT Y GET, NO HAY UPDATE
@@ -33,9 +32,19 @@ public class CorrectionResource {
 	public CorrectionResource (Database database) {
 		this.database = database;
 		this.dao = new CorrectionDao(this.database);
-		this.errorResource = new ErrorResource (this.database);
+		this.errorResource = new ErrorResource(this.database);
 	}
 	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{time}/")
+	public Response getCorrection(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") long time) throws Exception {
+		System.out.println("simple");
+		Correction correction = this.dao.getCorrection(userId,projectId,time);
+		if (correction == null)
+			return Response.status(Status.NOT_FOUND).build();
+		return Response.ok(correction).build();
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -50,7 +59,6 @@ public class CorrectionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addCorrection(Correction correction, @Context UriInfo uriInfo) throws Exception {
-		//TODO chequeos 
 		if (correction == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		if (this.dao.insert(correction)) {
@@ -61,11 +69,11 @@ public class CorrectionResource {
 			return Response.status(Status.CONFLICT).build();
 		}
 	}
-	
+		
 	@Path("/{time}/errors")
-	public ErrorResource errors(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") int time) throws Exception {
-		ArrayList<Correction> corrections = this.dao.getCorrectionsByProject(userId, projectId);
-		if (corrections.isEmpty())
+	public ErrorResource errors(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") long time) throws Exception {
+		Correction correction = this.dao.getCorrection(userId,projectId,time);
+		if (correction == null)
 			return null;
 		return this.errorResource;
 	}
