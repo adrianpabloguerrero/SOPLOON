@@ -1,10 +1,11 @@
 package ar.edu.unicen.isistan.si.soploon.server.database;
 
+
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
@@ -82,11 +83,13 @@ public class CorrectionDao {
 
 	public Correction getCorrection(int userId, int projectId, long time) throws SQLException {
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId,new Date(time))) {
+		
+		//TODO 	revisar *1000 en date. 
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId,new Timestamp(time*1000))) {
 			ResultSet result = statement.executeQuery();
 
 			if (result.next())
-				return this.readRow(result);
+ 				return this.readRow(result);
 			else
 				return null;
 		} catch (SQLException e) {

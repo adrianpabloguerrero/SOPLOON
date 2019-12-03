@@ -52,8 +52,10 @@ public class ErrorResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addErrors(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") int time, List<Error> errors, @Context UriInfo uriInfo) throws Exception {
-		// TODO chequeos
+	public Response addErrors(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") long time, List<Error> errors, @Context UriInfo uriInfo) throws Exception {
+		if (!validateErrors(errors,userId,projectId,time)) {
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
 		if (errors == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		if (this.dao.insert(errors)) {
@@ -62,5 +64,12 @@ public class ErrorResource {
 		} else {
 			return Response.status(Status.CONFLICT).build();
 		}
+	}
+	
+	private boolean validateErrors (List<Error> errors, int userId, int projectId, long time) {
+		for (Error error: errors)
+			if (error.getUserId() != userId || error.getProjectId() != projectId || error.getDate() != time)
+				return false;
+		return true;
 	}
 }

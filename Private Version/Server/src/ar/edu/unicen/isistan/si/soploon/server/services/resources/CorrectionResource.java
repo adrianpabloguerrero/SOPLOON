@@ -39,8 +39,7 @@ public class CorrectionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{time}/")
 	public Response getCorrection(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") long time) throws Exception {
-		System.out.println("simple");
-		Correction correction = this.dao.getCorrection(userId,projectId,time);
+ 		Correction correction = this.dao.getCorrection(userId,projectId,time);
 		if (correction == null)
 			return Response.status(Status.NOT_FOUND).build();
 		return Response.ok(correction).build();
