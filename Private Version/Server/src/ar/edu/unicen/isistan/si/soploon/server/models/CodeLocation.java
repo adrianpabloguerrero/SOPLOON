@@ -34,6 +34,20 @@ public class CodeLocation {
 	public void setEndChar(String endChar) {
 		this.endChar = endChar;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+	        if (this == o) {
+	            return true;
+	        }
+	        if (o == null || getClass() != o.getClass()) {
+	            return false;
+	        }
+	        CodeLocation codeLocation = (CodeLocation) o;
+	        return	this.path.equals(codeLocation.getPath()) &&
+	        		this.startChar.equals(codeLocation.getStartChar()) &&
+	        		this.endChar.equals(codeLocation.getEndChar());
+		}
 
 	@Override
 	public String toString() {

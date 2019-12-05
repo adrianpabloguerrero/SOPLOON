@@ -98,6 +98,26 @@ public class Error {
 	}
 
 	@Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Error error = (Error) o;
+        return this.id == error.getId() &&
+               this.projectId== error.getProjectId() &&
+               this.userId == error.getUserId() &&
+               //TODO problemas para comparar fecha: Ej: this: date	1569362149	- error: 1569294000000
+               //this.date == error.getDate() &&
+               this.ruleId == error.getRuleId() && 
+               this.versionRule == error.getVersionRule() && 
+               this.codeLocation.equals(error.getCodeLocation()) &&
+               this.representationLocation.equals(error.getRepresentationLocation());
+	}
+	
+	@Override
 	public String toString() {
 		return "Error [id=" + id + ", projectId=" + projectId + ", userId=" + userId + ", date=" + date + ", ruleId="
 				+ ruleId + ", versionRule=" + versionRule + ", codeLocation=" + codeLocation
