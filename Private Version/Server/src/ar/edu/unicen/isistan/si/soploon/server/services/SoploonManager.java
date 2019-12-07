@@ -7,6 +7,7 @@ import org.glassfish.hk2.api.Immediate;
 
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.CorrectionResource;
+import ar.edu.unicen.isistan.si.soploon.server.services.resources.ErrorQueryResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.PredicateResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.ProjectResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.RuleResource;
@@ -25,6 +26,7 @@ public class SoploonManager extends Application {
 	private UserResource userResource;
 	private PredicateResource predicateResorce;
 	private CorrectionResource correctionResource;
+	private ErrorQueryResource errorQueryResource;
 	private Database database;
 
 	@PostConstruct
@@ -36,6 +38,7 @@ public class SoploonManager extends Application {
 		this.userResource = new UserResource (this.database);
 		this.predicateResorce = new PredicateResource (this.database);
 		this.correctionResource = new CorrectionResource(this.database);
+		this.errorQueryResource = new ErrorQueryResource (this.database);
 	}
 
 	@Path("/rules/")
@@ -58,6 +61,11 @@ public class SoploonManager extends Application {
 		return this.predicateResorce;
 	}
 
+	@Path("/errors/")
+	public ErrorQueryResource getErrorQueryResource() {
+		return this.errorQueryResource;
+	}
+	
 	/*@Path("/correction/")
 	public CorrectionResource getCorrectionResource() {
 		return this.correctionResource;
