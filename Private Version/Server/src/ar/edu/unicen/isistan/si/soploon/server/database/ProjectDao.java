@@ -11,9 +11,9 @@ import ar.edu.unicen.isistan.si.soploon.server.models.Project;
 public class ProjectDao {
 
 	private static final String TABLE_NAME = "soploon.project";
-	private static final String COLUMNS = "(id_user,name)";
+	private static final String COLUMNS = "(id,id_user,name)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
-	private static final String VALUES = "(?,?)";
+	private static final String VALUES = "((SELECT COUNT (*) FROM soploon.project WHERE id_user = ?) + 1,?,?)";
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
 	private static final String CONDITION_USER_ID = "WHERE id_user = ? ";
 	private static final String CONDITION_ID = " WHERE id_user = ? AND id = ?";
@@ -29,9 +29,10 @@ public class ProjectDao {
 
 	public boolean insert(Project project) throws SQLException {
 
-		Object[] args = new Object[2];
+		Object[] args = new Object[3];
 		args[0] = project.getUserId();
-		args[1] = project.getName();
+		args[1] = project.getUserId();
+		args[2] = project.getName();
 
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
