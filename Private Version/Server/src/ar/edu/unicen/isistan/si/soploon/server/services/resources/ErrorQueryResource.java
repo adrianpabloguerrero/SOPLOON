@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -33,7 +31,7 @@ public class ErrorQueryResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getErrors (@QueryParam("error_id") Integer id, @QueryParam("user_id") Integer userId, @QueryParam("date_start") Long dateStart, @QueryParam("date_end") Long dateEnd) throws SQLException {
+	public Response getErrors (@QueryParam("error_id") Integer id, @QueryParam("user_id") Integer userId, @QueryParam("date_start") Long dateStart, @QueryParam("date_end") Long dateEnd, @QueryParam("rule_id") Integer ruleId) throws SQLException {
 		List <Error> errors = new  ArrayList <Error> ();
 		if (id != null)
 			errors.add(this.dao.getErrorsById(id));
@@ -43,6 +41,9 @@ public class ErrorQueryResource {
 			
 			if (userId != null)
 				errors.addAll(this.dao.getErrorsByUserBetweenDate(userId,dateStart,dateEnd));
+			
+			if (ruleId != null)
+				errors.addAll(this.dao.getErrorsByRuleBetweenDate(ruleId,dateStart,dateEnd));			
 			else {
 				errors.addAll(this.dao.getErrorsBetweenDate(dateStart,dateEnd));
 			}		
