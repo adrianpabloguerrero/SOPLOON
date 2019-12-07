@@ -2,6 +2,7 @@ package ar.edu.unicen.isistan.si.soploon.server.services.resources;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -22,24 +23,33 @@ public class ErrorQueryResource {
 
 	private Database database;
 	private ErrorDao dao;
-	
+
 	public ErrorQueryResource (Database database) {
 		this.database = database;
 		this.dao = new ErrorDao (this.database);
 	}
-	
-	
-	
+
+
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getErrors (@QueryParam("error_id") Integer id) throws SQLException {
+	public Response getErrors (@QueryParam("error_id") Integer id, @QueryParam("user_id") Integer userId, @QueryParam("date_start") Long dateStart, @QueryParam("date_end") Long dateEnd) throws SQLException {
 		List <Error> errors = new  ArrayList <Error> ();
 		if (id != null)
 			errors.add(this.dao.getErrorsById(id));
+		else {
+			if (dateStart ==  null)
+				dateStart =  0L;
+			if (dateEnd == null)
+				dateEnd = new Date().getTime();
+			if (userId != null)
+				errors.addAll(this.dao.getErrorsByUserBetweenDate(userId,dateStart,dateEnd));
+		}
+
 		if (!errors.isEmpty())
 			return Response.ok(errors).build();
 		else
 			return Response.status(Response.Status.NOT_FOUND).build();
 	}
-	
+
 }
