@@ -38,21 +38,21 @@ public class ErrorQueryResource {
 		else {
 			if (dateStart ==  null) dateStart =  0L;
 			if (dateEnd == null) dateEnd = new Date().getTime();
-			
-			if (userId != null)
-				errors.addAll(this.dao.getErrorsByUserBetweenDate(userId,dateStart,dateEnd));
-			
-			if (ruleId != null)
-				errors.addAll(this.dao.getErrorsByRuleBetweenDate(ruleId,dateStart,dateEnd));			
-			else {
-				errors.addAll(this.dao.getErrorsBetweenDate(dateStart,dateEnd));
-			}		
+			if (userId != null && ruleId != null) {
+				errors.addAll(this.dao.getErrorsByUserAndRuleBetweenDate(userId,ruleId,dateStart,dateEnd));
+			} else {
+				if (userId != null)
+					errors.addAll(this.dao.getErrorsByUserBetweenDate(userId,dateStart,dateEnd));
+				else
+					if (ruleId != null)
+						errors.addAll(this.dao.getErrorsByRuleBetweenDate(ruleId,dateStart,dateEnd));			
+					else 
+						errors.addAll(this.dao.getErrorsBetweenDate(dateStart,dateEnd));
+			}
 		}
-
 		if (!errors.isEmpty())
 			return Response.ok(errors).build();
 		else
 			return Response.status(Response.Status.NOT_FOUND).build();
 	}
-
 }
