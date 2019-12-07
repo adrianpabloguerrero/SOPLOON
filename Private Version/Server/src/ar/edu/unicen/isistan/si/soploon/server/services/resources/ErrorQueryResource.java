@@ -38,12 +38,14 @@ public class ErrorQueryResource {
 		if (id != null)
 			errors.add(this.dao.getErrorsById(id));
 		else {
-			if (dateStart ==  null)
-				dateStart =  0L;
-			if (dateEnd == null)
-				dateEnd = new Date().getTime();
+			if (dateStart ==  null) dateStart =  0L;
+			if (dateEnd == null) dateEnd = new Date().getTime();
+			
 			if (userId != null)
 				errors.addAll(this.dao.getErrorsByUserBetweenDate(userId,dateStart,dateEnd));
+			else {
+				errors.addAll(this.dao.getErrorsBetweenDate(dateStart,dateEnd));
+			}		
 		}
 
 		if (!errors.isEmpty())

@@ -24,12 +24,14 @@ public class ErrorDao {
 	private static final String VALUES = "(?,?,to_timestamp(?),?,?,to_json(?::json),to_json(?::json),?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String CONDITION_ID = " WHERE id = ?";
-	private static final String CONDITION_USER_DATE = " WHERE id_user = ? AND date BETWEEN ? AND ? ";
+	private static final String CONDITION_DATE = " date BETWEEN ? AND ? ";
+	private static final String CONDITION_USER_DATE = " WHERE id_user = ? AND " + CONDITION_DATE;
 	private static final String CONDITION_CORRECTION = " WHERE id_user = ? AND id_project = ? AND date = ? ";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME + " ";
 	private static final String SELECT_BY_CORRECTION = SIMPLE_SELECT + CONDITION_CORRECTION + ";";
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + ";";
 	private static final String SELECT_BY_USER_DATE = SIMPLE_SELECT + CONDITION_USER_DATE + ";";
+	private static final String SELECT_BETWEEN_DATE = SIMPLE_SELECT + "WHERE " + CONDITION_DATE + ";";
 	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , id_project = ? , id_user = ? , date = to_timestamp(?) , id_rule = ? , version_rule = ?, code_location = to_json(?::json) , representation_location = to_json(?::json), reviewed = ? " + CONDITION_ID;
 
 	private Database database;
@@ -95,6 +97,25 @@ public class ErrorDao {
 		} 
 	}
 
+	public ArrayList<Error> getErrorsBetweenDate(long dateStart, long dateEnd) throws SQLException{
+		ArrayList<Error> out = new ArrayList<>();
+
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				Error error = this.readRow(result);
+				out.add(error);
+			}
+			return out;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		} 
+	}
 
 	public boolean insert(List<Error> errors) throws SQLException {
 
@@ -192,5 +213,7 @@ public class ErrorDao {
 			}
 		}
 	}
+
+	
 
 }
