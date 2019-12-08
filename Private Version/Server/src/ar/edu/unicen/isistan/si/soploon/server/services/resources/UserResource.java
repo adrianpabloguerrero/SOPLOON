@@ -46,7 +46,6 @@ public class UserResource {
 		} else {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-
 	}
 
 	@GET

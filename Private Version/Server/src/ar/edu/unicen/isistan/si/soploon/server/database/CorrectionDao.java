@@ -23,8 +23,9 @@ public class CorrectionDao {
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id_user = ? AND id_project = ? AND date = ?";
 	private static final String CONDITION_PROJECT = " WHERE id_user = ? AND id_project = ?";
-	private static final String SELECT_BY_PROJECT = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_PROJECT + ";";
-	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
+	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME + " " ;
+	private static final String SELECT_BY_PROJECT = SIMPLE_SELECT + CONDITION_PROJECT + ";";
+	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + ";";
 	
 	private Database database;
 

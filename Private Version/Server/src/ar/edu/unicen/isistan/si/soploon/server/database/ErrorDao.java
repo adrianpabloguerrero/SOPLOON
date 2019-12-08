@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -27,7 +26,7 @@ public class ErrorDao {
 	private static final String CONDITION_DATE = " date BETWEEN ? AND ? ";
 	private static final String CONDITION_USER = " id_user = ? ";
 	private static final String CONDITION_RULE = " id_rule = ? ";
-	private static final String CONDITION_CORRECTION = " WHERE id_user = ? AND id_project = ? AND date = ? ";
+	private static final String CONDITION_CORRECTION = " id_user = ? AND id_project = ? AND date = ? ";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME + " " + "WHERE" + " ";
 	private static final String SELECT_BY_CORRECTION = SIMPLE_SELECT + CONDITION_CORRECTION + ";";
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + ";";
@@ -35,7 +34,7 @@ public class ErrorDao {
 	private static final String SELECT_BY_USER_DATE = SIMPLE_SELECT + CONDITION_USER + " AND " + CONDITION_DATE + ";";
 	private static final String SELECT_BY_USER_RULE_DATE = SIMPLE_SELECT + CONDITION_USER + " AND " + CONDITION_RULE + " AND " + CONDITION_DATE + ";";
 	private static final String SELECT_BETWEEN_DATE = SIMPLE_SELECT + CONDITION_DATE + ";";
-	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , id_project = ? , id_user = ? , date = to_timestamp(?) , id_rule = ? , version_rule = ?, code_location = to_json(?::json) , representation_location = to_json(?::json), reviewed = ? " + CONDITION_ID;
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , id_project = ? , id_user = ? , date = to_timestamp(?) , id_rule = ? , version_rule = ?, code_location = to_json(?::json) , representation_location = to_json(?::json), reviewed = ? " + " WHERE " + CONDITION_ID;
 
 	private Database database;
 	
@@ -47,7 +46,7 @@ public class ErrorDao {
 		ArrayList<Error> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, new Date(time*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, new Timestamp (time*1000))) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
