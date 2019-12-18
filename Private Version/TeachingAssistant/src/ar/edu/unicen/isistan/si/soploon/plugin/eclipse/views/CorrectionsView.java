@@ -62,6 +62,7 @@ public class CorrectionsView extends ViewPart {
 			}
 
 		});
+		
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
@@ -71,7 +72,7 @@ public class CorrectionsView extends ViewPart {
 					return;
 				else {
 					if (selectedNode instanceof Bug) {
-						String uri = ((Bug) selectedNode).getRule().getUri();
+						String uri = ((Bug) selectedNode).getRule().getLink();
 						if (uri != null) {
 							Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 							if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -136,7 +137,7 @@ public class CorrectionsView extends ViewPart {
 		this.columns = new Vector<TreeViewerColumn>();
 
 		TreeViewerColumn col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText("Correcci�n");
+		col.getColumn().setText("Corrección");
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -184,7 +185,7 @@ public class CorrectionsView extends ViewPart {
 		this.columns.add(col);
 
 		col = new TreeViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText("C�digo");
+		col.getColumn().setText("Código");
 		col.getColumn().setAlignment(SWT.CENTER);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -203,7 +204,7 @@ public class CorrectionsView extends ViewPart {
 
 		col = new TreeViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setWidth(500);
-		col.getColumn().setText("Descripci�n");
+		col.getColumn().setText("Descripción");
 		col.setLabelProvider(new ColumnLabelProvider() {
 
 			@Override

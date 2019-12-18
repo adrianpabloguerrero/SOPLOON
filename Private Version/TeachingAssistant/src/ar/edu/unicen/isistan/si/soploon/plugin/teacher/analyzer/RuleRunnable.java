@@ -15,11 +15,11 @@ public class RuleRunnable implements Runnable {
 	Prolog engine;
 	Mapper mapper;
 	NodeConverterFactory converter_factory;
-	List<Rule> rules;
+	List<PrologRule> rules;
 	List<Bug> bugs;
 	int total_rules;
 	
-	public RuleRunnable(IProgressMonitor monitor, Prolog engine, Mapper mapper, NodeConverterFactory converter_factory, List<Rule> rules, List<Bug> bugs) {
+	public RuleRunnable(IProgressMonitor monitor, Prolog engine, Mapper mapper, NodeConverterFactory converter_factory, List<PrologRule> rules, List<Bug> bugs) {
 		this.monitor = monitor;
 		this.engine = engine;
 		this.mapper = mapper;
@@ -32,7 +32,7 @@ public class RuleRunnable implements Runnable {
 	
 	@Override
 	public void run() {
-		Rule rule = null;
+		PrologRule rule = null;
 		
 		synchronized(rules) {
 			if (!rules.isEmpty())

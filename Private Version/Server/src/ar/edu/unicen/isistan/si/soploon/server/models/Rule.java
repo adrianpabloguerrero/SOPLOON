@@ -128,4 +128,32 @@ public class Rule {
 				+ link + ", query=" + query + ", code=" + code + ", activated=" + activated + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (activated ? 1231 : 1237);
+		result = prime * result + id;
+		result = prime * result + version;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rule other = (Rule) obj;
+		if (activated != other.activated)
+			return false;
+		if (id != other.id)
+			return false;
+		if (version != other.version)
+			return false;
+		return true;
+	}
+
 }

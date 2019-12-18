@@ -1,4 +1,4 @@
-import ar.edu.unicen.isistan.si.soploon.server.client.WebClient;
+import ar.edu.unicen.isistan.si.soploon.server.client.SoploonClient;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.models.User.Role;
 
@@ -10,7 +10,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		WebClient wclient = new WebClient("http://localhost:8080/soploon/api/");
+		SoploonClient wclient = new SoploonClient("http://localhost:8080/soploon/api/");
 		// Users
 		System.out.println(wclient.getUsers());
 		System.out.println(wclient.getUser(1));

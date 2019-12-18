@@ -1,8 +1,10 @@
 package ar.edu.unicen.isistan.si.soploon.plugin.teacher;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -29,6 +32,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -36,19 +40,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import ar.edu.unicen.isistan.si.soploon.plugin.Soploon;
 import ar.edu.unicen.isistan.si.soploon.plugin.eclipse.views.CorrectionsView;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.PrologAnalyzer;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.bugs.Bug;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.ModelGenerator;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.parser.CodeParser;
 import ar.edu.unicen.isistan.si.soploon.plugin.uploader.Uploader;
+import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
+import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
 
 public class Teacher {
 
-	public static final String LOG_PATH = (Platform.getInstallLocation().getURL().getPath() + "dropins" + File.separator
-			+ "plugins" + File.separator + "runs" + File.separator).substring(1);
-	private static final String LOG_CANCELED = System.lineSeparator() + "Ejecucion Cancelada por el Usuario"
-			+ System.lineSeparator();
+	public static final String LOG_PATH = (Platform.getInstallLocation().getURL().getPath() + "dropins" + File.separator + "plugins" + File.separator + "runs" + File.separator).substring(1);
+	private static final String LOG_CANCELED = System.lineSeparator() + "Ejecucion Cancelada por el Usuario" + System.lineSeparator();
 	private static final String LOG_ERROR = System.lineSeparator() + "Error:" + System.lineSeparator();
 	private static final String ERROR_MESSAGE_X0 = "Error en el Proyecto";
 	private static final String ERROR_MESSAGE_X1 = "Error generando el Modelo Prolog";
@@ -56,9 +61,10 @@ public class Teacher {
 	private static final String ERROR_MESSAGE_X3 = "Error corrigiendo el Modelo Prolog";
 
 	private static Teacher TEACHER = null;
-	private CodeParser code_parser;
-	private PrologAnalyzer prolog_analyzer;
-	private ModelGenerator model_generator;
+	
+	private CodeParser codeParser;
+	private PrologAnalyzer prologAnalyzer;
+	private ModelGenerator modelGenerator;
 
 	public static Teacher getInstance() {
 		if (TEACHER == null)
@@ -67,32 +73,22 @@ public class Teacher {
 	}
 
 	private Teacher() {
-		this.code_parser = new CodeParser();
-		this.prolog_analyzer = new PrologAnalyzer();
-		this.model_generator = new ModelGenerator();
-	}
-
-	public void init() {
-		this.prolog_analyzer.init();
+		this.codeParser = new CodeParser();
+		this.prologAnalyzer = new PrologAnalyzer();
+		this.modelGenerator = new ModelGenerator();
 	}
 
 	public PrologAnalyzer getAnalyzer() {
-		return this.prolog_analyzer;
+		return this.prologAnalyzer;
 	}
 
 	public void check(IJavaProject project) {
 		try {
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(new Shell());
-			CorrectionsView view = (CorrectionsView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().showView(CorrectionsView.ID);
+			CorrectionsView view = (CorrectionsView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(CorrectionsView.ID);
 			Long id = System.currentTimeMillis();
-			CheckRunnable runner = new CheckRunnable(project, code_parser, prolog_analyzer, model_generator, id);
+			CheckRunnable runner = new CheckRunnable(project, codeParser, prologAnalyzer, modelGenerator, id);
 			dialog.run(true, true, runner);
-
-			if (zipFolder(project, id)) {
-				Thread thread = new Thread(new Uploader());
-				thread.start();
-			}
 
 			int result = runner.getResult();
 			if (result == 0)
@@ -103,18 +99,24 @@ public class Teacher {
 				case -1:
 					message = ERROR_MESSAGE_X0;
 					break;
-				case -10:
+				case -2:
 					message = ERROR_MESSAGE_X1;
 					break;
-				case -20:
+				case -3:
 					message = ERROR_MESSAGE_X2;
 					break;
-				case -30:
+				case -4:
 					message = ERROR_MESSAGE_X3;
 					break;
 				}
 				MessageDialog.openInformation(null, "Ayudante Virtual", message);
 			}
+			
+			if (zipFolder(project, id)) {
+				Thread thread = new Thread(new Uploader());
+				thread.start();
+			}
+			
 		} catch (InvocationTargetException | InterruptedException | PartInitException e) {
 			e.printStackTrace();
 		}
@@ -123,19 +125,18 @@ public class Teacher {
 	private class CheckRunnable implements IRunnableWithProgress {
 
 		private IJavaProject project;
-		private CodeParser code_parser;
-		private PrologAnalyzer prolog_analyzer;
-		private ModelGenerator model_generator;
+		private CodeParser codeParser;
+		private PrologAnalyzer prologAnalyzer;
+		private ModelGenerator modelGenerator;
 		private List<Bug> bugs;
 		private int result;
 		private long id;
 
-		public CheckRunnable(IJavaProject project, CodeParser code_parser, PrologAnalyzer prolog_analyzer,
-				ModelGenerator model_generator, long id) {
+		public CheckRunnable(IJavaProject project, CodeParser codeParser, PrologAnalyzer prologAnalyzer, ModelGenerator modelGenerator, long id) {
 			this.project = project;
-			this.code_parser = code_parser;
-			this.prolog_analyzer = prolog_analyzer;
-			this.model_generator = model_generator;
+			this.codeParser = codeParser;
+			this.prologAnalyzer = prologAnalyzer;
+			this.modelGenerator = modelGenerator;
 			this.id = id;
 			this.bugs = new Vector<Bug>();
 		}
@@ -146,6 +147,7 @@ public class Teacher {
 
 		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			
 			PrintWriter logger = null;
 			try {
 				File dir = new File(LOG_PATH);
@@ -154,7 +156,7 @@ public class Teacher {
 
 				logger = new PrintWriter(LOG_PATH + id + ".log", "UTF-8");
 
-				logger.println("Plugin v1.0");
+				logger.println();
 				logger.println("Usuario: " + System.getProperty("user.name"));
 				logger.println("Maquina: " + InetAddress.getLocalHost().getHostName());
 				logger.println("Fecha: " + new Date().toString());
@@ -169,7 +171,7 @@ public class Teacher {
 					if (actual_package.getKind() == IPackageFragmentRoot.K_SOURCE)
 						packages_source.add(actual_package);
 
-				result = this.code_parser.process(this.project, monitor, logger) * 10;
+				result = this.codeParser.process(this.project, monitor) * 2;
 
 				if (result < 0) { // Error
 					logger.close();
@@ -182,7 +184,7 @@ public class Teacher {
 					return;
 				}
 
-				result = this.model_generator.process(this.code_parser.getUnits(), monitor, logger) * 20;
+				result = this.modelGenerator.process(this.codeParser.getUnits(), monitor, logger) * 3;
 
 				if (result < 0) { // Error
 					logger.close();
@@ -195,8 +197,7 @@ public class Teacher {
 					return;
 				}
 
-				result = this.prolog_analyzer.process(this.model_generator.getMapper(),
-						this.model_generator.getCheckCode(), this.model_generator.getFactory(), monitor) * 30;
+				result = this.prologAnalyzer.process(this.modelGenerator.getMapper(), this.modelGenerator.getCheckCode(), this.modelGenerator.getFactory(), monitor) * 4;
 
 				if (result < 0) { // Error
 					logger.close();
@@ -209,7 +210,7 @@ public class Teacher {
 					return;
 				}
 
-				this.bugs.addAll(this.prolog_analyzer.getBugs());
+				this.bugs.addAll(this.prologAnalyzer.getBugs());
 
 				monitor.done();
 			} catch (CoreException e) {
@@ -231,7 +232,7 @@ public class Teacher {
 		public int getResult() {
 			return this.result;
 		}
-
+		
 	}
 
 	private boolean zipFolder(IJavaProject project, long id) {
@@ -266,4 +267,38 @@ public class Teacher {
 
 	}
 
+	private boolean store() {
+				
+		Correction correction = new Correction();
+		correction.setDate(System.currentTimeMillis());
+		correction.setVersionSoploon(Soploon.VERSION);
+		correction.setRepresentation(new ArrayList<String>(this.modelGenerator.getCheckCode().getFacts()));
+		
+		ArrayList<SourceCode> sourceCodes = new ArrayList<SourceCode>();
+		for (CompilationUnit cunit: this.codeParser.getUnits()) {
+			SourceCode sourceCode = new SourceCode();
+			sourceCode.setPath(cunit.getJavaElement().getPath().toString());
+			File file = cunit.getJavaElement().getPath().toFile();
+			try (FileReader fileReader = new FileReader(file); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+				StringBuilder builder = new StringBuilder();
+				String line = null;
+				while ((line = bufferedReader.readLine()) != null) {
+					builder.append(line);
+				}
+				String code = builder.toString();
+				sourceCode.setCode(code);
+				sourceCodes.add(sourceCode);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		correction.setCode(sourceCodes);
+		// ID Usuario
+		// ID Proyecto
+
+		// ArrayList<SourceCode> Código fuente
+		
+		return false;
+	}
 }

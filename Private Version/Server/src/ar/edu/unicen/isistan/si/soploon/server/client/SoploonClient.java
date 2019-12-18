@@ -20,7 +20,7 @@ import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.models.Error;
 import ar.edu.unicen.isistan.si.soploon.server.providers.GsonProvider;
 
-public class WebClient {
+public class SoploonClient {
 
 	private static final String USERS = "users";
 	private static final String PROJECTS = "projects";
@@ -38,7 +38,7 @@ public class WebClient {
 	 * Crea un cliente para la API de soploon alojada en la URL indicada
 	 * @param basePath URL base de la API 
 	 */
-	public WebClient(String basePath) {
+	public SoploonClient(String basePath) {
 		this.basePath = basePath;
 		ClientConfig config = new ClientConfig().register(new GsonProvider());
 		this.client = ClientBuilder.newClient(config);

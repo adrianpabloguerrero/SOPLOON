@@ -7,15 +7,15 @@ import java.util.Vector;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.ASTNode;
 
-import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.Rule;
+import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.PrologRule;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.converters.NodeConverterFactory;
 
 public class Bug implements Comparable<Bug> {
 
-	private Rule rule;
+	private PrologRule rule;
 	private List<BuggedCode> codes;
 	
-	public Bug(Rule rule, Vector<ASTNode> nodes, NodeConverterFactory converter_factory) {
+	public Bug(PrologRule rule, Vector<ASTNode> nodes, NodeConverterFactory converter_factory) {
 		this.rule = rule;
 		this.codes = new Vector<BuggedCode>();
 		for (ASTNode node: nodes)
@@ -57,7 +57,7 @@ public class Bug implements Comparable<Bug> {
 	}
 	
 	public String getType() {
-		return this.rule.getType();
+		return this.rule.getName();
 	}
 
 	public String getDescription() {
@@ -74,11 +74,11 @@ public class Bug implements Comparable<Bug> {
 		return this.codes;
 	}
 
-	public Rule getRule() {
+	public PrologRule getRule() {
 		return rule;
 	}
 
-	public void setRule(Rule rule) {
+	public void setRule(PrologRule rule) {
 		this.rule = rule;
 	}
 

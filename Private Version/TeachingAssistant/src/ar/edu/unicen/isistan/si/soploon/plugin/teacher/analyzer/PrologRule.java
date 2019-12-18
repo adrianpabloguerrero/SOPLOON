@@ -7,8 +7,6 @@ import java.util.Vector;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoMoreSolutionException;
 import alice.tuprolog.NoSolutionException;
@@ -21,61 +19,28 @@ import alice.tuprolog.Var;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.bugs.Bug;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.Mapper;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.converters.NodeConverterFactory;
+import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 
-@XStreamAlias("simple-rule")
-public class Rule implements Comparable<Rule>{
-    
-	private String type;
-    private String description;
-    private String query;
-    private String predicates;
-    private boolean active;
-    private String uri;
-    
-    public Rule() {
-        this.type = null;
-        this.query = null;
-        this.description = null;
-        this.predicates = null;
-        this.active = false;
-    }
+public class PrologRule implements Comparable<PrologRule> {
 
-    public String getType() {
-        return this.type;
-    }
+	private Rule rule;
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-	public String getQuery() {
-		return this.query;
+	public PrologRule(Rule rule) {
+		this.rule = rule;
 	}
 
-	public void setQuery(String query) {
-		this.query = query;
-	}
-
-	public List<Bug> execute(Prolog engine, Mapper mapper, NodeConverterFactory converter_factory) {
+	public List<Bug> execute(Prolog engine, Mapper mapper, NodeConverterFactory converterFactory) {
 		List<Bug> returnList = new ArrayList<Bug>();
 
 		try {
-			String query = this.getQuery() + "(ID).";
+			String query = this.rule.getQuery() + "(ID).";
 			SolveInfo info = engine.solve(query);
 
 			while (info.isSuccess()) {
 				Term term = info.getTerm("ID");
 				Vector<String> nodes_ids = plain(term);
 				Vector<ASTNode> nodes = getNodes(nodes_ids, mapper);
-				Bug bug = new Bug(this,nodes,converter_factory);
+				Bug bug = new Bug(this, nodes, converterFactory);
 				returnList.add(bug);
 
 				if (engine.hasOpenAlternatives()) {
@@ -89,54 +54,40 @@ public class Rule implements Comparable<Rule>{
 		}
 		return returnList;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private Vector<String> plain(Term term) {
 		Vector<String> out = new Vector<String>();
 		if (!term.isList()) {
 			out.add(term.toString());
-		}
-		else if (term.isStruct()){
+		} else if (term.isStruct()) {
 			Struct struct = (Struct) term;
 			int arity = struct.getArity();
 			for (int i = 0; i < arity; i++)
 				out.addAll(plain(struct.getArg(i)));
-		}
-		else if (term.isVar()) {
+		} else if (term.isVar()) {
 			Var var = (Var) term;
 			out.addAll(plain(var.getTerm()));
 		}
 		return out;
-	}	
+	}
 
-	private Vector<ASTNode> getNodes(Vector<String> nodes_ids, Mapper mapper) {
+	private Vector<ASTNode> getNodes(Vector<String> nodesIDs, Mapper mapper) {
 		Vector<ASTNode> nodes = new Vector<ASTNode>();
-		for (String id : nodes_ids)
+		for (String id : nodesIDs)
 			nodes.add(mapper.getNode(id));
 		return nodes;
 	}
 
 	@Override
-	public int compareTo(Rule rule) {
-		return this.getType().compareTo(rule.getType());
+	public int compareTo(PrologRule rule) {
+		return this.getName().compareTo(rule.getName());
 	}
 
 	public String getPredicates() {
-		return predicates;
+		return this.rule.getCode();
 	}
 
-	public void setPredicates(String predicates) {
-		this.predicates = predicates;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-	
 	public boolean equals(Object o) {
 		if (o == null)
 			return false;
@@ -145,12 +96,21 @@ public class Rule implements Comparable<Rule>{
 		return false;
 	}
 
-	public String getUri() {
-		return uri;
+	public boolean isActivated() {
+		return this.rule.getActivated();
 	}
 
-	public void setUri(String uri) {
-		this.uri = uri;
+	public String getName() {
+		return this.rule.getName();
 	}
+
+	public String getDescription() {
+		return this.rule.getDescription();
+	}
+
+
+	public String getLink() {
+		return this.rule.getLink();
+	}
+	
 }
-

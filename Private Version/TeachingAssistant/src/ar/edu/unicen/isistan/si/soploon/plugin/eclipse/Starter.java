@@ -3,16 +3,20 @@ package ar.edu.unicen.isistan.si.soploon.plugin.eclipse;
 import org.eclipse.ui.IStartup;
 
 import ar.edu.unicen.isistan.si.soploon.plugin.storage.StorageManager;
+import ar.edu.unicen.isistan.si.soploon.plugin.updater.UpdateTask;
 
 public class Starter implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		StorageManager sm = StorageManager.getInstance();
+		StorageManager storeManager = StorageManager.getInstance();
+
+		Thread thread = new Thread(new UpdateTask());
+		thread.start();
 		
-		System.out.println(sm.getUserId());
-		sm.setUserId(System.currentTimeMillis());
-		System.out.println(sm.getUserId());
+		if (!storeManager.getUserData().hasUserId() /* si hay archivos pendientes de subir*/) {
+			// TODO Aca largar un thread con el uploader
+		}
 	}
 
 }

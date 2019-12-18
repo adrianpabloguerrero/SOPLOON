@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import ar.edu.unicen.isistan.si.soploon.plugin.api.SoploonApi;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.Teacher;
 
 public class CheckHandler extends AbstractHandler {
@@ -22,20 +21,18 @@ public class CheckHandler extends AbstractHandler {
 	private static final String ERROR_NO_PROJECT = "Selecciona un proyecto Java antes de pedir correcciones";
 	private static final String ERROR_CLOSED = "El proyecto seleccionado debe estar abierto";
 	private static final String ERROR_COMPILATION = "El proyecto no debe contener errores de compilaci�n";
-	private static final String ERROR_NO_RULES = "Es necesario actualizar para corregir el proyecto";
 
 	private Teacher teacher;
-	private IJavaProject last_check;
+	private IJavaProject lastCheck;
 	
 	public CheckHandler() {
 		this.teacher = Teacher.getInstance();
-		this.last_check = null;
+		this.lastCheck = null;
 	}
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		new SoploonApi();
-		/*IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection("org.eclipse.jdt.ui.PackageExplorer");
 					
 		if (selection == null)
@@ -52,17 +49,13 @@ public class CheckHandler extends AbstractHandler {
 			project = JavaCore.create((IProject) object);
 		}
 		
-		if (project == null && this.last_check != null)
-			project = this.last_check;
+		if (project == null && this.lastCheck != null) {
+			project = this.lastCheck;
+		}
 		
 		if (project != null && project.exists() && !hasCompilationErrors(project)) {
-			this.teacher.init();
-			if (this.teacher.getAnalyzer().getRuleSet() != null) {
-				this.last_check = project;
-				this.teacher.check(project);
-			} else {
-				MessageDialog.openInformation(null, "Ayudante Virtual", ERROR_NO_RULES);
-			}
+			this.lastCheck = project;
+			this.teacher.check(project);
 		}
 		else if (project == null) 
 			MessageDialog.openInformation(null, "Ayudante Virtual", ERROR_NO_PROJECT);
@@ -70,7 +63,6 @@ public class CheckHandler extends AbstractHandler {
 			MessageDialog.openInformation(null, "Ayudante Virtual", ERROR_CLOSED);
 		else if (hasCompilationErrors(project))
 			MessageDialog.openInformation(null, "Ayudante Virtual", ERROR_COMPILATION);
-		*/
 		return null;
 	}
 

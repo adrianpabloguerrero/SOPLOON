@@ -1,19 +1,18 @@
 package ar.edu.unicen.isistan.si.soploon.plugin.storage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
 import org.eclipse.core.runtime.Platform;
 
 public class StorageManager {
 
-	private static final String USER_ID = "userid";
 	private static final String STORAGE_PATH = (Platform.getInstallLocation().getURL().getPath() + "dropins" + File.separator + "plugins" + File.separator + "ar.edu.unicen.isistan.si.soploon" + File.separator).substring(1);
-	private static final String CONFIG_PATH = STORAGE_PATH + "soploon.config";
+	private static final String DATA_PATH = STORAGE_PATH + "data.json";
+	private static final String CONFIG_PATH = STORAGE_PATH + "config.json";
 
 	private static StorageManager INSTANCE;
+	
+	private UserData userData;
+	private ConfigurationData configurationData;
 	
 	public static StorageManager getInstance() {
 		if (INSTANCE == null)
@@ -21,52 +20,46 @@ public class StorageManager {
 		return INSTANCE;
 	}
 	
-	private Properties properties;
-
 	private StorageManager() {
-		System.out.println(STORAGE_PATH);
-		this.properties = new Properties();
 		this.init();
-	}
-
-	private boolean saveConfig() {
-		File file = new File(CONFIG_PATH);
-		try (FileOutputStream output = new FileOutputStream(file)) {
-			this.properties.store(output, null);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 	private void init() {
 		File folder = new File(STORAGE_PATH);
 		if (!folder.exists())
 			folder.mkdirs();
-		File file = new File(CONFIG_PATH);
-		if (file.exists()) {
-			try (FileInputStream input = new FileInputStream(file)) {
-				this.properties.load(input);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		JsonFile<UserData> dataFile = new JsonFile<UserData>(DATA_PATH);
+		this.userData = dataFile.read(UserData.class);
+		if (this.userData == null) {
+			this.userData = new UserData();
+			dataFile.store(this.userData);
+		}
+		JsonFile<ConfigurationData> configFile = new JsonFile<ConfigurationData>(CONFIG_PATH);
+		this.configurationData = configFile.read(ConfigurationData.class);
+		if (this.configurationData == null) {
+			this.configurationData = new ConfigurationData();
+			configFile.store(this.configurationData);
 		}
 	}
 
-	public long getUserId() {
-		return (long) this.properties.getOrDefault(USER_ID, -1L);
-	}
-	
-	public void setUserId(long userid) {
-		this.properties.put(USER_ID, userid);
-		this.saveConfig();
+	public UserData getUserData() {
+		return userData;
 	}
 
+	public ConfigurationData getConfigurationData() {
+		return this.configurationData;
+	}
+	
+	public boolean storeUserData(UserData userData) {
+		this.userData = userData;
+		JsonFile<UserData> file = new JsonFile<UserData>(DATA_PATH);
+		return file.store(userData);
+	}
+
+	public synchronized boolean storeConfigurationData(ConfigurationData configurationData) {
+		this.configurationData = configurationData;
+		JsonFile<ConfigurationData> file = new JsonFile<ConfigurationData>(CONFIG_PATH);
+		return file.store(configurationData);
+	}
+	
 }
