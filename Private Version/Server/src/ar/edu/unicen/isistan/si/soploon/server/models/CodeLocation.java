@@ -7,9 +7,9 @@ public class CodeLocation {
 	@Expose
 	private String path;
 	@Expose
-	private String startChar;
+	private int startChar;
 	@Expose
-	private String endChar;
+	private int endChar;
 
 	public String getPath() {
 		return path;
@@ -19,19 +19,19 @@ public class CodeLocation {
 		this.path = path;
 	}
 
-	public String getStartChar() {
+	public int getStartChar() {
 		return startChar;
 	}
 
-	public void setStartChar(String startChar) {
+	public void setStartChar(int startChar) {
 		this.startChar = startChar;
 	}
 
-	public String getEndChar() {
+	public int getEndChar() {
 		return endChar;
 	}
 
-	public void setEndChar(String endChar) {
+	public void setEndChar(int endChar) {
 		this.endChar = endChar;
 	}
 	
@@ -45,8 +45,8 @@ public class CodeLocation {
 	        }
 	        CodeLocation codeLocation = (CodeLocation) o;
 	        return	this.path.equals(codeLocation.getPath()) &&
-	        		this.startChar.equals(codeLocation.getStartChar()) &&
-	        		this.endChar.equals(codeLocation.getEndChar());
+	        		this.startChar == codeLocation.getStartChar() &&
+	        		this.endChar == codeLocation.getEndChar();
 		}
 
 	@Override
