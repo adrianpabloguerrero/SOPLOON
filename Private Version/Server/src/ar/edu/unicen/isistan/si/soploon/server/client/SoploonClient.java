@@ -49,12 +49,15 @@ public class SoploonClient {
 	 * @return Lista de usuarios
 	 */
 	public ArrayList<User> getUsers() {
-		WebTarget target = client.target(this.basePath).path(USERS);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<User>>() {});
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<User>>() {});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -63,12 +66,15 @@ public class SoploonClient {
 	 * @return Usuario
 	 */
 	public User getUser(int userId) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId));
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(User.class);		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId));
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(User.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -77,12 +83,15 @@ public class SoploonClient {
 	 * @return Usuario creado con el ID asignado.
 	 */
 	public User postUser(User user) {
-		WebTarget target = client.target(this.basePath).path(USERS);
-		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
-		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
-			return response.readEntity(User.class);		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS);
+			Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
+			if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+				return response.readEntity(User.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -100,12 +109,15 @@ public class SoploonClient {
 	 * @return Lista de proyectos
 	 */
 	public ArrayList<Project> getProjects(int userId) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Project>>() {});		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Project>>() {});		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
     	
 	/**
@@ -115,12 +127,15 @@ public class SoploonClient {
 	 * @return Proyecto
 	 */
 	public Project getProject(int userId, int projectId) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId));
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(Project.class);		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId));
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(Project.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -139,31 +154,41 @@ public class SoploonClient {
 	 * @return Proyecto creado con el ID asignado.
 	 */	
 	public Project postProject(Project project) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(project.getUserId())).path(PROJECTS);
-		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(project, MediaType.APPLICATION_JSON));
-		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
-			return response.readEntity(Project.class);		
-		else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
-			return project;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(project.getUserId())).path(PROJECTS);
+			Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(project, MediaType.APPLICATION_JSON));
+			if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+				return response.readEntity(Project.class);		
+			else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
+				return project;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
 	public ArrayList<Correction> getCorrections(int userId, int projectId) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Correction>>() {});		
-		else
-			return null;
+		try{
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Correction>>() {});		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public Correction getCorrection(int userId, int projectId, long correctionTime) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(correctionTime));
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(Correction.class);		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(correctionTime));
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(Correction.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -172,32 +197,42 @@ public class SoploonClient {
 	 * @return Correccion creada.
 	 */	
 	public Correction postCorrection(Correction correction) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(correction.getUserId())).path(PROJECTS).path(String.valueOf(correction.getProjectId())).path(CORRECTIONS);		
-		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(correction, MediaType.APPLICATION_JSON));
-		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
-			return response.readEntity(Correction.class);		
-		else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
-			return correction;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(correction.getUserId())).path(PROJECTS).path(String.valueOf(correction.getProjectId())).path(CORRECTIONS);		
+			Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(correction, MediaType.APPLICATION_JSON));
+			if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+				return response.readEntity(Correction.class);		
+			else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
+				return correction;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
 	
 	public ArrayList<Error> getErrors(int userId, int projectId, long time) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Error>>() {});		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Error>>() {});		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public Error getError(int userId, int projectId, long time, int errorId) {
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS).path(String.valueOf(errorId));
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(Error.class);		
-		else
-			return null;
+		try{
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS).path(String.valueOf(errorId));
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(Error.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -209,19 +244,22 @@ public class SoploonClient {
 		if (errors.isEmpty())
 			return errors;
 		
-		Error error = errors.get(0);
-		ArrayList<Error> alreadyStored = this.getErrors(error.getUserId(), error.getProjectId(), error.getDate());
-		if (alreadyStored == null || !alreadyStored.isEmpty())
-			return alreadyStored;
-		
-		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(error.getUserId())).path(PROJECTS).path(String.valueOf(error.getProjectId())).path(CORRECTIONS).path(String.valueOf(error.getDate())).path(ERRORS);
-		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(errors, MediaType.APPLICATION_JSON));
-		
-		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Error>>(){});		
-		else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
-			return errors;
-		
+		try {
+			Error error = errors.get(0);
+			ArrayList<Error> alreadyStored = this.getErrors(error.getUserId(), error.getProjectId(), error.getDate());
+			if (alreadyStored == null || !alreadyStored.isEmpty())
+				return alreadyStored;
+			
+			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(error.getUserId())).path(PROJECTS).path(String.valueOf(error.getProjectId())).path(CORRECTIONS).path(String.valueOf(error.getDate())).path(ERRORS);
+			Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(errors, MediaType.APPLICATION_JSON));
+			
+			if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Error>>(){});		
+			else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
+				return errors;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
@@ -230,30 +268,39 @@ public class SoploonClient {
 	 * @return Lista de reglas
 	 */
 	public ArrayList<Rule> getRules() {
-		WebTarget target = client.target(this.basePath).path(RULES);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Rule>>() {});		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(RULES);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Rule>>() {});		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public Rule getRule(int ruleId) {
-		WebTarget target = client.target(this.basePath).path(RULES).path(String.valueOf(ruleId));
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(Rule.class);		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(RULES).path(String.valueOf(ruleId));
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(Rule.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public ArrayList<Rule> getRuleHistory(int ruleId) {
-		WebTarget target = client.target(this.basePath).path(RULES).path(String.valueOf(ruleId)).path(VERSIONS);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Rule>>() {});		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(RULES).path(String.valueOf(ruleId)).path(VERSIONS);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Rule>>() {});		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public ArrayList<Predicate> getPredicates() {
@@ -266,21 +313,27 @@ public class SoploonClient {
 	}
 	
 	public Predicate getPredicate(int predicateId) {
-		WebTarget target = client.target(this.basePath).path(PREDICATES).path(String.valueOf(predicateId));
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(Predicate.class);		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(PREDICATES).path(String.valueOf(predicateId));
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(Predicate.class);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public ArrayList<Predicate> getPredicateHistory(int predicateId) {
-		WebTarget target = client.target(this.basePath).path(PREDICATES).path(String.valueOf(predicateId)).path(VERSIONS);
-		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<ArrayList<Predicate>>() {});		
-		else
-			return null;
+		try {
+			WebTarget target = client.target(this.basePath).path(PREDICATES).path(String.valueOf(predicateId)).path(VERSIONS);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == Response.Status.OK.getStatusCode())
+				return response.readEntity(new GenericType<ArrayList<Predicate>>() {});		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	
