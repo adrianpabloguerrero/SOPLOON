@@ -1,6 +1,5 @@
 package ar.edu.unicen.isistan.si.soploon.plugin.storage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ar.edu.unicen.isistan.si.soploon.server.models.Project;
@@ -10,12 +9,10 @@ public class Data {
 	
 	private User user;
 	private HashMap<String, Integer> projects;
-	private ArrayList<Long> pendingCorrections;
 
 	public Data() {
 		this.user = null;
 		this.projects = new HashMap<String,Integer>();
-		this.pendingCorrections = new ArrayList<Long>();
 	}
 
 	public boolean hasUser() {
@@ -45,17 +42,5 @@ public class Data {
 	public boolean hasProjectId(Project project) {
 		return this.projects.containsKey(project.getName());
 	}	
-	
-	public void addCorrection(long date) {
-		this.pendingCorrections.add(date);
-	}
-	
-	public void removeCorrection(long date) {
-		this.pendingCorrections.remove(date);
-	}
-	
-	public ArrayList<Long> getPendingCorrections() {
-		return new ArrayList<Long>(this.pendingCorrections);
-	}
 	
 }

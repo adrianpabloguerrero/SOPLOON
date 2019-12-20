@@ -1,6 +1,8 @@
 package ar.edu.unicen.isistan.si.soploon.plugin.storage;
 
 import java.io.File;
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.Platform;
 
 public class StorageManager {
@@ -72,27 +74,22 @@ public class StorageManager {
 	public synchronized void store(CorrectionData correctionData) {
 		this.populate(correctionData);
 		JsonFile<CorrectionData> correctionFile = new JsonFile<CorrectionData>(CORRECTIONS_PATH + correctionData.getCorrection().getDate() + JSON_EXT);
-		if (correctionFile.store(correctionData)) {
-			this.data.addCorrection(correctionData.getDate());
-			this.store(this.data);
-		}
-		
+		correctionFile.store(correctionData);		
 	}
 	
 	public synchronized CorrectionData getCorrection(long id) {
 		JsonFile<CorrectionData> dataFile = new JsonFile<CorrectionData>(CORRECTIONS_PATH + id + JSON_EXT);
 		CorrectionData correctionData = dataFile.read(CorrectionData.class);
+		if (correctionData == null)
+			return null;
 		this.populate(correctionData);		
 		return correctionData;
 	}
 	
 	public synchronized void deleteCorrection(long correctionId) {
 		File file = new File(CORRECTIONS_PATH + correctionId + JSON_EXT);
-		if (file.exists()) {
+		if (file.exists())
 			file.delete();
-			this.data.removeCorrection(correctionId);
-			this.store(data);
-		}		
 	}
 	
 	private void populate(CorrectionData correctionData) {
@@ -104,6 +101,17 @@ public class StorageManager {
 			correctionData.setProjectId(projectId);	
 	}
 
+	public ArrayList<Integer> pendingCorrections() {
+		ArrayList<Integer> pendings = new ArrayList<Integer>();
+		File correctionsFolder = new File(CORRECTIONS_PATH);
+		for (File file: correctionsFolder.listFiles()) {
+			try {
+				pendings.add(Integer.valueOf(file.getName().split("\\.")[0]));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return pendings;
+	}
 	
-
 }

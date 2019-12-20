@@ -30,7 +30,7 @@ public class SyncTask implements Runnable {
 		if (!this.registerUserIfNeeded())
 			return;
 		
-		ArrayList<Long> pending = this.storageManager.getData().getPendingCorrections();
+		ArrayList<Integer> pending = this.storageManager.pendingCorrections();
 		
 		for (long correctionId: pending) {
 			CorrectionData correctionData = this.storageManager.getCorrection(correctionId);
@@ -110,5 +110,6 @@ public class SyncTask implements Runnable {
 		ArrayList<Error> result = this.client.postErrors(errors);
 		return (result != null);
 	}
+	
 
 }
