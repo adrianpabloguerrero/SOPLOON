@@ -9,7 +9,9 @@ import ar.edu.unicen.isistan.si.soploon.server.client.SoploonClient;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 
-public class UpdateTask implements Runnable {
+public class Updater {
+
+	private static Updater INSTANCE = null;
 
 	public static final int NOT_FINISHED = 0;
 	public static final int ERROR_CONNECTIVITY = -2;
@@ -17,37 +19,38 @@ public class UpdateTask implements Runnable {
 	public static final int UPDATED = 1;
 	public static final int NOT_UPDATED = 2;
 	
-	private int result;
-	
-	public UpdateTask() {
-		this.result = NOT_FINISHED;
+	private SoploonClient client;
+	private StorageManager storageManager;
+
+	private Updater() {
+		this.client = new SoploonClient(Soploon.BASE_HOST);
+		this.storageManager = StorageManager.getInstance();
 	}
 	
-	@Override
-	public void run() {
+	public synchronized static Updater getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new Updater();
+		return INSTANCE;
+	}
+
+	public synchronized int update() {
 		
-		SoploonClient client = new SoploonClient(Soploon.BASE_HOST);
-		List<Rule> rules = client.getRules();
-		List<Predicate> predicates = client.getPredicates();
+		List<Rule> rules = this.client.getRules();
+		List<Predicate> predicates = this.client.getPredicates();
 
 		if (rules != null && predicates != null) {
 			Configuration configuration = new Configuration();
 			configuration.setRules(rules);
 			configuration.setPredicates(predicates);
 			
-			StorageManager manager = StorageManager.getInstance();
-			Configuration currentConfiguration = manager.getConfiguration();
+			Configuration currentConfiguration = this.storageManager.getConfiguration();
 			if (!configuration.equals(currentConfiguration))
-				this.result = (manager.storeConfiguration(configuration)) ? UPDATED : ERROR_STORING;
+				return (this.storageManager.storeConfiguration(configuration)) ? UPDATED : ERROR_STORING;
 			else
-				this.result = NOT_UPDATED;
+				return NOT_UPDATED;
 		} else {
-			this.result = ERROR_CONNECTIVITY;
+			return ERROR_CONNECTIVITY;
 		}
 	}
 	
-	public int getResult() {
-		return this.result;
-	}
-
 }

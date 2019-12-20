@@ -18,7 +18,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import ar.edu.unicen.isistan.si.soploon.plugin.Soploon;
-import ar.edu.unicen.isistan.si.soploon.plugin.api.SyncTask;
+import ar.edu.unicen.isistan.si.soploon.plugin.api.Synchronizer;
 import ar.edu.unicen.isistan.si.soploon.plugin.eclipse.views.CorrectionsView;
 import ar.edu.unicen.isistan.si.soploon.plugin.storage.CorrectionData;
 import ar.edu.unicen.isistan.si.soploon.plugin.storage.StorageManager;
@@ -92,8 +92,7 @@ public class Teacher {
 			}
 			
 			this.store();
-			Thread thread = new Thread(new SyncTask());
-			thread.start();			
+			new Thread(Synchronizer.getInstance()::sync).start();
 		} catch (InvocationTargetException | InterruptedException | PartInitException e) {
 			e.printStackTrace();
 		}

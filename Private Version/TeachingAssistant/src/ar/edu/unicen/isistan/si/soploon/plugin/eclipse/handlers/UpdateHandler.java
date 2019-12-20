@@ -4,29 +4,26 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 
-import ar.edu.unicen.isistan.si.soploon.plugin.api.UpdateTask;
+import ar.edu.unicen.isistan.si.soploon.plugin.api.Updater;
 
 public class UpdateHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) {	
-		UpdateTask updateTask = new UpdateTask();
-		updateTask.run();
-		
-		int result = updateTask.getResult();
+		int result = Updater.getInstance().update();
 		
 		String message = null;
 		switch (result) {
-			case UpdateTask.ERROR_CONNECTIVITY:
+			case Updater.ERROR_CONNECTIVITY:
 				message = "[WARN] Hay problemas de conectividad con el servidor";
 				break;
-			case UpdateTask.ERROR_STORING:
+			case Updater.ERROR_STORING:
 				message = "[ERROR] Error al almacenar las reglas nuevas";
 				break;
-			case UpdateTask.NOT_UPDATED:
+			case Updater.NOT_UPDATED:
 				message = "[OK] No es necesario actualizar";
 				break;
-			case UpdateTask.UPDATED:
+			case Updater.UPDATED:
 				message = "[OK] Se actualizaron los errores";
 				break;
 		}
