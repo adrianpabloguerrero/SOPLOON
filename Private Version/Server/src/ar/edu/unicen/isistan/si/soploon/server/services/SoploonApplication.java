@@ -9,7 +9,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import ar.edu.unicen.isistan.si.soploon.server.providers.CORSFilter;
 import ar.edu.unicen.isistan.si.soploon.server.providers.ExceptionCatcher;
-import ar.edu.unicen.isistan.si.soploon.server.providers.GsonProvider;
+import ar.edu.unicen.isistan.si.soploon.server.providers.GsonServerProvider;
 
 
 @ApplicationPath("/api")
@@ -19,7 +19,7 @@ public class SoploonApplication extends ResourceConfig {
 	    public SoploonApplication(ServiceLocator locator) {
 	        ServiceLocatorUtilities.enableImmediateScope(locator);
 	        this.register(CORSFilter.class);
-	        this.register(GsonProvider.class);
+	        this.register(GsonServerProvider.class);
 	        this.register(ExceptionCatcher.class);
 	        this.register(SoploonManager.class);    
 	    }

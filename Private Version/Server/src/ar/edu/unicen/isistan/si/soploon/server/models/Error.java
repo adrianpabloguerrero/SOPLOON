@@ -109,8 +109,7 @@ public class Error {
         return this.id == error.getId() &&
                this.projectId== error.getProjectId() &&
                this.userId == error.getUserId() &&
-               //TODO problemas para comparar fecha: Ej: this: date	1569362149	- error: 1569294000000
-               //this.date == error.getDate() &&
+               this.date == error.getDate() &&
                this.ruleId == error.getRuleId() && 
                this.versionRule == error.getVersionRule() && 
                this.codeLocation.equals(error.getCodeLocation()) &&

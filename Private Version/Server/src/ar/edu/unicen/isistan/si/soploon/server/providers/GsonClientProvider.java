@@ -19,16 +19,11 @@ import java.lang.reflect.Type;
 @Provider
 @Consumes({MediaType.APPLICATION_JSON, "text/json", "application/*+json"})
 @Produces({MediaType.APPLICATION_JSON, "text/json", "application/*+json"})
-public class GsonProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
+public class GsonClientProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
 
 	private final String UTF8 = "UTF-8";
 
-	private static final Gson GSON = new GsonBuilder()
-    		//.registerTypeHierarchyAdapter(Calendar.class, (JsonDeserializer<Calendar>) (json, typeOfT, context) -> { Calendar out = Calendar.getInstance(); out.setTimeInMillis(json.getAsJsonPrimitive().getAsLong()); return out; } )
-    	    //.registerTypeHierarchyAdapter(Calendar.class, (JsonSerializer<Calendar>) (date, type, jsonSerializationContext) -> { return new JsonPrimitive(date.getTimeInMillis()); })   
-    		//.setLongSerializationPolicy(LongSerializationPolicy.STRING)
-    		.excludeFieldsWithoutExposeAnnotation()
-    		.create();
+	private static final Gson GSON = new GsonBuilder().create();
 
 	@Override
 	public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {

@@ -39,10 +39,6 @@ public class Project {
 		return userId;
 	}
 
-	public void setIdUser(int userId) {
-		this.userId = userId;
-	}
-	
 	public boolean check() {
 		return this.name != null;
 	}

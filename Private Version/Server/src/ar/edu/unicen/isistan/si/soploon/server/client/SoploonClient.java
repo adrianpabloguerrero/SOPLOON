@@ -18,7 +18,7 @@ import ar.edu.unicen.isistan.si.soploon.server.models.Project;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.models.Error;
-import ar.edu.unicen.isistan.si.soploon.server.providers.GsonProvider;
+import ar.edu.unicen.isistan.si.soploon.server.providers.GsonClientProvider;
 
 public class SoploonClient {
 
@@ -40,7 +40,7 @@ public class SoploonClient {
 	 */
 	public SoploonClient(String basePath) {
 		this.basePath = basePath;
-		ClientConfig config = new ClientConfig().register(new GsonProvider());
+		ClientConfig config = new ClientConfig().register(new GsonClientProvider());
 		this.client = ClientBuilder.newClient(config);
 	}
 

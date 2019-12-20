@@ -119,7 +119,7 @@ public class ProjectDao {
 	private Project readRow(ResultSet result) throws SQLException {
 		Project project = new Project();
 		project.setId(result.getInt(1));
-		project.setIdUser(result.getInt(2));
+		project.setUserId(result.getInt(2));
 		project.setName(result.getString(3));
 		return project;
 	}

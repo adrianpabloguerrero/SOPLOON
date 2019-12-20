@@ -6,10 +6,8 @@ import javax.ws.rs.core.Application;
 import org.glassfish.hk2.api.Immediate;
 
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
-import ar.edu.unicen.isistan.si.soploon.server.services.resources.CorrectionResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.ErrorQueryResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.PredicateResource;
-import ar.edu.unicen.isistan.si.soploon.server.services.resources.ProjectResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.RuleResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.UserResource;
 
@@ -22,10 +20,10 @@ public class SoploonManager extends Application {
 	static final String PASS = "soploononon";
 
 	private RuleResource ruleResource;
-	private ProjectResource projectResource;
+//	private ProjectResource projectResource;
 	private UserResource userResource;
 	private PredicateResource predicateResorce;
-	private CorrectionResource correctionResource;
+//	private CorrectionResource correctionResource;
 	private ErrorQueryResource errorQueryResource;
 	private Database database;
 
@@ -34,10 +32,10 @@ public class SoploonManager extends Application {
 		this.database = new Database(URL, USER, PASS);
 		this.database.connect();
 		this.ruleResource = new RuleResource(this.database);
-		this.projectResource = new ProjectResource(this.database);
+//		this.projectResource = new ProjectResource(this.database);
 		this.userResource = new UserResource (this.database);
 		this.predicateResorce = new PredicateResource (this.database);
-		this.correctionResource = new CorrectionResource(this.database);
+//		this.correctionResource = new CorrectionResource(this.database);
 		this.errorQueryResource = new ErrorQueryResource (this.database);
 	}
 
