@@ -17,7 +17,7 @@ public class Correction {
 	@Expose
 	private ArrayList<String> representation;
 	@Expose
-	private String versionSoploon;
+	private Configuration configuration;
 
 	public int getUserId() {
 		return userId;
@@ -59,18 +59,20 @@ public class Correction {
 		this.representation = representation;
 	}
 
-	public String getVersionSoploon() {
-		return versionSoploon;
+	public Configuration getConfiguration() {
+		return configuration;
 	}
 
-	public void setVersionSoploon(String versionSoploon) {
-		this.versionSoploon = versionSoploon;
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Correction [userId=" + userId + ", projectId=" + projectId + ", date=" + date + ", code=" + code
-				+ ", representation=" + representation + ", versionSoploon=" + versionSoploon + "]";
+				+ ", representation=" + representation + ", configuration=" + configuration + "]";
 	}
+
+
 
 }

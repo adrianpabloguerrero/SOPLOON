@@ -22,4 +22,15 @@ public class PrologPredicate {
 		return this.predicate.getCode();
 	}
 
+	public boolean isActivated() {
+		return this.predicate.getActivated();
+	}
+	
+	public int getVersion() {
+		return this.predicate.getVersion();
+	}
+	
+	public int getId() {
+		return this.predicate.getId();
+	}
 }

@@ -93,7 +93,7 @@ public class PrologRule implements Comparable<PrologRule> {
 		return this.rule.getLink();
 	}
 	
-	public int getID() {
+	public int getId() {
 		return this.rule.getId();
 	}
 	

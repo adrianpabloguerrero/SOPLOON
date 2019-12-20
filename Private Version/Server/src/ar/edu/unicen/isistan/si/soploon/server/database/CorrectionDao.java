@@ -1,6 +1,5 @@
 package ar.edu.unicen.isistan.si.soploon.server.database;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,12 +12,13 @@ import com.google.gson.reflect.TypeToken;
 
 import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
 import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
+import ar.edu.unicen.isistan.si.soploon.server.models.Configuration;
 
 public class CorrectionDao {
 
 	private static final String TABLE_NAME = "soploon.correction";
 	private static final String COLUMNS_INSERT = "(id_user,id_project,date,code,representation,version_soploon)";
-	private static final String VALUES = "(?,?,to_timestamp(?),to_json(?::json),to_json(?::json),?)";
+	private static final String VALUES = "(?,?,to_timestamp(?),to_json(?::json),to_json(?::json),to_json(?::json))";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id_user = ? AND id_project = ? AND date = ?";
@@ -42,7 +42,7 @@ public class CorrectionDao {
 		args[2] = correction.getDate();
 		args[3] = gson.toJson(correction.getCode());
 		args[4] = gson.toJson(correction.getRepresentation());
-		args[5] = correction.getVersionSoploon();
+		args[5] = gson.toJson(correction.getConfiguration());
 		
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
@@ -53,6 +53,7 @@ public class CorrectionDao {
 				return false;
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return false;
 		} finally {
 			if (connection != null) {
@@ -85,9 +86,8 @@ public class CorrectionDao {
 		Connection connection = this.database.connection();
 		
 		//TODO 	revisar *1000 en date. 
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId,new Timestamp(time*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId, new Timestamp(time*1000))) {
 			ResultSet result = statement.executeQuery();
-
 			if (result.next())
  				return this.readRow(result);
 			else
@@ -109,7 +109,7 @@ public class CorrectionDao {
 		correction.setDate(result.getDate(3).getTime());
 		correction.setCode(gson.fromJson(result.getString(4), new TypeToken<ArrayList<SourceCode>>() {}.getType()));
 		correction.setRepresentation(gson.fromJson(result.getString(5), new TypeToken<ArrayList<String>>() {}.getType()));
-		correction.setVersionSoploon(result.getString(6));
+		correction.setConfiguration(gson.fromJson(result.getString(6), Configuration.class));
 		return correction;
 	}
 	

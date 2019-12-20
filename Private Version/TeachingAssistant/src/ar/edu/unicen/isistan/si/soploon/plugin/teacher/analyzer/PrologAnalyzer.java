@@ -1,6 +1,7 @@
 package ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
@@ -144,6 +145,24 @@ public class PrologAnalyzer {
 		for (Predicate predicate: configuration.getPredicates()) {
 			this.predicates.add(new PrologPredicate(predicate));
 		}	
+	}
+
+	public HashMap<Integer, Integer> rulesVersions() {
+		HashMap<Integer, Integer> out = new HashMap<Integer, Integer>();
+		for (PrologRule rule: this.rules) {
+			if (rule.isActivated())
+				out.put(rule.getId(), rule.getVersion());
+		}
+		return out;
+	}
+	
+	public HashMap<Integer, Integer> predicatesVersions() {
+		HashMap<Integer, Integer> out = new HashMap<Integer, Integer>();
+		for (PrologPredicate predicate: this.predicates) {
+			if (predicate.isActivated())
+				out.put(predicate.getId(), predicate.getVersion());
+		}
+		return out;
 	}
 
 }

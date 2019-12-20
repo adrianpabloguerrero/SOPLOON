@@ -102,7 +102,7 @@ public class Synchronizer {
 	private boolean postCorrectionIfNeeded(CorrectionData correctionData) {
 
 		Correction correction = correctionData.getCorrection();
-
+	
 		Correction result = this.client.postCorrection(correction);
 		if (result != null) {
 			correctionData.setDate(result.getDate());

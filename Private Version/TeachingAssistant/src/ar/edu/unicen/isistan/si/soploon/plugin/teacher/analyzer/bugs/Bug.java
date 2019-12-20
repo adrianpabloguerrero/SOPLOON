@@ -112,7 +112,7 @@ public class Bug implements Comparable<Bug> {
 		
 		error.setReviewed(0);
 		error.setCodeLocation(codeLocations);
-		error.setRuleId(this.rule.getID());
+		error.setRuleId(this.rule.getId());
 		error.setVersionRule(this.rule.getVersion());
 		error.setRepresentationLocation(representation);
 		

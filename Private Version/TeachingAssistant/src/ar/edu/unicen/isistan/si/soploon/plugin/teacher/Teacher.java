@@ -26,6 +26,7 @@ import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.PrologAnalyzer;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.bugs.Bug;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.ModelGenerator;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.parser.CodeParser;
+import ar.edu.unicen.isistan.si.soploon.server.models.Configuration;
 import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
 import ar.edu.unicen.isistan.si.soploon.server.models.Project;
 
@@ -164,6 +165,14 @@ public class Teacher {
 		
 	}
 	
+	private Configuration currentConfiguration() {
+		Configuration configuration = new Configuration();
+		configuration.setVersion(Soploon.VERSION);
+		configuration.setRules(this.prologAnalyzer.rulesVersions());
+		configuration.setPredicates(this.prologAnalyzer.predicatesVersions());
+		return configuration;
+	}
+	
 	private void store() {
 		
 		CorrectionData data = new CorrectionData();
@@ -175,9 +184,9 @@ public class Teacher {
 		
 		// Seteo la correccion
 		Correction correction = new Correction();
-		correction.setVersionSoploon(Soploon.VERSION);
 		correction.setRepresentation(this.modelGenerator.toRepresentation());
 		correction.setCode(this.codeParser.toSourceCodes());
+		correction.setConfiguration(this.currentConfiguration());
 		data.setCorrection(correction);
 		
 		// Seteo los errores
