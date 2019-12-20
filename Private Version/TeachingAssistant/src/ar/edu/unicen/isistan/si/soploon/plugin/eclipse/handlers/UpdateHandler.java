@@ -3,7 +3,8 @@ package ar.edu.unicen.isistan.si.soploon.plugin.eclipse.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
-import ar.edu.unicen.isistan.si.soploon.plugin.updater.UpdateTask;
+
+import ar.edu.unicen.isistan.si.soploon.plugin.api.UpdateTask;
 
 public class UpdateHandler extends AbstractHandler {
 

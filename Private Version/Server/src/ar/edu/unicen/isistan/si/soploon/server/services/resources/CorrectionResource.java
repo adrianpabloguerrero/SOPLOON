@@ -19,10 +19,6 @@ import ar.edu.unicen.isistan.si.soploon.server.database.CorrectionDao;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
 
-
-// TODO, HACER LOS METODOS HTTP DE ESTA CLASE, SOLO INSERT Y GET, NO HAY UPDATE
-// NOTA: EL INSERT DEBERIA TRAER CONSIGO TODA LA LISTA DE ERRORES, NO TIENE SENTIDO INSERTAR DE A UN ERROR
-
 public class CorrectionResource {
 
 	private Database database;

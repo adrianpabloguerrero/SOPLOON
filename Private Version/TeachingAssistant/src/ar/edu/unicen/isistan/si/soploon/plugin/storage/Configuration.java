@@ -6,12 +6,12 @@ import java.util.List;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 
-public class ConfigurationData {
+public class Configuration {
 
 	private List<Rule> rules;
 	private List<Predicate> predicates;
 
-	public ConfigurationData() {
+	public Configuration() {
 		this.rules = new ArrayList<Rule>();
 		this.predicates = new ArrayList<Predicate>();
 	}
@@ -40,7 +40,7 @@ public class ConfigurationData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConfigurationData other = (ConfigurationData) obj;
+		Configuration other = (Configuration) obj;
 		if (predicates == null) {
 			if (other.predicates != null)
 				return false;

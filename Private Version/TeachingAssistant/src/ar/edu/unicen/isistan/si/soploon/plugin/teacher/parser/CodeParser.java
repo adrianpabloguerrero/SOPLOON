@@ -1,7 +1,8 @@
 
 package ar.edu.unicen.isistan.si.soploon.plugin.teacher.parser;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -13,18 +14,20 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
+
 public class CodeParser {
 
 	private static final String MONITOR_TITLE = "C�digo Java -> Arbol Sint�ctico";
 
 	private ASTParser parser;
-	private List<CompilationUnit> units;
-
+	private HashMap<CompilationUnit,String> units;
+	
 	@SuppressWarnings("deprecation")
 	public CodeParser() {
 		this.parser = ASTParser.newParser(AST.JLS8);
 		this.parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		this.units = new Vector<CompilationUnit>();
+		this.units = new HashMap<CompilationUnit,String>();
 	}
 
 	private CompilationUnit parse(ICompilationUnit compilation_unit) {
@@ -38,6 +41,7 @@ public class CodeParser {
 		this.units.clear();
 		
 		try {
+			
 			IPackageFragment[] packages = project.getPackageFragments();
 
 			Vector<IPackageFragment> packages_source = new Vector<IPackageFragment>();
@@ -53,8 +57,9 @@ public class CodeParser {
 			for (IPackageFragment actual_package : packages_source) {
 				ICompilationUnit[] compilation_units;
 				compilation_units = actual_package.getCompilationUnits();
-				for (ICompilationUnit compilation_unit : compilation_units) {
-					this.units.add(this.parse(compilation_unit));
+				for (ICompilationUnit icompilationUnit : compilation_units) {
+					CompilationUnit compilationUnit = this.parse(icompilationUnit);
+					this.units.put(compilationUnit, icompilationUnit.getSource());
 
 					if (monitor.isCanceled()) {
 						monitor.done();
@@ -71,10 +76,19 @@ public class CodeParser {
 		}
 	}
 
-	public List<CompilationUnit> getUnits() {
-		return this.units;
+	public ArrayList<CompilationUnit> getUnits() {
+		return new ArrayList<CompilationUnit>(this.units.keySet());
 	}
 
-
+	public ArrayList<SourceCode> toSourceCodes() {
+		ArrayList<SourceCode> sourceCodes = new ArrayList<SourceCode>();
+		for (CompilationUnit cunit: this.units.keySet()) {
+			SourceCode sourceCode = new SourceCode();
+			sourceCode.setPath(cunit.getJavaElement().getPath().toString());
+			sourceCode.setCode(this.units.get(cunit));
+			sourceCodes.add(sourceCode);
+		}
+		return sourceCodes;
+	}
 
 }

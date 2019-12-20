@@ -1,6 +1,6 @@
 package ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler;
 
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -9,34 +9,30 @@ import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.converters.NodeCo
 
 public class ModelGenerator {
 
-	private static final String MONITOR_TITLE = "Arbol Sint�ctico -> C�digo Prolog";
-	private static final String LOG_HEADER = System.lineSeparator() + "Generando el Modelo Prolog";
-	private static final String LOG_FOOTER = System.lineSeparator() + "Modelo Prolog Generado Correctamente" + System.lineSeparator();
-	private static final String LOG_ERROR = System.lineSeparator() + "Error:" + System.lineSeparator();
+	private static final String MONITOR_TITLE = "Arbol Sintáctico -> Código Prolog";
 
-	private PrologCode check_code;
+	private PrologCode prologCode;
 	private Mapper mapper;
-	private NodeConverterFactory converter_factory;
+	private NodeConverterFactory converterFactory;
 
 	public ModelGenerator() {
+		
 	}
 
 	private void init() {
-		this.check_code = new PrologCode();
+		this.prologCode = new PrologCode();
 		this.mapper = new Mapper();
-		this.converter_factory = new NodeConverterFactory(this.mapper,this.check_code);
+		this.converterFactory = new NodeConverterFactory(this.mapper,this.prologCode);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public int process(List<CompilationUnit> units, IProgressMonitor monitor, PrintWriter logger) {
+	public int process(List<CompilationUnit> units, IProgressMonitor monitor) {
 		init();
 		try {
-			logger.println(LOG_HEADER);
-
 			monitor.beginTask(MONITOR_TITLE, units.size() * 2);
 			
 			for (CompilationUnit unit : units) {
-				this.converter_factory.getConverter(unit).bind(unit);
+				this.converterFactory.getConverter(unit).bind(unit);
 				monitor.worked(1);
 				if (monitor.isCanceled()) {
 					monitor.done();
@@ -45,30 +41,24 @@ public class ModelGenerator {
 			}
 			
 			for (CompilationUnit unit : units) {
-				this.converter_factory.getConverter(unit).convert(unit);
+				this.converterFactory.getConverter(unit).convert(unit);
 				monitor.worked(1);
 				if (monitor.isCanceled()) {
 					monitor.done();
 					return 1;
 				}
 			}
-			
-			logger.println(LOG_FOOTER);
-			
-			this.check_code.log(logger);
-			
+								
 			return 0;			
 		}
 		catch (Exception e) {
 			monitor.done();
-			logger.println(LOG_ERROR);
-			logger.println(e.toString());
 			return -1;
 		}
 	}
 
-	public PrologCode getCheckCode() {
-		return this.check_code;
+	public PrologCode getPrologCode() {
+		return this.prologCode;
 	}
 		
 	public Mapper getMapper() {
@@ -76,7 +66,11 @@ public class ModelGenerator {
 	}
 	
 	public NodeConverterFactory getFactory() {
-		return this.converter_factory;
+		return this.converterFactory;
+	}
+	
+	public ArrayList<String> toRepresentation() {
+		return this.prologCode.getFacts();
 	}
 	
 	/* Este c�digo modifica un AST y baja las modificaciones del c�digo al archivo */

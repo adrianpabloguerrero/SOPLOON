@@ -1,4 +1,3 @@
-
 package ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.bugs;
 
 import org.eclipse.core.resources.IFile;
@@ -13,23 +12,27 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.Mapper;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.converters.NodeConverterFactory;
+import ar.edu.unicen.isistan.si.soploon.server.models.CodeLocation;
 
 public class BuggedCode {
 
 	private Bug bug;
 	private ASTNode node;
-	private NodeConverterFactory converter_factory; 
+	private NodeConverterFactory converterFactory; 
+	private int nodeId;
 	
-	public BuggedCode(Bug bug, ASTNode node, NodeConverterFactory converter_factory) {
+	public BuggedCode(Bug bug, int nodeId, Mapper mapper, NodeConverterFactory converterFactory) {
 		this.bug = bug;
-		this.node = node;
-		this.converter_factory = converter_factory;
+		this.nodeId = nodeId;
+		this.node = mapper.getNode(nodeId);
+		this.converterFactory = converterFactory;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public String getLineNumber() {
-		return converter_factory.getConverter(node).getLineNumber(node);
+		return converterFactory.getConverter(node).getLineNumber(node);
 	}
 
 	public String getFile() {
@@ -37,7 +40,7 @@ public class BuggedCode {
 	}
 
 	public IPath getPath() {
-		return ((CompilationUnit)node.getRoot()).getJavaElement().getPath();
+		return ((CompilationUnit) node.getRoot()).getJavaElement().getPath();
 	}
 	
 	public void open() {
@@ -61,13 +64,26 @@ public class BuggedCode {
 	public Bug getBug() {
 		return this.bug;
 	}
+	
+	public int getNodeID() {
+		return nodeId;
+	}
 
 	@SuppressWarnings("unchecked")
 	public String getCode() {
-		return converter_factory.getConverter(node).getName(node);
+		return converterFactory.getConverter(node).getName(node);
 	}
-
+	
 	public String toString() {
 		return this.getFile() + ", " + this.getLineNumber() + ", " + this.getCode();
 	}
+	
+	public CodeLocation toCodeLocation() {
+		CodeLocation codeLocation = new CodeLocation();
+		codeLocation.setPath(this.getPath().toString());
+		codeLocation.setStartChar(this.node.getStartPosition());
+		codeLocation.setStartChar(this.node.getStartPosition() + this.node.getLength());
+		return codeLocation;
+	}
+	
 }

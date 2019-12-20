@@ -6,15 +6,17 @@ import org.eclipse.core.runtime.Platform;
 public class StorageManager {
 
 	private static final String STORAGE_PATH = (Platform.getInstallLocation().getURL().getPath() + "dropins" + File.separator + "plugins" + File.separator + "ar.edu.unicen.isistan.si.soploon" + File.separator).substring(1);
-	private static final String DATA_PATH = STORAGE_PATH + "data.json";
-	private static final String CONFIG_PATH = STORAGE_PATH + "config.json";
-
+	private static final String CORRECTIONS_PATH = STORAGE_PATH + "corrections" + File.separator;
+	private static final String JSON_EXT = ".json";
+	private static final String DATA_PATH = STORAGE_PATH + "data" + JSON_EXT;
+	private static final String CONFIG_PATH = STORAGE_PATH + "config" + JSON_EXT;
+	
 	private static StorageManager INSTANCE;
 	
-	private UserData userData;
-	private ConfigurationData configurationData;
+	private Configuration configuration;
+	private Data data;
 	
-	public static StorageManager getInstance() {
+	public synchronized static StorageManager getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new StorageManager();
 		return INSTANCE;
@@ -28,38 +30,80 @@ public class StorageManager {
 		File folder = new File(STORAGE_PATH);
 		if (!folder.exists())
 			folder.mkdirs();
-		JsonFile<UserData> dataFile = new JsonFile<UserData>(DATA_PATH);
-		this.userData = dataFile.read(UserData.class);
-		if (this.userData == null) {
-			this.userData = new UserData();
-			dataFile.store(this.userData);
+		File correctionsFolder = new File(CORRECTIONS_PATH);
+		if (!correctionsFolder.exists())
+			correctionsFolder.mkdirs();
+		
+		JsonFile<Data> dataFile = new JsonFile<Data>(DATA_PATH);
+		this.data = dataFile.read(Data.class);
+		if (this.data == null) {
+			this.data = new Data();
+			dataFile.store(this.data);
 		}
-		JsonFile<ConfigurationData> configFile = new JsonFile<ConfigurationData>(CONFIG_PATH);
-		this.configurationData = configFile.read(ConfigurationData.class);
-		if (this.configurationData == null) {
-			this.configurationData = new ConfigurationData();
-			configFile.store(this.configurationData);
+		
+		JsonFile<Configuration> configFile = new JsonFile<Configuration>(CONFIG_PATH);
+		this.configuration = configFile.read(Configuration.class);
+		if (this.configuration == null) {
+			this.configuration = new Configuration();
+			configFile.store(this.configuration);
 		}
 	}
 
-	public UserData getUserData() {
-		return userData;
+	public Data getData() {
+		return data;
 	}
 
-	public ConfigurationData getConfigurationData() {
-		return this.configurationData;
+	public Configuration getConfiguration() {
+		return this.configuration;
 	}
 	
-	public boolean storeUserData(UserData userData) {
-		this.userData = userData;
-		JsonFile<UserData> file = new JsonFile<UserData>(DATA_PATH);
-		return file.store(userData);
+	public synchronized boolean store(Data data) {
+		this.data = data;
+		JsonFile<Data> file = new JsonFile<Data>(DATA_PATH);
+		return file.store(data);
 	}
 
-	public synchronized boolean storeConfigurationData(ConfigurationData configurationData) {
-		this.configurationData = configurationData;
-		JsonFile<ConfigurationData> file = new JsonFile<ConfigurationData>(CONFIG_PATH);
-		return file.store(configurationData);
+	public synchronized boolean storeConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+		JsonFile<Configuration> file = new JsonFile<Configuration>(CONFIG_PATH);
+		return file.store(configuration);
+	}
+
+	public synchronized void store(CorrectionData correctionData) {
+		this.populate(correctionData);
+		JsonFile<CorrectionData> correctionFile = new JsonFile<CorrectionData>(CORRECTIONS_PATH + correctionData.getCorrection().getDate() + JSON_EXT);
+		if (correctionFile.store(correctionData)) {
+			this.data.addCorrection(correctionData.getDate());
+			this.store(this.data);
+		}
+		
 	}
 	
+	public synchronized CorrectionData getCorrection(long id) {
+		JsonFile<CorrectionData> dataFile = new JsonFile<CorrectionData>(CORRECTIONS_PATH + id + JSON_EXT);
+		CorrectionData correctionData = dataFile.read(CorrectionData.class);
+		this.populate(correctionData);		
+		return correctionData;
+	}
+	
+	public synchronized void deleteCorrection(long correctionId) {
+		File file = new File(CORRECTIONS_PATH + correctionId + JSON_EXT);
+		if (file.exists()) {
+			file.delete();
+			this.data.removeCorrection(correctionId);
+			this.store(data);
+		}		
+	}
+	
+	private void populate(CorrectionData correctionData) {
+		if (correctionData.getDate() == 0)
+			correctionData.setDate(System.currentTimeMillis()/1000);
+		correctionData.setUserId(this.data.getUserId());
+		Integer projectId = this.data.getProjectId(correctionData.getProject());
+		if (projectId != null)
+			correctionData.setProjectId(projectId);	
+	}
+
+	
+
 }

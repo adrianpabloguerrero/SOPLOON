@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.IBinding;
 
 public class Mapper {
 
-	private long actual_id;
+	private int actual_id;
 	private HashMap<ASTNode, String> nodes_ids;
 	private HashMap<ASTNode,String> aux_nodes_ids;
 	private HashMap<String, ASTNode> nodes_ids_inverse;
@@ -37,11 +37,11 @@ public class Mapper {
 	public String getNodeID(ASTNode node) {
 		if (node == null)
 			return null;
-    	String id = this.aux_nodes_ids.get(node);
+		String id = this.aux_nodes_ids.get(node);
     	if (id == null)
     		id = this.nodes_ids.get(node);
     	if (id == null) {
-    		id = Long.toString(actual_id++);
+    		id = String.valueOf(actual_id++);
     		setNodeID(node,id);
     	}
     	return id;
@@ -66,13 +66,17 @@ public class Mapper {
 	}
 
 	public String getID() {
-		return Long.toString(actual_id++);
+		return String.valueOf(actual_id++);
 	}
 
 	public ASTNode getNode(String id) {
 		return this.nodes_ids_inverse.get(id);
 	}
 
+	public ASTNode getNode(Integer id) {
+		return this.nodes_ids_inverse.get(String.valueOf(id));
+	}
+	
 	public ASTNode getParent(ASTNode node) {
 		return node_levels.get(node);
 	}

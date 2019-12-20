@@ -1,6 +1,6 @@
 package ar.edu.unicen.isistan.si.soploon.server.client;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -42,18 +42,17 @@ public class SoploonClient {
 		this.basePath = basePath;
 		ClientConfig config = new ClientConfig().register(new GsonProvider());
 		this.client = ClientBuilder.newClient(config);
-
 	}
 
 	/**
 	 * Obtiene el listado de todos los usuarios.
 	 * @return Lista de usuarios
 	 */
-	public List<User> getUsers() {
+	public ArrayList<User> getUsers() {
 		WebTarget target = client.target(this.basePath).path(USERS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<User>>() {});
+			return response.readEntity(new GenericType<ArrayList<User>>() {});
 		else
 			return null;
 	}
@@ -91,7 +90,7 @@ public class SoploonClient {
 	 * @param user Usuario en cuestion
 	 * @return Lista de proyectos
 	 */
-	public List<Project> getProjects(User user) {
+	public ArrayList<Project> getProjects(User user) {
 		return this.getProjects(user.getId());
 	}
 	
@@ -100,11 +99,11 @@ public class SoploonClient {
 	 * @param userId ID del usuario en cuestion
 	 * @return Lista de proyectos
 	 */
-	public List<Project> getProjects(int userId) {
+	public ArrayList<Project> getProjects(int userId) {
 		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Project>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Project>>() {});		
 		else
 			return null;
 	}
@@ -134,12 +133,26 @@ public class SoploonClient {
 		return this.getProject(user.getId(),projectId);
 	}
 	
-
-	public List<Correction> getCorrections(int userId, int projectId) {
+	/**
+	 * Crea un proyecto con los parametros indicados. Retorna null si no se pudo crear el proyecto.
+	 * @param project Projecto que se desea crear
+	 * @return Proyecto creado con el ID asignado.
+	 */	
+	public Project postProject(Project project) {
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(project.getUserId())).path(PROJECTS);
+		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(project, MediaType.APPLICATION_JSON));
+		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+			return response.readEntity(Project.class);		
+		else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
+			return project;
+		return null;
+	}
+	
+	public ArrayList<Correction> getCorrections(int userId, int projectId) {
 		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Correction>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Correction>>() {});		
 		else
 			return null;
 	}
@@ -153,11 +166,27 @@ public class SoploonClient {
 			return null;
 	}
 	
-	public List<Error> getErrors(int userId, int projectId, long time) {
+	/**
+	 * Crea una correccion con los parametros indicados. Retorna null si no se pudo crear la correccion.
+	 * @param correccion Correccion que se desea crear
+	 * @return Correccion creada.
+	 */	
+	public Correction postCorrection(Correction correction) {
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(correction.getUserId())).path(PROJECTS).path(String.valueOf(correction.getProjectId())).path(CORRECTIONS);		
+		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(correction, MediaType.APPLICATION_JSON));
+		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+			return response.readEntity(Correction.class);		
+		else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
+			return correction;
+		return null;
+	}
+	
+	
+	public ArrayList<Error> getErrors(int userId, int projectId, long time) {
 		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Error>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Error>>() {});		
 		else
 			return null;
 	}
@@ -171,16 +200,40 @@ public class SoploonClient {
 			return null;
 	}
 	
+	/**
+	 * Crea una correccion con los parametros indicados. Retorna null si no se pudo crear la correccion.
+	 * @param correccion Correccion que se desea crear
+	 * @return Correccion creada.
+	 */	
+	public ArrayList<Error> postErrors(ArrayList<Error> errors) {
+		if (errors.isEmpty())
+			return errors;
+		
+		Error error = errors.get(0);
+		ArrayList<Error> alreadyStored = this.getErrors(error.getUserId(), error.getProjectId(), error.getDate());
+		if (alreadyStored == null || !alreadyStored.isEmpty())
+			return alreadyStored;
+		
+		WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(error.getUserId())).path(PROJECTS).path(String.valueOf(error.getProjectId())).path(CORRECTIONS).path(String.valueOf(error.getDate())).path(ERRORS);
+		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(errors, MediaType.APPLICATION_JSON));
+		
+		if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+			return response.readEntity(new GenericType<ArrayList<Error>>(){});		
+		else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode())
+			return errors;
+		
+		return null;
+	}
 	
 	/**
 	 * Lista todas las reglas activas.
 	 * @return Lista de reglas
 	 */
-	public List<Rule> getRules() {
+	public ArrayList<Rule> getRules() {
 		WebTarget target = client.target(this.basePath).path(RULES);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Rule>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Rule>>() {});		
 		else
 			return null;
 	}
@@ -194,20 +247,20 @@ public class SoploonClient {
 			return null;
 	}
 	
-	public List<Rule> getRuleHistory(int ruleId) {
+	public ArrayList<Rule> getRuleHistory(int ruleId) {
 		WebTarget target = client.target(this.basePath).path(RULES).path(String.valueOf(ruleId)).path(VERSIONS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Rule>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Rule>>() {});		
 		else
 			return null;
 	}
 	
-	public List<Predicate> getPredicates() {
+	public ArrayList<Predicate> getPredicates() {
 		WebTarget target = client.target(this.basePath).path(PREDICATES);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Predicate>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Predicate>>() {});		
 		else
 			return null;
 	}
@@ -221,11 +274,11 @@ public class SoploonClient {
 			return null;
 	}
 	
-	public List<Predicate> getPredicateHistory(int predicateId) {
+	public ArrayList<Predicate> getPredicateHistory(int predicateId) {
 		WebTarget target = client.target(this.basePath).path(PREDICATES).path(String.valueOf(predicateId)).path(VERSIONS);
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		if (response.getStatus() == Response.Status.OK.getStatusCode())
-			return response.readEntity(new GenericType<List<Predicate>>() {});		
+			return response.readEntity(new GenericType<ArrayList<Predicate>>() {});		
 		else
 			return null;
 	}

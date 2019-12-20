@@ -53,7 +53,7 @@ public class CorrectionDao {
 				return false;
 			}
 		} catch (SQLException e) {
-			throw e;
+			return false;
 		} finally {
 			if (connection != null) {
 				connection.close();
@@ -67,7 +67,6 @@ public class CorrectionDao {
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
 			ResultSet result = statement.executeQuery();
-
 			while (result.next()) {
 				Correction correction = this.readRow(result);
 				out.add(correction);

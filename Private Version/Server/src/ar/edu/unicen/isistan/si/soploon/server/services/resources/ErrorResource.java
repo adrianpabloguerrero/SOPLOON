@@ -54,17 +54,16 @@ public class ErrorResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addErrors(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") long time, List<Error> errors, @Context UriInfo uriInfo) throws Exception {
-		if (!validateAddErrors(errors,userId,projectId,time)) {
+		if (!validateAddErrors(errors,userId,projectId,time))
 			return Response.status(Response.Status.BAD_REQUEST).build();
-		}
+
 		if (errors == null)
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		if (this.dao.insert(errors)) {
 			UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
 			return Response.created(uriBuilder.build()).entity(errors).build();
-		} else {
+		} else
 			return Response.status(Status.CONFLICT).build();
-		}
 	}
 
 	@PUT

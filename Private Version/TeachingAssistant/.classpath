@@ -32,7 +32,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/jersey-common-2.25.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jersey-guava-2.25.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/osgi-resource-locator-1.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/soploon-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/soploon-client.jar" sourcepath="/TeachingAssistantServer/src/ar/edu/unicen/isistan/si/soploon/server/client"/>
 	<classpathentry exported="true" kind="lib" path="libs/gson-2.8.6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

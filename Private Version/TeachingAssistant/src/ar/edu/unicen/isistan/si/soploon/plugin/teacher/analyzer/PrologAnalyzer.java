@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
-import ar.edu.unicen.isistan.si.soploon.plugin.storage.ConfigurationData;
+import ar.edu.unicen.isistan.si.soploon.plugin.storage.Configuration;
 import ar.edu.unicen.isistan.si.soploon.plugin.storage.StorageManager;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer.bugs.Bug;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.Mapper;
@@ -20,6 +20,7 @@ import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.PrologCode;
 import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.converters.NodeConverterFactory;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
+import ar.edu.unicen.isistan.si.soploon.server.models.Error;
 
 public class PrologAnalyzer {
 
@@ -125,8 +126,15 @@ public class PrologAnalyzer {
 		}
 	}
 
+	public ArrayList<Error> toErrors() {
+		ArrayList<Error> errors = new ArrayList<Error>();
+		for (Bug bug: this.bugs)
+			errors.add(bug.toError());
+		return errors;
+	}
+	
 	private void prepare() {
-		ConfigurationData configuration = StorageManager.getInstance().getConfigurationData();
+		Configuration configuration = StorageManager.getInstance().getConfiguration();
 		
 		this.rules.clear();
 		for (Rule rule: configuration.getRules())
@@ -135,8 +143,7 @@ public class PrologAnalyzer {
 		this.predicates.clear();
 		for (Predicate predicate: configuration.getPredicates()) {
 			this.predicates.add(new PrologPredicate(predicate));
-		}
-	
+		}	
 	}
 
 }

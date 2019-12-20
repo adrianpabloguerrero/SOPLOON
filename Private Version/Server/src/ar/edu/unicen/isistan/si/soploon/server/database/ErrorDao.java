@@ -1,7 +1,6 @@
 package ar.edu.unicen.isistan.si.soploon.server.database;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -200,7 +199,8 @@ public class ErrorDao {
 				return false;
 			}
 		} catch (SQLException e) {
-			throw e;
+			e.printStackTrace();
+			return false;
 		} finally {
 			if (connection != null) {
 				connection.close();

@@ -47,7 +47,7 @@ public class ProjectDao {
 				return false;
 			}
 		} catch (SQLException e) {
-			throw e;
+			return false;
 		} finally {
 			if (connection != null) {
 				connection.close();

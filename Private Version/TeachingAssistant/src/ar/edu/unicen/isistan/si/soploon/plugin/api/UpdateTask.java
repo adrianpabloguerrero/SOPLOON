@@ -1,8 +1,9 @@
-package ar.edu.unicen.isistan.si.soploon.plugin.updater;
+package ar.edu.unicen.isistan.si.soploon.plugin.api;
 
 import java.util.List;
 
-import ar.edu.unicen.isistan.si.soploon.plugin.storage.ConfigurationData;
+import ar.edu.unicen.isistan.si.soploon.plugin.Soploon;
+import ar.edu.unicen.isistan.si.soploon.plugin.storage.Configuration;
 import ar.edu.unicen.isistan.si.soploon.plugin.storage.StorageManager;
 import ar.edu.unicen.isistan.si.soploon.server.client.SoploonClient;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
@@ -25,24 +26,23 @@ public class UpdateTask implements Runnable {
 	@Override
 	public void run() {
 		
-		SoploonClient client = new SoploonClient("http://localhost:8080/soploon/api");
-		
+		SoploonClient client = new SoploonClient(Soploon.BASE_HOST);
 		List<Rule> rules = client.getRules();
 		List<Predicate> predicates = client.getPredicates();
 
 		if (rules != null && predicates != null) {
-			ConfigurationData configuration = new ConfigurationData();
+			Configuration configuration = new Configuration();
 			configuration.setRules(rules);
 			configuration.setPredicates(predicates);
 			
 			StorageManager manager = StorageManager.getInstance();
-			ConfigurationData currentConfiguration = manager.getConfigurationData();
+			Configuration currentConfiguration = manager.getConfiguration();
 			if (!configuration.equals(currentConfiguration))
-				result = (manager.storeConfigurationData(configuration)) ? UPDATED : ERROR_STORING;
+				this.result = (manager.storeConfiguration(configuration)) ? UPDATED : ERROR_STORING;
 			else
-				result = NOT_UPDATED;
+				this.result = NOT_UPDATED;
 		} else {
-			result = ERROR_CONNECTIVITY;
+			this.result = ERROR_CONNECTIVITY;
 		}
 	}
 	

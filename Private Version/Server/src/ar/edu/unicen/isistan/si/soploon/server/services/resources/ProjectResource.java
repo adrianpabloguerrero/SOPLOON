@@ -43,7 +43,7 @@ public class ProjectResource {
 			uriBuilder.path(Integer.toString(project.getId()));
 			return Response.created(uriBuilder.build()).entity(project).build();
 		} else {
-			return Response.status(Status.BAD_REQUEST).build();
+			return Response.status(Status.CONFLICT).build();
 		}
 
 	}

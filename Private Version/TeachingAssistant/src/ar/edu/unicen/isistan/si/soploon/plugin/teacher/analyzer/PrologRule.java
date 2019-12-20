@@ -3,9 +3,6 @@ package ar.edu.unicen.isistan.si.soploon.plugin.teacher.analyzer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
-import org.eclipse.jdt.core.dom.ASTNode;
 
 import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoMoreSolutionException;
@@ -38,9 +35,8 @@ public class PrologRule implements Comparable<PrologRule> {
 
 			while (info.isSuccess()) {
 				Term term = info.getTerm("ID");
-				Vector<String> nodes_ids = plain(term);
-				Vector<ASTNode> nodes = getNodes(nodes_ids, mapper);
-				Bug bug = new Bug(this, nodes, converterFactory);
+				ArrayList<Integer> nodesIds = this.plain(term);
+				Bug bug = new Bug(this, nodesIds, mapper, converterFactory);
 				returnList.add(bug);
 
 				if (engine.hasOpenAlternatives()) {
@@ -56,10 +52,10 @@ public class PrologRule implements Comparable<PrologRule> {
 	}
 
 	@SuppressWarnings("deprecation")
-	private Vector<String> plain(Term term) {
-		Vector<String> out = new Vector<String>();
+	private ArrayList<Integer> plain(Term term) {
+		ArrayList<Integer> out = new ArrayList<Integer>();
 		if (!term.isList()) {
-			out.add(term.toString());
+			out.add(Integer.valueOf(term.toString()));
 		} else if (term.isStruct()) {
 			Struct struct = (Struct) term;
 			int arity = struct.getArity();
@@ -72,13 +68,6 @@ public class PrologRule implements Comparable<PrologRule> {
 		return out;
 	}
 
-	private Vector<ASTNode> getNodes(Vector<String> nodesIDs, Mapper mapper) {
-		Vector<ASTNode> nodes = new Vector<ASTNode>();
-		for (String id : nodesIDs)
-			nodes.add(mapper.getNode(id));
-		return nodes;
-	}
-
 	@Override
 	public int compareTo(PrologRule rule) {
 		return this.getName().compareTo(rule.getName());
@@ -86,14 +75,6 @@ public class PrologRule implements Comparable<PrologRule> {
 
 	public String getPredicates() {
 		return this.rule.getCode();
-	}
-
-	public boolean equals(Object o) {
-		if (o == null)
-			return false;
-		if (o == this)
-			return true;
-		return false;
 	}
 
 	public boolean isActivated() {
@@ -108,9 +89,24 @@ public class PrologRule implements Comparable<PrologRule> {
 		return this.rule.getDescription();
 	}
 
-
 	public String getLink() {
 		return this.rule.getLink();
+	}
+	
+	public int getID() {
+		return this.rule.getId();
+	}
+	
+	public int getVersion() {
+		return this.rule.getVersion();
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (o == this)
+			return true;
+		return false;
 	}
 	
 }

@@ -1,19 +1,15 @@
 
 package ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler;
 
-import java.io.PrintWriter;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class PrologCode {
-   
-	private static final String LOG_HEADER = "====== Prolog Model =====" + System.lineSeparator();
-	private static final String LOG_FOOTER = System.lineSeparator() + "=========================";
-	
-	private Vector<String> facts;
+  	
+	private ArrayList<String> facts;
 	private Mapper mapper;
 	
     public PrologCode() {
-        this.facts = new Vector<String>();
+        this.facts = new ArrayList<String>();
         this.mapper = new Mapper();
     }
    
@@ -38,8 +34,8 @@ public class PrologCode {
         return sb;
     }
 
-    public Vector<String> getFacts() {
-    	return this.facts;
+    public ArrayList<String> getFacts() {
+    	return new ArrayList<String>(this.facts);
     }
     
     public String getFact(int index) {
@@ -55,13 +51,6 @@ public class PrologCode {
     		out.append(System.lineSeparator());
     	}
     	return out.toString();
-    }
-    
-    public void log(PrintWriter logger) {
-    	logger.println(LOG_HEADER);
-    	for(String fact: facts)
-    		logger.println(fact.toString());
-    	logger.println(LOG_FOOTER);
     }
 
 	public Mapper getMapper() {

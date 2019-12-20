@@ -49,15 +49,15 @@ public class CheckHandler extends AbstractHandler {
 			project = JavaCore.create((IProject) object);
 		}
 		
+		
 		if (project == null && this.lastCheck != null) {
 			project = this.lastCheck;
 		}
-		
+	
 		if (project != null && project.exists() && !hasCompilationErrors(project)) {
 			this.lastCheck = project;
 			this.teacher.check(project);
-		}
-		else if (project == null) 
+		} else if (project == null) 
 			MessageDialog.openInformation(null, "Ayudante Virtual", ERROR_NO_PROJECT);
 		else if (!project.exists())
 			MessageDialog.openInformation(null, "Ayudante Virtual", ERROR_CLOSED);
@@ -71,8 +71,7 @@ public class CheckHandler extends AbstractHandler {
 			IMarker[] problems = javaProject.getProject().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 
 			for (int problemsIndex = 0; problemsIndex < problems.length; problemsIndex++) {
-				if (IMarker.SEVERITY_ERROR == problems[problemsIndex].getAttribute(IMarker.SEVERITY,
-						IMarker.SEVERITY_INFO))
+				if (IMarker.SEVERITY_ERROR == problems[problemsIndex].getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO))
 					return true;
 			}
 
