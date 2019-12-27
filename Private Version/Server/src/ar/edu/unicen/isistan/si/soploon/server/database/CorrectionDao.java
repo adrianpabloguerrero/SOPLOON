@@ -44,21 +44,12 @@ public class CorrectionDao {
 		args[4] = gson.toJson(correction.getRepresentation());
 		args[5] = gson.toJson(correction.getConfiguration());
 		
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 			int modifiedRows = statement.executeUpdate();
-			if (modifiedRows == 1) {
-				return true;
-			} else {
-				return false;
-			}
+			return (modifiedRows == 1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
