@@ -54,10 +54,7 @@ public class Database {
 			return null;
 		}
 	}
-	
-			
-	
-	
+		
 	public PreparedStatement getStatement(Connection connection, String query, Object... args) {
 		if (this.connect()) {
 			PreparedStatement statement = null;
