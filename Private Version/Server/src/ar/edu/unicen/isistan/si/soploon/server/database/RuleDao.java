@@ -17,14 +17,13 @@ public class RuleDao {
 	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
 	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";
 	private static final String CONDITION_ID = " WHERE id = ? ";
-	private static final String CONDITION_ACTIVATED = " WHERE activated = true ";
 	private static final String SET_FALSE_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID + ";";
 	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME  + CONDITION_ID + LAST_VERSION + ")";
 	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?,?,?)";
 	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME ;
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + " " + CONDITION_ID + LAST_VERSION;
-	private static final String SELECT_ACTIVATED_RULES = SIMPLE_SELECT + CONDITION_ACTIVATED + ";";
+	private static final String SELECT_RULES = SIMPLE_SELECT  + ";";
 	private static final String SELECT_BY_ID_VERSIONS = SIMPLE_SELECT + CONDITION_ID + ";";
 
 	private Database database;
@@ -88,7 +87,7 @@ public class RuleDao {
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES)) {
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_RULES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = this.readRow(result);
