@@ -88,19 +88,30 @@ export default function MaterialTableDemo() {
            }
        }}
 
-       actions={[
-          {
-            icon: 'edit',
-            tooltip: 'Editar',
-            onClick: (event, rowData) => alert('You are editing ' + rowData.name)
-          },
-        ]}
-
       title="Gestion de usuarios"
       columns={state.columns}
       data={entries.data}
       editable={{
-
+        onRowUpdate: (newData, oldData) =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              var dateFormat = require('dateformat');
+              resolve();
+              const data = [...entries.data];
+              const position = data.indexOf(oldData);
+              data[position] = newData;
+              let newProject = {
+                id: newData.id,
+                name: newData.name,
+                role: newData.role,
+                creationDate: new Date("2015-03-25T12:00:00Z")
+              }
+              console.log(newProject);
+              axios
+               .put(`http://localhost:8080/soploon/api/users/${oldData.id}`,newProject)
+           setEntries({ ...entries, data });
+       }, 600);
+          }),
       }}
     />
 
