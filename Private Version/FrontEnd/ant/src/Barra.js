@@ -22,22 +22,15 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import Soploon from './images/soploon.png';
-import TableUsers from './components/TableUsers.js';
+import TableUsers from './components/Users.js';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { Result, Button } from 'antd';
-
-
 import TableProjects from './components/TableProjects.js';
-import Rules from './components/Rules.js';
+import Rules from './components/ActiveRules.js';
 import TablePredicates from './components/TablePredicates.js';
 import AddPredicate from './components/addPredicate.js';
-
-
-
-
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
-
 
 const drawerWidth = 240;
 
@@ -63,7 +56,6 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     backgroundColor:"#222",
-
   },
   appBarShift: {
     marginLeft: drawerWidth,
