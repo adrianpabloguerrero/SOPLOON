@@ -100,11 +100,13 @@ export default function MaterialTableDemo() {
               const data = [...entries.data];
               const position = data.indexOf(oldData);
               data[position] = newData;
+              //TODO revisar 1000 de date.
+              var newDate = moment(newData.creationDate, "DD/MM/YYYY HH:mm:ss").valueOf()/1000;
               let newProject = {
                 id: newData.id,
                 name: newData.name,
                 role: newData.role,
-                creationDate: new Date("2015-03-25T12:00:00Z")
+                creationDate: newDate
               }
               console.log(newProject);
               axios
