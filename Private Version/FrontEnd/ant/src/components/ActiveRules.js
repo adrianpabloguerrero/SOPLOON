@@ -67,26 +67,45 @@ export default function Rules() {
   };
 
   const handleVersionChange = (event, rule) => {
-	ruleId = rule.selected.id;
-	selectedVersion = event.target.value-1;	
-	
-	// TODO ACA HAY QUE MODIFICAR LA VERSION SELECCIONADA 
+	  
+        const data = [...entries.data];
+		const position = data.indexOf(rule);
+		
+		var selectedVersion = event.target.value-1;	
+		data[position].selected = data[position].versions[selectedVersion];
+		setEntries({data});
   }
 
   const handleClose = () => {
     setOpen(false);
     handleCleaner();
   };
-
+   
+   const buscarIndice = (ruleList, rule) => {
+		if (ruleList.length == 0)
+			return -1;
+		
+		var index = 0;
+		
+		while (index < ruleList.length && rule.id != ruleList[index].selected.id)
+			index++;
+		
+		if (index >= ruleList.length)
+			return -1;	
+		
+		return index;
+   }
+   
   const guardarEditar = () => {
-	console.log(inputs);
     let url = 'http://localhost:8080/soploon/api/rules/'+inputs.id;
     Axios.put(url, inputs)
       .then(response => {
         handleClose();
         const data = [...entries.data];
-        const position = data.indexOf(oldData);
-        data[position] = response.data;
+        const position = buscarIndice(data,oldData);
+        data[position].selected = response.data;
+		data[position].versions.forEach( el => {el.activated = false});
+		data[position].versions.push(response.data);
         setEntries({ data });
         handleCleaner();
       })
@@ -98,8 +117,8 @@ export default function Rules() {
     let url = 'http://localhost:8080/soploon/api/rules/';
     Axios.post(url, inputs)
       .then(response => {
+		// TODO ACA CREAR UN OBJECT RULE COMO LOS DEMAS
         const data = [...entries.data,response.data];
-        console.log(data);
         setEntries({ data });
         handleCleaner();
         handleClose();
@@ -114,26 +133,12 @@ export default function Rules() {
       guardarNuevaRegla();
     }
   }
+  
   //Regla
   const [entries, setEntries] = React.useState({
      data: [],
    });
-   
-  //Entradas tabla
-  const [state] = React.useState({
-    columns: [
-     { title: 'Nombre', field: 'selected.name' },
-     { title: 'Description', field: 'selected.description' },
-     { title: 'Version', field: 'selected.version', render: rule => 
-		<Select onChange={function(event) { handleVersionChange(event, rule) }} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}> 
-			{rule.versions.map((version,index) =>
-			  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
-			)}
-		</Select> 
-	 }
-   ],
-  });
-  
+     
    const initState = {
      id:'',
      name: '',
@@ -178,6 +183,8 @@ export default function Rules() {
 			}
 		});
 		
+		
+		
 		Object.entries(rules).forEach(keyvalue => {
 			var rule = keyvalue[1];
 			
@@ -189,10 +196,10 @@ export default function Rules() {
 			}
 			
 			if (rule.selected == undefined)
-				rule.selected = rule.versions[rule.length-1];
+				rule.selected = rule.versions[rule.versions.length-1];
 			
 		});
-		
+			
 		return rules;
 	}
 
@@ -266,11 +273,21 @@ export default function Rules() {
 
         ]}
       title="Reglas activas"
-      columns={state.columns}
+      columns={[
+			 { title: 'Nombre', field: 'selected.name' },
+			 { title: 'Description', field: 'selected.description' },
+			 { title: 'Version', field: 'selected.version', render: rule => 
+				<Select onChange={(event) => handleVersionChange(event,rule)} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}> 
+					{rule.versions.map((version,index) =>
+					  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
+					)}
+				</Select> 
+			 }
+		]}
       data={entries.data}
     />
     <Dialog fullScreen open={open} onClose={handleClose} >
-    <form className={classes.root} onSubmit={guardar} autoComplete="off">
+    <form className={classes.root} autoComplete="off">
     <AppBar className={classes.appBar}>
       <Toolbar>
         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -280,8 +297,7 @@ export default function Rules() {
           Edicion de reglas
         </Typography>
         <img src={Soploon} className={classes.image} / >
-        <Button style={{ marginLeft: "auto", float: "right" }}
-        autoFocus color="inherit" type="submit">
+        <Button style={{ marginLeft: "auto", float: "right" }} onClick={guardar} autoFocus color="inherit">
           Guardar
         </Button>
       </Toolbar>

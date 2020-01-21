@@ -23,7 +23,7 @@ public class RuleDao {
 	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME ;
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + " " + CONDITION_ID + LAST_VERSION;
-	private static final String SELECT_RULES = SIMPLE_SELECT  + ";";
+	private static final String SELECT_RULES = SIMPLE_SELECT + " ORDER BY id, version;";
 	private static final String SELECT_BY_ID_VERSIONS = SIMPLE_SELECT + CONDITION_ID + ";";
 
 	private Database database;
@@ -119,7 +119,7 @@ public class RuleDao {
 		argsNV[4] = rule.getLink();
 		argsNV[5] = rule.getQuery();
 		argsNV[6] = rule.getCode();
-		argsNV[7] = rule.getActivated();	
+		argsNV[7] = true;	
 
 		Connection connection = this.database.connection();
 
@@ -175,7 +175,6 @@ public class RuleDao {
 		}
 	}
 
-
 	private Rule readRow (ResultSet result) throws SQLException {
 		Rule rule = new Rule();
 		rule.setId(result.getInt(1));
@@ -188,7 +187,5 @@ public class RuleDao {
 		rule.setActivated(result.getBoolean(8));
 		return rule;
 	}
-
-
 
 }
