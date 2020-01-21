@@ -88,7 +88,7 @@ public class RuleDao {
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_RULES)) {
+		try (PreparedStatement statement = this.database.getStatement(connection,SIMPLE_SELECT)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = this.readRow(result);

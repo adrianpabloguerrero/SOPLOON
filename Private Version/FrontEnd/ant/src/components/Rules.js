@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Soploon from '../images/soploon.png';
 import TextField from "@material-ui/core/TextField";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Axios from 'axios';
 
 
@@ -59,10 +61,17 @@ export default function Rules() {
   const handleClickOpen = (event,rowData) => {
     setOpen(true);
     if (rowData != undefined){
-      setInputs(rowData);
-      setOldData(rowData);
+      setInputs(rowData.selected);
+      setOldData(rowData.selected);
     }
   };
+
+  const handleVersionChange = (event, rule) => {
+	ruleId = rule.selected.id;
+	selectedVersion = event.target.value-1;	
+	
+	// TODO ACA HAY QUE MODIFICAR LA VERSION SELECCIONADA 
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -70,6 +79,7 @@ export default function Rules() {
   };
 
   const guardarEditar = () => {
+	console.log(inputs);
     let url = 'http://localhost:8080/soploon/api/rules/'+inputs.id;
     Axios.put(url, inputs)
       .then(response => {
@@ -105,27 +115,25 @@ export default function Rules() {
     }
   }
   //Regla
-   const [entries, setEntries] = React.useState({
-     data: [
-       { id: '',
-         version: '',
-         name: '',
-         description: '',
-         link:'',
-         query: '',
-         code:'',
-         activated:''
-       }
-     ],
+  const [entries, setEntries] = React.useState({
+     data: [],
    });
+   
   //Entradas tabla
   const [state] = React.useState({
     columns: [
-     { title: 'Nombre', field: 'name' },
-     { title: 'Description', field: 'description' },
-     { title: 'Version', field: 'version' },
+     { title: 'Nombre', field: 'selected.name' },
+     { title: 'Description', field: 'selected.description' },
+     { title: 'Version', field: 'selected.version', render: rule => 
+		<Select onChange={function(event) { handleVersionChange(event, rule) }} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}> 
+			{rule.versions.map((version,index) =>
+			  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
+			)}
+		</Select> 
+	 }
    ],
   });
+  
    const initState = {
      id:'',
      name: '',
@@ -144,6 +152,7 @@ export default function Rules() {
      code: '',
      activated: 'true',
    });
+   
    const [errors,setErrors] = React.useState({
      errorName: "",
    });
@@ -155,31 +164,54 @@ export default function Rules() {
       setInputs(initState);
       setOldData(initState);
     }
+	const processData = data => {
+		var rules = {};
+		
+		data.forEach(ruleVersion => {
+			if (rules[ruleVersion.id] == undefined) {
+				var rule = {};
+				rule.versions = [];
+				rule.versions.push(ruleVersion);
+				rules[ruleVersion.id] = rule;
+			} else {
+				rules[ruleVersion.id].versions.push(ruleVersion);
+			}
+		});
+		
+		Object.entries(rules).forEach(keyvalue => {
+			var rule = keyvalue[1];
+			
+			var index = 0;
+			while (rule.selected == undefined && index < rule.versions.length) {
+				if (rule.versions[index].activated)
+					rule.selected = rule.versions[index];
+				index++;
+			}
+			
+			if (rule.selected == undefined)
+				rule.selected = rule.versions[rule.length-1];
+			
+		});
+		
+		return rules;
+	}
 
-
-  useEffect(() => {
-         Axios
-         .get('http://localhost:8080/soploon/api/rules/')
-         .then(response => {
-         let data = [];
-         response.data.forEach(el => {
-         data.push({
-         id: el.id,
-         version: el.version,
-         name: el.name,
-         description: el.description,
-         link: el.link,
-         query: el.query,
-         code: el.code,
-         activated: el.activated
-     });
- });
-     setEntries({ data: data });
- })
- .catch(function(error) {
-         console.log(error);
-     });
- }, []);
+	useEffect(() => {
+		Axios
+		.get('http://localhost:8080/soploon/api/rules/')
+		.then(response => {
+			let data = [];
+			var result = processData(response.data);
+			Object.entries(result).forEach(keyvalue => {
+				data.push(keyvalue[1]);
+			});
+			setEntries({ data: data });
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+	}, []);
+  
   return (
     <div>
     <MaterialTable
