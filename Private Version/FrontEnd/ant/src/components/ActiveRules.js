@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { orange } from '@material-ui/core/colors';
 import MaterialTable from 'material-table';
 import Button from "@material-ui/core/Button";
 import Dialog from '@material-ui/core/Dialog';
@@ -12,6 +13,7 @@ import Soploon from '../images/soploon.png';
 import TextField from "@material-ui/core/TextField";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
 import Axios from 'axios';
 
 
@@ -66,6 +68,9 @@ export default function Rules() {
     }
   };
 
+  const handleActivatedChange = (event,activatedRule) =>{
+	  console.log(activatedRule);
+  }
   const handleVersionChange = (event, rule) => {
 	  
         const data = [...entries.data];
@@ -98,7 +103,7 @@ export default function Rules() {
    
   const guardarEditar = () => {
     let url = 'http://localhost:8080/soploon/api/rules/'+inputs.id;
-    Axios.put(url, inputs)
+    Axios.post(url, inputs)
       .then(response => {
         handleClose();
         const data = [...entries.data];
@@ -115,15 +120,20 @@ export default function Rules() {
 
   const guardarNuevaRegla = () => {
     let url = 'http://localhost:8080/soploon/api/rules/';
+	console.log(inputs);
     Axios.post(url, inputs)
       .then(response => {
-		// TODO ACA CREAR UN OBJECT RULE COMO LOS DEMAS
-        const data = [...entries.data,response.data];
-        setEntries({ data });
+	    handleClose();
+		var ruleObject = {};
+		ruleObject.versions = [];
+		ruleObject.versions.push(response.data);
+		ruleObject.selected = response.data;
+        const data = [...entries.data,ruleObject];
+		setEntries({ data });
         handleCleaner();
-        handleClose();
       })
-      .catch(response => {});
+      .catch(response => {
+	  });
   }
 
   const guardar = (oldData) => {
@@ -165,6 +175,17 @@ export default function Rules() {
      const { name, value } = e.target;
      setInputs({ ...inputs, [name]: value });
    };
+   
+   const CustomCheckbox = withStyles({
+  root: {
+    color: orange[400],
+    '&$checked': {
+      color: orange[600],
+    },
+  },
+  checked: {},
+})(props => <Checkbox color="default" {...props} />);
+
    const handleCleaner = e => {
       setInputs(initState);
       setOldData(initState);
@@ -282,6 +303,9 @@ export default function Rules() {
 					  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
 					)}
 				</Select> 
+			 },
+			 { title: 'Activated', field: 'selected.activated', render: rule => 
+				<CustomCheckbox checked={rule.selected.activated} onChange={(event) => handleActivatedChange(event,'activatedRule')} value="activatedRule"/>
 			 }
 		]}
       data={entries.data}

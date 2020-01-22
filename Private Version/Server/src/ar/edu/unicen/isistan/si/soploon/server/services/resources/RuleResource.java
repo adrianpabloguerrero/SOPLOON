@@ -94,12 +94,22 @@ public class RuleResource {
 
 	}
 
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/{id}/")
+	public Response newVersion(@PathParam("id") int id, Rule rule) throws SQLException {
+		if (this.dao.newVersion(id,rule))
+		 return Response.ok(rule).build();
+		return Response.status(Response.Status.BAD_REQUEST).build();
+	}
+	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
 	public Response editRule(@PathParam("id") int id, Rule rule) throws SQLException {
-		if (this.dao.updateRule(id,rule))
+		if (this.dao.editRule(id,rule))
 		 return Response.ok(rule).build();
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
