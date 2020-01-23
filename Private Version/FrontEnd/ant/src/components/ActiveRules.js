@@ -68,15 +68,25 @@ export default function Rules() {
     }
   };
 
-  const handleActivatedChange = (event,activatedRule) =>{
-	  console.log(activatedRule);
+  const handleActivatedChange = (event,rule) =>{
+    var reglaSeleccionada = rule.selected;
+    var newValue = !reglaSeleccionada.activated;
+    reglaSeleccionada.activated = newValue;
+
+    let url = 'http://localhost:8080/soploon/api/rules/'+reglaSeleccionada.id;
+    Axios.put(url, reglaSeleccionada)
+      .then(response => {
+        const data = [...entries.data];
+        const position = buscarIndice(data,rule.selected);
+        data[position].versions.forEach( el => { if (el.version != reglaSeleccionada.version) {el.activated = false} else {el.activated = response.data.activated}});
+        setEntries({ data });
+      })
+      .catch(response => {});
   }
   const handleVersionChange = (event, rule) => {
-	  
-        const data = [...entries.data];
+    const data = [...entries.data];
 		const position = data.indexOf(rule);
-		
-		var selectedVersion = event.target.value-1;	
+		var selectedVersion = event.target.value-1;
 		data[position].selected = data[position].versions[selectedVersion];
 		setEntries({data});
   }
@@ -85,22 +95,22 @@ export default function Rules() {
     setOpen(false);
     handleCleaner();
   };
-   
+
    const buscarIndice = (ruleList, rule) => {
 		if (ruleList.length == 0)
 			return -1;
-		
+
 		var index = 0;
-		
+
 		while (index < ruleList.length && rule.id != ruleList[index].selected.id)
 			index++;
-		
+
 		if (index >= ruleList.length)
-			return -1;	
-		
+			return -1;
+
 		return index;
    }
-   
+
   const guardarEditar = () => {
     let url = 'http://localhost:8080/soploon/api/rules/'+inputs.id;
     Axios.post(url, inputs)
@@ -109,13 +119,17 @@ export default function Rules() {
         const data = [...entries.data];
         const position = buscarIndice(data,oldData);
         data[position].selected = response.data;
-		data[position].versions.forEach( el => {el.activated = false});
-		data[position].versions.push(response.data);
+		    data[position].versions.forEach( el => {el.activated = false});
+		    data[position].versions.push(response.data);
         setEntries({ data });
         handleCleaner();
       })
       .catch(response => {});
 
+  }
+
+  const guardarActivated = (rowData) => {
+    console.log(rowData);
   }
 
   const guardarNuevaRegla = () => {
@@ -143,12 +157,12 @@ export default function Rules() {
       guardarNuevaRegla();
     }
   }
-  
+
   //Regla
   const [entries, setEntries] = React.useState({
      data: [],
    });
-     
+
    const initState = {
      id:'',
      name: '',
@@ -167,7 +181,7 @@ export default function Rules() {
      code: '',
      activated: 'true',
    });
-   
+
    const [errors,setErrors] = React.useState({
      errorName: "",
    });
@@ -175,7 +189,7 @@ export default function Rules() {
      const { name, value } = e.target;
      setInputs({ ...inputs, [name]: value });
    };
-   
+
    const CustomCheckbox = withStyles({
   root: {
     color: orange[400],
@@ -192,7 +206,7 @@ export default function Rules() {
     }
 	const processData = data => {
 		var rules = {};
-		
+
 		data.forEach(ruleVersion => {
 			if (rules[ruleVersion.id] == undefined) {
 				var rule = {};
@@ -203,24 +217,24 @@ export default function Rules() {
 				rules[ruleVersion.id].versions.push(ruleVersion);
 			}
 		});
-		
-		
-		
+
+
+
 		Object.entries(rules).forEach(keyvalue => {
 			var rule = keyvalue[1];
-			
+
 			var index = 0;
 			while (rule.selected == undefined && index < rule.versions.length) {
 				if (rule.versions[index].activated)
 					rule.selected = rule.versions[index];
 				index++;
 			}
-			
+
 			if (rule.selected == undefined)
 				rule.selected = rule.versions[rule.versions.length-1];
-			
+
 		});
-			
+
 		return rules;
 	}
 
@@ -239,7 +253,7 @@ export default function Rules() {
 			console.log(error);
 		});
 	}, []);
-  
+
   return (
     <div>
     <MaterialTable
@@ -297,15 +311,15 @@ export default function Rules() {
       columns={[
 			 { title: 'Nombre', field: 'selected.name' },
 			 { title: 'Description', field: 'selected.description' },
-			 { title: 'Version', field: 'selected.version', render: rule => 
-				<Select onChange={(event) => handleVersionChange(event,rule)} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}> 
+			 { title: 'Version', field: 'selected.version', render: rule =>
+				<Select onChange={(event) => handleVersionChange(event,rule)} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}>
 					{rule.versions.map((version,index) =>
 					  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
 					)}
-				</Select> 
+				</Select>
 			 },
-			 { title: 'Activated', field: 'selected.activated', render: rule => 
-				<CustomCheckbox checked={rule.selected.activated} onChange={(event) => handleActivatedChange(event,'activatedRule')} value="activatedRule"/>
+			 { title: 'Activated', field: 'selected.activated', render: rule =>
+				<CustomCheckbox checked={rule.selected.activated} onChange={(event) => handleActivatedChange(event,rule)} value="activatedRule"/>
 			 }
 		]}
       data={entries.data}
