@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.PredicateDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
+import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 
 public class PredicateResource {
 
@@ -85,17 +86,25 @@ public class PredicateResource {
 		}
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/{id}/")
+	public Response newVersion(@PathParam("id") int id, Predicate predicate) throws SQLException {
+		if (this.dao.newVersion(id, predicate))
+		 return Response.ok(predicate).build();
+		return Response.status(Response.Status.BAD_REQUEST).build();
+	}
+
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}/")
 	public Response editPredicate(@PathParam("id") int id, Predicate predicate) throws SQLException {
-		if (this.dao.updatePredicate(id, predicate))
+		if (this.dao.editPredicate(id,predicate))
 		 return Response.ok(predicate).build();
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
-
-	
 	
 
 

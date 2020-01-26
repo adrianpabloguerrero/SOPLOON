@@ -1,4 +1,5 @@
 package ar.edu.unicen.isistan.si.soploon.server.database;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,19 +13,24 @@ public class PredicateDao {
 	private static final String COLUMNS_INSERT = "(name,description,code,activated)";
 	private static final String VALUES = "(?,?,?,?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
-	private static final String SINGLE_INSERT= INSERT+ " " + VALUES + ";";
+	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
 	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String CONDITION_ACTIVATED = " WHERE activated = true ";
-	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME  + CONDITION_ID + LAST_VERSION + ")";
+	private static final String CONDITION_ID_VERSION = " WHERE id = ? AND version = ? ";
+	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME + CONDITION_ID + LAST_VERSION
+			+ ")";
 	private static final String VALUES_NEW_VERSION = "(?, " + SUB_QUERY_VERSION + "+1," + "?,?,?,?)";
-	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION + ";";
-	private static final String SET_FALSE_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID + ";";
-	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME ;
+	private static final String INSERT_NEW_VERSION = " INSERT INTO " + TABLE_NAME + " VALUES " + VALUES_NEW_VERSION
+			+ ";";
+	private static final String SET_ACTIVATED_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = " + "?" + CONDITION_ID_VERSION + ";";;
+	private static final String SET_FALSE_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID
+			+ ";";
+	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME;
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + LAST_VERSION + ";";
-	private static final String SELECT_ALL_PREDICATES = SIMPLE_SELECT;
+	private static final String SELECT_ALL_PREDICATES = SIMPLE_SELECT + " ORDER BY id, version;";
 	private static final String SELECT_BY_ID_VERSIONS = SIMPLE_SELECT + CONDITION_ID;
-
+	
 	private Database database;
 
 	public PredicateDao(Database database) {
@@ -35,11 +41,11 @@ public class PredicateDao {
 		Object[] args = new Object[4];
 		args[0] = predicate.getName();
 		args[1] = predicate.getDescription();
-		args[2]	= predicate.getCode();
+		args[2] = predicate.getCode();
 		args[3] = predicate.getActivated();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -63,7 +69,7 @@ public class PredicateDao {
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -85,15 +91,14 @@ public class PredicateDao {
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ALL_PREDICATES)) {
-			ResultSet result = statement.executeQuery(); 
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PREDICATES)) {
+			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
 				out.add(predicate);
 			}
 			return out;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw e;
 		} finally {
 			if (connection != null) {
@@ -102,13 +107,13 @@ public class PredicateDao {
 		}
 	}
 
-	public boolean updatePredicate (int id, Predicate predicate) throws SQLException {
+	public boolean newVersion(int id, Predicate predicate) throws SQLException {
 
-		//SET FALSE
-		Object [] argsSF = new Object [1];
-		argsSF [0] = id;
+		// SET FALSE
+		Object[] argsSF = new Object[1];
+		argsSF[0] = id;
 
-		//NEW VERSION
+		// NEW VERSION
 		Object[] argsNV = new Object[6];
 		argsNV[0] = id;
 		argsNV[1] = id;
@@ -122,8 +127,9 @@ public class PredicateDao {
 		try {
 			connection.setAutoCommit(false);
 
-			PreparedStatement statementSetFalse = this.database.getStatement(connection,SET_FALSE_BY_ID,argsSF); 
-			PreparedStatement statementInsertVersion = this.database.getStatement(connection, INSERT_NEW_VERSION, argsNV);
+			PreparedStatement statementSetFalse = this.database.getStatement(connection, SET_FALSE_BY_ID, argsSF);
+			PreparedStatement statementInsertVersion = this.database.getStatement(connection, INSERT_NEW_VERSION,
+					argsNV);
 
 			statementSetFalse.executeUpdate();
 			statementInsertVersion.executeUpdate();
@@ -138,10 +144,9 @@ public class PredicateDao {
 			} else {
 				return false;
 			}
-		}
-		catch (SQLException e ) {
-			throw e;   
-		}finally {
+		} catch (SQLException e) {
+			throw e;
+		} finally {
 			connection.setAutoCommit(true);
 			if (connection != null) {
 				connection.close();
@@ -150,7 +155,7 @@ public class PredicateDao {
 
 	}
 
-	private Predicate readRow (ResultSet result) throws SQLException {
+	private Predicate readRow(ResultSet result) throws SQLException {
 		Predicate predicate = new Predicate();
 		predicate.setId(result.getInt(1));
 		predicate.setVersion(result.getInt(2));
@@ -166,17 +171,60 @@ public class PredicateDao {
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_VERSIONS,id)) {
-			ResultSet result = statement.executeQuery(); 
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_VERSIONS, id)) {
+			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
 				out.add(predicate);
 			}
 			return out;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw e;
 		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	public boolean editPredicate(int id, Predicate predicate) throws SQLException {
+
+		// SET FALSE
+		Object[] argsSF = new Object[1];
+		argsSF[0] = id;
+
+		// SET ACTIVATED
+		Object[] argsSA = new Object[3];
+		argsSA[0] = predicate.getActivated();
+		argsSA[1] = predicate.getId();
+		argsSA[2] = predicate.getVersion();
+
+		Connection connection = this.database.connection();
+
+		try {
+			connection.setAutoCommit(false);
+
+			PreparedStatement statementSetFalse = this.database.getStatement(connection, SET_FALSE_BY_ID, argsSF);
+			PreparedStatement statementInsertVersion = this.database.getStatement(connection, SET_ACTIVATED_BY_ID,
+					argsSA);
+
+			statementSetFalse.executeUpdate();
+			statementInsertVersion.executeUpdate();
+
+			ResultSet rs = statementInsertVersion.getGeneratedKeys();
+			connection.commit();
+
+			if (rs.next()) {
+				predicate.setId(id);
+				predicate.setVersion(rs.getInt("version"));
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			connection.setAutoCommit(true);
 			if (connection != null) {
 				connection.close();
 			}
