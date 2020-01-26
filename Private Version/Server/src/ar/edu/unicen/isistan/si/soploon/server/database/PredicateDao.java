@@ -22,7 +22,7 @@ public class PredicateDao {
 	private static final String SET_FALSE_BY_ID = " UPDATE " + TABLE_NAME + " SET " + "activated = false" + CONDITION_ID + ";";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME ;
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + LAST_VERSION + ";";
-	private static final String SELECT_ACTIVATED_PREDICATES = SIMPLE_SELECT + CONDITION_ACTIVATED;
+	private static final String SELECT_ALL_PREDICATES = SIMPLE_SELECT;
 	private static final String SELECT_BY_ID_VERSIONS = SIMPLE_SELECT + CONDITION_ID;
 
 	private Database database;
@@ -85,7 +85,7 @@ public class PredicateDao {
 
 		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ACTIVATED_PREDICATES)) {
+		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_ALL_PREDICATES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
