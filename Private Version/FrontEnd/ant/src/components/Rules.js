@@ -128,13 +128,10 @@ export default function Rules() {
 
   }
 
-  const guardarActivated = (rowData) => {
-    console.log(rowData);
-  }
+
 
   const guardarNuevaRegla = () => {
     let url = 'http://localhost:8080/soploon/api/rules/';
-	console.log(inputs);
     Axios.post(url, inputs)
       .then(response => {
 	    handleClose();
@@ -307,7 +304,7 @@ export default function Rules() {
           },
 
         ]}
-      title="Reglas activas"
+      title="Reglas"
       columns={[
 			 { title: 'Nombre', field: 'selected.name' },
 			 { title: 'Description', field: 'selected.description' },

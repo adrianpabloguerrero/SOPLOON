@@ -27,8 +27,8 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { Result, Button } from 'antd';
 import TableProjects from './components/TableProjects.js';
-import Rules from './components/ActiveRules.js';
-import TablePredicates from './components/TablePredicates.js';
+import Rules from './components/Rules.js';
+import Predicates from './components/Predicates.js';
 import AddPredicate from './components/addPredicate.js';
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
@@ -212,7 +212,7 @@ export default function MiniDrawer() {
           <Route path="/users" render={() => <div> <TableUsers/></div>} />
           <Route path="/projects" render={() => <div> <TableProjects/></div>} />
           <Route path="/rules" render={() => <div> <Rules/></div>} />
-          <Route path="/predicates" render={() => <div> <TablePredicates/></div>} />
+          <Route path="/predicates" render={() => <div> <Predicates/></div>} />
           <Route path="/addPredicates" render={() => <div> <AddPredicate/></div>} />
           <Route  render={() => <div> <Result
             status="404"
