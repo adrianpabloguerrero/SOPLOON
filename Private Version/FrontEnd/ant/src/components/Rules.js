@@ -115,14 +115,13 @@ export default function Rules() {
     let url = 'http://localhost:8080/soploon/api/rules/'+inputs.id;
     Axios.post(url, inputs)
       .then(response => {
-        handleClose();
         const data = [...entries.data];
         const position = buscarIndice(data,oldData);
         data[position].selected = response.data;
 		    data[position].versions.forEach( el => {el.activated = false});
 		    data[position].versions.push(response.data);
         setEntries({ data });
-        handleCleaner();
+        handleClose();
       })
       .catch(response => {});
 
@@ -134,14 +133,13 @@ export default function Rules() {
     let url = 'http://localhost:8080/soploon/api/rules/';
     Axios.post(url, inputs)
       .then(response => {
-	    handleClose();
-		var ruleObject = {};
-		ruleObject.versions = [];
+		  var ruleObject = {};
+		  ruleObject.versions = [];
 		ruleObject.versions.push(response.data);
 		ruleObject.selected = response.data;
-        const data = [...entries.data,ruleObject];
+    const data = [...entries.data,ruleObject];
 		setEntries({ data });
-        handleCleaner();
+    handleClose();
       })
       .catch(response => {
 	  });
@@ -161,7 +159,6 @@ export default function Rules() {
    });
 
    const initState = {
-     id:'',
      name: '',
      description: '',
      link: '',
@@ -307,7 +304,7 @@ export default function Rules() {
       title="Reglas"
       columns={[
 			 { title: 'Nombre', field: 'selected.name' },
-			 { title: 'Description', field: 'selected.description' },
+			 { title: 'Descripción', field: 'selected.description' },
 			 { title: 'Version', field: 'selected.version', render: rule =>
 				<Select onChange={(event) => handleVersionChange(event,rule)} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}>
 					{rule.versions.map((version,index) =>
@@ -315,7 +312,7 @@ export default function Rules() {
 					)}
 				</Select>
 			 },
-			 { title: 'Activated', field: 'selected.activated', render: rule =>
+			 { title: 'Activada', field: 'selected.activated', render: rule =>
 				<CustomCheckbox checked={rule.selected.activated} onChange={(event) => handleActivatedChange(event,rule)} value="activatedRule"/>
 			 }
 		]}
