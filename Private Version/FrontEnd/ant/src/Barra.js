@@ -12,6 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import ErrorIcon from '@material-ui/icons/Error';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -29,8 +31,9 @@ import { Result, Button } from 'antd';
 import TableProjects from './components/TableProjects.js';
 import Rules from './components/Rules.js';
 import Predicates from './components/Predicates.js';
-import AddPredicate from './components/addPredicate.js';
+import Errors from './components/Errors.js';
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
+
 
 const drawerWidth = 240;
 
@@ -178,42 +181,44 @@ export default function MiniDrawer() {
         </div>
         <Divider />
         <List>
+        <ListItem button component={Link} to={"/home"}>
+          <ListItemIcon><TrendingUpIcon /></ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+        </List>
+        <Divider />
+        <List>
             <ListItem button component={Link} to={"/users"}>
               <ListItemIcon><PersonIcon /></ListItemIcon>
               <ListItemText primary="Usuarios" />
             </ListItem>
-            <ListItem button component={Link} to={"/projects"}>
-              <ListItemIcon><FolderIcon /></ListItemIcon>
-              <ListItemText primary="Proyectos" />
-            </ListItem>
             <ListItem button component={Link} to={"/rules"}>
               <ListItemIcon><TocIcon /></ListItemIcon>
-              <ListItemText primary="Reglas activas" />
+              <ListItemText primary="Reglas" />
             </ListItem>
+            <ListItem button component={Link} to={"/predicates"}>
+              <ListItemIcon><LibraryBooksIcon /></ListItemIcon>
+              <ListItemText primary="Predicados" />
+            </ListItem>
+        </List>
+        <Divider />
+        <List>
+        <ListItem button component={Link} to={"/errors"}>
+          <ListItemIcon><ErrorIcon /></ListItemIcon>
+          <ListItemText primary="Errores" />
+        </ListItem>
         </List>
         <Divider />
 
-        <List>
-            <ListItem button component={Link} to={"/predicates"}>
-              <ListItemIcon><LibraryBooksIcon /></ListItemIcon>
-              <ListItemText primary="Predicados activos" />
-            </ListItem>
-            <ListItem button component={Link} to={"/addPredicates"}>
-              <ListItemIcon><LibraryAddIcon /></ListItemIcon>
-              <ListItemText primary="Agregar predicado" />
-            </ListItem>
-        </List>
-        <Divider />
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
           <Route exact path="/" render={() => <div>Home Page</div>} />
           <Route path="/users" render={() => <div> <TableUsers/></div>} />
-          <Route path="/projects" render={() => <div> <TableProjects/></div>} />
           <Route path="/rules" render={() => <div> <Rules/></div>} />
           <Route path="/predicates" render={() => <div> <Predicates/></div>} />
-          <Route path="/addPredicates" render={() => <div> <AddPredicate/></div>} />
+          <Route path="/errors" render={() => <div> <Errors/></div>} />
           <Route  render={() => <div> <Result
             status="404"
             title="404"
