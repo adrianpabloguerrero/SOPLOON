@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';
 import MaterialTable from 'material-table';
@@ -61,7 +61,7 @@ export default function Predicates() {
   const classes = useStyles();
   const handleClickOpen = (event,rowData) => {
     setOpen(true);
-    if (rowData != undefined){
+    if (rowData !== undefined){
       setInputs(rowData.selected);
       setOldData(rowData.selected);
     }
@@ -77,7 +77,7 @@ export default function Predicates() {
       .then(response => {
         const data = [...entries.data];
         const position = buscarIndice(data,predicate.selected);
-        data[position].versions.forEach( el => { if (el.version != predicadoSeleccionado.version) {el.activated = false} else {el.activated = response.data.activated}});
+        data[position].versions.forEach( el => { if (el.version !== predicadoSeleccionado.version) {el.activated = false} else {el.activated = response.data.activated}});
         setEntries({ data });
       })
       .catch(response => {});
@@ -96,12 +96,12 @@ export default function Predicates() {
   };
 
    const buscarIndice = (predicateList, predicate) => {
-		if (predicateList.length == 0)
+		if (predicateList.length === 0)
 			return -1;
 
 		var index = 0;
 
-		while (index < predicateList.length && predicate.id != predicateList[index].selected.id)
+		while (index < predicateList.length && predicate.id !== predicateList[index].selected.id)
 			index++;
 
 		if (index >= predicateList.length)
@@ -143,7 +143,7 @@ export default function Predicates() {
   }
 
   const guardar = (oldData) => {
-    if (inputs.id != undefined)
+    if (inputs.id !== undefined)
       guardarEditar();
     else {
       guardarNuevoPredicado();
@@ -169,9 +169,7 @@ export default function Predicates() {
      activated: 'true',
    });
 
-   const [errors,setErrors] = React.useState({
-     errorName: "",
-   });
+
    const handleChange = e => {
      const { name, value } = e.target;
      setInputs({ ...inputs, [name]: value });
@@ -195,7 +193,7 @@ export default function Predicates() {
 		var predicates = {};
 
 		data.forEach(predicateVersion => {
-			if (predicates[predicateVersion.id] == undefined) {
+			if (predicates[predicateVersion.id] === undefined) {
 				var predicate = {};
 				predicate.versions = [];
 				predicate.versions.push(predicateVersion);
@@ -211,13 +209,13 @@ export default function Predicates() {
 			var predicate = keyvalue[1];
 
 			var index = 0;
-			while (predicate.selected == undefined && index < predicate.versions.length) {
+			while (predicate.selected === undefined && index < predicate.versions.length) {
 				if (predicate.versions[index].activated)
 					predicate.selected = predicate.versions[index];
 				index++;
 			}
 
-			if (predicate.selected == undefined)
+			if (predicate.selected === undefined)
 				predicate.selected = predicate.versions[predicate.versions.length-1];
 
 		});
@@ -299,7 +297,7 @@ export default function Predicates() {
 			 { title: 'Nombre', field: 'selected.name' },
 			 { title: 'Descripción', field: 'selected.description' },
 			 { title: 'Version', field: 'selected.version', render: predicate =>
-				<Select onChange={(event) => handleVersionChange(event,predicate)} labelId="label" id="select" value={predicate.selected.version} disabled={predicate.versions.length == 1}>
+				<Select onChange={(event) => handleVersionChange(event,predicate)} labelId="label" id="select" value={predicate.selected.version} disabled={predicate.versions.length === 1}>
 					{predicate.versions.map((version,index) =>
 					  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
 					)}
@@ -321,7 +319,7 @@ export default function Predicates() {
         <Typography variant="h6" className={classes.title}>
           Edicion de predicados
         </Typography>
-        <img src={Soploon} className={classes.image} / >
+        <img src={Soploon} alt="Soploon" className={classes.image} / >
         <Button style={{ marginLeft: "auto", float: "right" }} onClick={guardar} autoFocus color="inherit">
           Guardar
         </Button>

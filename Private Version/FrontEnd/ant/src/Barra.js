@@ -18,17 +18,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
-import FolderIcon from '@material-ui/icons/Folder';
 import TocIcon from '@material-ui/icons/Toc';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import Soploon from './images/soploon.png';
 import TableUsers from './components/Users.js';
-import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
-import { Result, Button } from 'antd';
-import TableProjects from './components/TableProjects.js';
+import { Result } from 'antd';
 import Rules from './components/Rules.js';
 import Predicates from './components/Predicates.js';
 import Errors from './components/Errors.js';
@@ -37,9 +32,6 @@ import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
 const drawerWidth = 240;
 
-const clasePersonalizada = {
-  backgroundColor:"red",
-};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -155,7 +147,7 @@ export default function MiniDrawer() {
           <Typography variant="h6" style={{color:"#9d9d9d"}} noWrap>
             Soploon
           </Typography>
-          <img src={Soploon} className={classes.image} / >
+          <img src={Soploon} alt="Soploon" className={classes.image} / >
 
         </Toolbar>
       </AppBar>

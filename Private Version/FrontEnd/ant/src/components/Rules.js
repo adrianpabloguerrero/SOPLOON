@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect} from 'react';
 import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';
 import MaterialTable from 'material-table';
@@ -62,7 +62,7 @@ export default function Rules() {
   const classes = useStyles();
   const handleClickOpen = (event,rowData) => {
     setOpen(true);
-    if (rowData != undefined){
+    if (rowData !== undefined){
       setInputs(rowData.selected);
       setOldData(rowData.selected);
     }
@@ -78,7 +78,7 @@ export default function Rules() {
       .then(response => {
         const data = [...entries.data];
         const position = buscarIndice(data,rule.selected);
-        data[position].versions.forEach( el => { if (el.version != reglaSeleccionada.version) {el.activated = false} else {el.activated = response.data.activated}});
+        data[position].versions.forEach( el => { if (el.version !== reglaSeleccionada.version) {el.activated = false} else {el.activated = response.data.activated}});
         setEntries({ data });
       })
       .catch(response => {});
@@ -97,12 +97,12 @@ export default function Rules() {
   };
 
    const buscarIndice = (ruleList, rule) => {
-		if (ruleList.length == 0)
+		if (ruleList.length === 0)
 			return -1;
 
 		var index = 0;
 
-		while (index < ruleList.length && rule.id != ruleList[index].selected.id)
+		while (index < ruleList.length && rule.id !== ruleList[index].selected.id)
 			index++;
 
 		if (index >= ruleList.length)
@@ -146,7 +146,7 @@ export default function Rules() {
   }
 
   const guardar = (oldData) => {
-    if (inputs.id != undefined)
+    if (inputs.id !== undefined)
       guardarEditar();
     else {
       guardarNuevaRegla();
@@ -176,9 +176,7 @@ export default function Rules() {
      activated: 'true',
    });
 
-   const [errors,setErrors] = React.useState({
-     errorName: "",
-   });
+
    const handleChange = e => {
      const { name, value } = e.target;
      setInputs({ ...inputs, [name]: value });
@@ -202,7 +200,7 @@ export default function Rules() {
 		var rules = {};
 
 		data.forEach(ruleVersion => {
-			if (rules[ruleVersion.id] == undefined) {
+			if (rules[ruleVersion.id] === undefined) {
 				var rule = {};
 				rule.versions = [];
 				rule.versions.push(ruleVersion);
@@ -218,13 +216,13 @@ export default function Rules() {
 			var rule = keyvalue[1];
 
 			var index = 0;
-			while (rule.selected == undefined && index < rule.versions.length) {
+			while (rule.selected === undefined && index < rule.versions.length) {
 				if (rule.versions[index].activated)
 					rule.selected = rule.versions[index];
 				index++;
 			}
 
-			if (rule.selected == undefined)
+			if (rule.selected === undefined)
 				rule.selected = rule.versions[rule.versions.length-1];
 
 		});
@@ -306,7 +304,7 @@ export default function Rules() {
 			 { title: 'Nombre', field: 'selected.name' },
 			 { title: 'Descripción', field: 'selected.description' },
 			 { title: 'Version', field: 'selected.version', render: rule =>
-				<Select onChange={(event) => handleVersionChange(event,rule)} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length == 1}>
+				<Select onChange={(event) => handleVersionChange(event,rule)} labelId="label" id="select" value={rule.selected.version} disabled={rule.versions.length === 1}>
 					{rule.versions.map((version,index) =>
 					  <MenuItem key={version.version} value={version.version}>{version.version}</MenuItem>
 					)}
@@ -328,7 +326,7 @@ export default function Rules() {
         <Typography variant="h6" className={classes.title}>
           Edicion de reglas
         </Typography>
-        <img src={Soploon} className={classes.image} / >
+        <img src={Soploon} alt="Soploon" className={classes.image} / >
         <Button style={{ marginLeft: "auto", float: "right" }} onClick={guardar} autoFocus color="inherit">
           Guardar
         </Button>

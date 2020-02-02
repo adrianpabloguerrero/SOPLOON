@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import MaterialTable from 'material-table';
 import moment from 'moment';
-import EditIcon from '@material-ui/icons/Edit';
-
 
 export default function MaterialTableDemo() {
 
@@ -95,7 +93,6 @@ export default function MaterialTableDemo() {
         onRowUpdate: (newData, oldData) =>
           new Promise(resolve => {
             setTimeout(() => {
-              var dateFormat = require('dateformat');
               resolve();
               const data = [...entries.data];
               const position = data.indexOf(oldData);
