@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Theme, createStyles, withStyles, makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import { sizing } from '@material-ui/system';
 import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
 import Button from '@material-ui/core/Button';
 import { orange } from '@material-ui/core/colors';
 import Axios from 'axios';
 import MaterialTable from 'material-table';
-import Checkbox from '@material-ui/core/Checkbox';
-
-
-
+import * as moment from 'moment'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
    form: {
      display: 'flex',
      flexDirection:"row",
-     justifyContent: 'space-around',
+     justifyContent: 'space-between',
    },
    select: {
      width:'100%',
@@ -47,7 +37,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Erros() {
   const classes = useStyles();
-
   const ColorButton = withStyles((theme: Theme) => ({
   root: {
     color: 'white',
@@ -57,30 +46,22 @@ export default function Erros() {
     },
   },
 }))(Button);
-
-
 const [users, setUsers] = React.useState({
    data: [],
  });
 
- const CustomCheckbox = withStyles({
- root: {
-  color: orange[400],
-  '&$checked': {
-    color: orange[600],
-  },
- },
- checked: {},
- })(props => <Checkbox color="default" {...props} />);
+ const dateToDefault = () => {return moment(new Date()).format('YYYY-MM-DD')}
+ const dateFromDefault = () => { return moment(dateToDefault()).subtract(1, 'months').format('YYYY-MM-DD')}
 
+ const [errors, setErrors] = React.useState({
+   data:[]
+ });
+ const [inputsSearch, setInputsSearch] = React.useState(
+   {
+     dateFrom: dateFromDefault() ,
+     dateTo: dateToDefault(),
+   });
 
-
- //Values Search
- const [searchUser, setSearchUser] = React.useState('');
-
- const handleSearchUserChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-   setSearchUser(event.target.value);
- };
 
  const [searchFiltrado, setSearchFiltrado] = React.useState('');
 
@@ -88,24 +69,31 @@ const [users, setUsers] = React.useState({
    setSearchFiltrado(event.target.value);
  };
 
- const handleActivatedChange = (event,rule) =>{
+ const handleInputsChange = e => {
+   const { name, value } = e.target;
+   setInputsSearch({ ...inputsSearch, [name]: value });
+ };
 
- }
- const processData = data => {
-   var rules = {};
-
-   data.forEach(ruleVersion => {
-     if (rules[ruleVersion.id] == undefined) {
-       var rule = {};
-       rule.versions = [];
-       rule.versions.push(ruleVersion);
-       rules[ruleVersion.id] = rule;
-     } else {
-       rules[ruleVersion.id].versions.push(ruleVersion);
-     }
+ const search = () => {
+   const params = {
+     date_start: new Date (inputsSearch.dateFrom).getTime()/1000,
+     date_end: new Date (inputsSearch.dateTo).getTime()/1000,
+   }
+   Axios
+   .get('http://localhost:8080/soploon/api/errors/',{params})
+   .then(response => {
+     let data = [];
+     Object.entries(response.data).forEach(keyvalue => {
+       data.push(keyvalue[1]);
+     });
+     setErrors ({ data: data });
+   })
+   .catch(function(error) {
+     console.log(error);
    });
-
  }
+
+
 
 useEffect(() => {
   Axios
@@ -121,8 +109,6 @@ useEffect(() => {
     console.log(error);
   });
 
-
-
 }, []);
 
 
@@ -132,33 +118,37 @@ useEffect(() => {
         <Grid item xs={5}>
           <Paper className={classes.paper}>
           <Grid container style={{height: "100%"}}  alignItems="stretch"spacing={3}>
-          <Grid item xs={12}>
+              <Grid item xs={12}>
 
-          <form  className={classes.form} noValidate autoComplete="off">
-            <TextField
-              id="dateFrom"
-              label="Desde"
-              type="date"
-              defaultValue="2017-05-24"
-              InputLabelProps={{
-              shrink: true,
-              }}
-            />
-            <TextField
-              id="dateTo"
-              label="Hasta"
-              type="date"
-              defaultValue="2017-05-24"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            </form>
+              <form  className={classes.form} noValidate autoComplete="off">
+                <TextField
+                  id="dateFrom"
+                  label="Desde"
+                  type="date"
+                  name="dateFrom"
+                  value={inputsSearch.dateFrom}
+                  onChange={handleInputsChange}
+                  InputLabelProps={{
+                  shrink: true,
+                  }}
+                />
+                <TextField
+                  id="dateTo"
+                  label="Hasta"
+                  type="date"
+                  name="dateTo"
+                  value={inputsSearch.dateTo}
+                  onChange={handleInputsChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                </form>
 
-            </Grid>
+                </Grid>
             <Grid item xs={12}>
             <div id="filtradoInput">
-          <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+          <InputLabel shrink id="demo-simple-select-placeholder-label-label" style={{textAlign:"start"}}>
             Filtrado
           </InputLabel>
           <Select
@@ -181,14 +171,14 @@ useEffect(() => {
           </Select>
         </div>
         </Grid>
+        <Grid item xs={12}>
 
-        <ColorButton variant="contained" color="primary" className={classes.margin}>
+        <ColorButton onClick= {search}variant="contained" color="primary" className={classes.margin}>
           Buscar
         </ColorButton>
+        </Grid>
           </Grid>
-
           </Paper>
-
         </Grid>
         <Grid item xs={7}>
           <Paper className={classes.paper}>
