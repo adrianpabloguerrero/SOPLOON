@@ -46,9 +46,9 @@ export default function Erros() {
     },
   },
 }))(Button);
-const [users, setUsers] = React.useState({
-   data: [],
- });
+const [users, setUsers] = React.useState({});
+const [projects, setProjects] = React.useState({});
+
 
  const dateToDefault = () => {return moment(new Date()).format('YYYY-MM-DD')}
  const dateFromDefault = () => { return moment(dateToDefault()).subtract(1, 'months').format('YYYY-MM-DD')}
@@ -65,6 +65,7 @@ const [users, setUsers] = React.useState({
 
  const [searchFiltrado, setSearchFiltrado] = React.useState('');
 
+
  const handleSearchFiltradoChange = (event: React.ChangeEvent<{ value: unknown }>) => {
    setSearchFiltrado(event.target.value);
  };
@@ -72,43 +73,74 @@ const [users, setUsers] = React.useState({
  const handleInputsChange = e => {
    const { name, value } = e.target;
    setInputsSearch({ ...inputsSearch, [name]: value });
+   loadCompleteErrors();
  };
 
- const search = () => {
+ const getUsers = data => {
+   const result = [];
+   const map = new Map();
+   for (const item of data ) {
+     if(!map.has(item.userId)){
+        map.set(item.userId, true)    // set any value to Map
+        result.push({
+            id: item.userId,
+            name: item.nameUser
+        })
+      }
+    }
+    return result;
+ }
+
+ const getProjects = data => {
+   const result = [];
+   const map = new Map();
+   for (const item of data ) {
+     if(!map.has(item.projectId)){
+        map.set(item.projectId, true)    // set any value to Map
+        result.push({
+            id: item.projectId,
+            name: item.nameProject
+        })
+      }
+    }
+    return result;
+ }
+
+ const loadCompleteErrors = () => {
    const params = {
      date_start: new Date (inputsSearch.dateFrom).getTime()/1000,
      date_end: new Date (inputsSearch.dateTo).getTime()/1000,
    }
+   let data = [];
    Axios
    .get('http://localhost:8080/soploon/api/errors/',{params})
    .then(response => {
-     let data = [];
      Object.entries(response.data).forEach(keyvalue => {
        data.push(keyvalue[1]);
      });
      setErrors ({ data: data });
+     const usuarios = getUsers(data);
+     const projects = getProjects(data);
+     setUsers (usuarios);
+     setProjects (projects);
    })
    .catch(function(error) {
      console.log(error);
    });
+
+    let users = [];
+ }
+
+ const search = () => {
+  console.log ("buscando")
+  console.log(users);
+  console.log(projects);
  }
 
 
 
 useEffect(() => {
-  Axios
-  .get('http://localhost:8080/soploon/api/users/')
-  .then(response => {
-    let data = [];
-    Object.entries(response.data).forEach(keyvalue => {
-      data.push(keyvalue[1]);
-    });
-    setUsers ({ data: data });
-  })
-  .catch(function(error) {
-    console.log(error);
-  });
-
+loadCompleteErrors();
 }, []);
 
 
