@@ -16,7 +16,6 @@ public class PredicateDao {
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
 	private static final String LAST_VERSION = "ORDER BY VERSION DESC LIMIT 1";
 	private static final String CONDITION_ID = " WHERE id = ? ";
-	private static final String CONDITION_ACTIVATED = " WHERE activated = true ";
 	private static final String CONDITION_ID_VERSION = " WHERE id = ? AND version = ? ";
 	private static final String SUB_QUERY_VERSION = " (SELECT version FROM " + TABLE_NAME + CONDITION_ID + LAST_VERSION
 			+ ")";
