@@ -14,6 +14,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import ErrorIcon from '@material-ui/icons/Error';
+import FolderIcon from '@material-ui/icons/Folder';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -27,6 +28,8 @@ import { Result } from 'antd';
 import Rules from './components/Rules.js';
 import Predicates from './components/Predicates.js';
 import Errors from './components/Errors.js';
+import Explorer from './components/Explorer.js';
+
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
 
@@ -195,7 +198,11 @@ export default function MiniDrawer() {
         </List>
         <Divider />
         <List>
-        <ListItem button component={Link} to={"/errors"}>
+         <ListItem button component={Link} to={"/explorer"}>
+          <ListItemIcon><FolderIcon /></ListItemIcon>
+          <ListItemText primary="Explorer" />
+        </ListItem>
+		<ListItem button component={Link} to={"/errors"}>
           <ListItemIcon><ErrorIcon /></ListItemIcon>
           <ListItemText primary="Errores" />
         </ListItem>
@@ -210,7 +217,8 @@ export default function MiniDrawer() {
           <Route path="/users" render={() => <div> <TableUsers/></div>} />
           <Route path="/rules" render={() => <div> <Rules/></div>} />
           <Route path="/predicates" render={() => <div> <Predicates/></div>} />
-          <Route path="/errors" render={() => <div> <Errors/></div>} />
+          <Route path="/explorer" render={() => <div> <Explorer/></div>} />
+		  <Route path="/errors" render={() => <div> <Errors/></div>} />
           <Route  render={() => <div> <Result
             status="404"
             title="404"
