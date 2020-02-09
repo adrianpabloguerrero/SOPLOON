@@ -37,7 +37,7 @@ class SourceFiles extends React.Component {
 	}
   
 	handleClose = (event, index, sourceFile) => {
-		if (index === this.props.sourceFiles.length - 1 && this.state.value === index)
+		if (index === this.props.sourceFiles.length - 1 && this.state.value === index && index > 0)
 			this.setState({'value': index-1});
 		this.props.closeAction(sourceFile);
 		event.stopPropagation();
