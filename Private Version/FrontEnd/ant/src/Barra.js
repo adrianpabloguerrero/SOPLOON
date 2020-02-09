@@ -28,7 +28,7 @@ import { Result } from 'antd';
 import Rules from './components/Rules.js';
 import Predicates from './components/Predicates.js';
 import Errors from './components/Errors.js';
-import Explorer from './components/Explorer.js';
+import Explorer from './components/explorer/explorer.js';
 
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 

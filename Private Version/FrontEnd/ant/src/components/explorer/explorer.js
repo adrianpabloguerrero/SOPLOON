@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ListItem  from '@material-ui/core/ListItem';
 import ListItemText  from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Link from '@material-ui/core/Link';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PackageIcon from '@material-ui/icons/BorderAll';
 import ExpandIcon from '@material-ui/icons/Add';
 import CollapseIcon from '@material-ui/icons/Remove';
 import FileIcon from '@material-ui/icons/Description';
+import ExplorerNavigationBar from './explorer-navigation-bar';
 
 import Axios from 'axios';
 
@@ -83,16 +77,26 @@ export default function Explorer() {
 		));
 	};
 	
+	const deselectUser = () => {
+		setState({user: null, project: null, correction: null});
+	}
+	
 	const selectUser = (user) => {
 		setState({user: user, project: null, correction: null});
-		if (user != null)
-			getProjects(user);
+		getProjects(user);
+	}
+	
+	const deselectProject = () => {
+		setState({user: state.user, project: null, correction: null});
 	}
 
 	const selectProject = (project) => {
 		setState({user: state.user, project: project, correction: null});
-		if (project != null)
-			getCorrections(project);
+		getCorrections(project);
+	}
+	
+	const deselectCorrection = () => {
+		setState({user: state.user, project: state.project, correction: null});
 	}
 	
 	const selectCorrection = (correction) => {
@@ -153,32 +157,7 @@ export default function Explorer() {
 			.catch(response => {
 			});
 	};
-	
-	const getUserNavigation = () =>  {
-		if (state.user != null)			
-			return (<Link color="inherit" onClick={() => selectProject(null)} > { userName() } </Link>)
-		else 
-			return null;
-	}
-	
-	const getProjectNavigation = () =>  {
-		if (state.project != null)			
-			return (<Link color="inherit" onClick={() => selectCorrection(null)} > { projectName() } </Link>)
-		else 
-			return null;
-	}
-	
-	const correctionName = () => {
-		return state.correction != null ? new Date(state.correction.date).toLocaleString() : '';
-	};
-
-	const getCorrectionNavigation = () =>  {
-		if (state.correction != null)			
-			return (<Link color="inherit"> { correctionName() } </Link>)
-		else 
-			return null;
-	}
-		
+			
 	const structureSource = (correction) => {
 		let folders = {childrens: []};
 		
@@ -217,7 +196,7 @@ export default function Explorer() {
 	}
 	
 	const showSourceFile = () => {
-		return sourceFile.name != undefined;
+		return sourceFile.name !== undefined;
 	}
 	
 	const getTreeItemsFromData = treeItems => {
@@ -278,12 +257,7 @@ export default function Explorer() {
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Paper className={classes.paper}>
-					  <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-					  	<Link color="inherit" onClick={() => selectUser(null)}> Inicio </Link>
-						{getUserNavigation()}
-						{getProjectNavigation()}
-						{getCorrectionNavigation()}
-					  </Breadcrumbs>
+					  <ExplorerNavigationBar data={state} actions={{'selectInit': () => deselectUser(), 'selectUser': () => deselectProject(), 'selectProject': () => deselectCorrection()}}/>
 					</Paper>
 				</Grid>
 				<Grid item xs={3}>
@@ -307,7 +281,7 @@ export default function Explorer() {
 						<div style={{'textAlign': 'left'}}>
 							{ sourceFile.name }
 							<SyntaxHighlighter language="java" style={docco}>
-							  { sourceFile.source != undefined ? sourceFile.source.replace(/\t/g,"   ") : ''}
+							  { sourceFile.source !== undefined ? sourceFile.source.replace(/\t/g,"   ") : ''}
 							</SyntaxHighlighter>
 						</div>
 					</Paper>
