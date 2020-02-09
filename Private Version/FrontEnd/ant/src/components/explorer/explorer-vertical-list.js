@@ -3,40 +3,41 @@ import VerticalList from '../utils/vertical-list';
 
 class ExplorerVerticalList extends React.Component {
 		
-	constructor(props) {
-		super(props);
-		this.state = { items: []};
+	shouldComponentUpdate(nextProps, nextState) {
+		return (nextProps.data !== this.props.data);
 	}
 	
-	static getDerivedStateFromProps(props, state) {
+	structure(props) {
 		
 		const {currentUser, users, currentProject, projects, currentCorrection, corrections} = props.data;
 		const {selectUser, selectProject, selectCorrection} = props.actions;
 
-		var newState = { title: '', items: [], show: false };
+		var data = { title: '', items: [], show: false };
 
 		if (currentCorrection == null) {
-			newState.show = true;
+			data.show = true;
 			if (currentProject == null) {
 				if (currentUser == null) {
-					newState.title = 'Usuarios';
-					users.forEach( user => { newState.items.push( {'text': user.name, 'action': () => selectUser(user) } )});
+					data.title = 'Usuarios';
+					users.forEach( user => { data.items.push( {'text': user.name, 'action': () => selectUser(user) } )});
 				} else {
-					newState.title = 'Projectos';
-					projects.forEach( project => { newState.items.push( {'text': project.name, 'action': () => selectProject(project) } )});
+					data.title = 'Projectos';
+					projects.forEach( project => { data.items.push( {'text': project.name, 'action': () => selectProject(project) } )});
 				}
 			} else {
-				newState.title = 'Correction';
-				corrections.forEach( correction => { newState.items.push( {'text': new Date(correction.date).toLocaleString(), 'action': () => selectCorrection(correction) } )});
+				data.title = 'Correction';
+				corrections.forEach( correction => { data.items.push( {'text': new Date(correction.date).toLocaleString(), 'action': () => selectCorrection(correction) } )});
 			}
 		}
 		
-		return newState;
+		return data;
 	}
 	
 	render() {
-		if (this.state.show)
-			return (<VerticalList title={this.state.title} items={this.state.items}/>)
+		var data = this.structure(this.props);
+		
+		if (data.show)
+			return (<VerticalList title={data.title} items={data.items}/>)
 		else
 			return null;
 	}

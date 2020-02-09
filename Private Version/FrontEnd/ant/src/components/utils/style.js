@@ -25,6 +25,13 @@ const style = makeStyles(theme => ({
   labelText: {
     fontWeight: 'inherit',
     flexGrow: 1,
+  },
+  smallText: {
+	fontSize: 'small',
+  },
+  sourceCode: {
+	fontSize: 'small',
+	textAlign: 'left',
   }
 }));
 
