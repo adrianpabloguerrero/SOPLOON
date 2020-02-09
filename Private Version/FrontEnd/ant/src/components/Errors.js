@@ -11,6 +11,13 @@ import { orange } from '@material-ui/core/colors';
 import Axios from 'axios';
 import MaterialTable from 'material-table';
 import * as moment from 'moment'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,12 +55,25 @@ export default function Erros() {
 }))(Button);
 const [users, setUsers] = React.useState({});
 const [projects, setProjects] = React.useState({});
+const [dataTableFilter, setDataTableFilter] = React.useState([]);
 
+const CustomCheckbox = withStyles({
+root: {
+ color: orange[400],
+ '&$checked': {
+   color: orange[600],
+ },
+},
+checked: {},
+})(props => <Checkbox color="default" {...props} />);
 
  const dateToDefault = () => {return moment(new Date()).format('YYYY-MM-DD')}
  const dateFromDefault = () => { return moment(dateToDefault()).subtract(1, 'months').format('YYYY-MM-DD')}
 
  const [errors, setErrors] = React.useState({
+   data:[]
+ });
+ const [errorsTable, setErrorsTable] = React.useState({
    data:[]
  });
  const [inputsSearch, setInputsSearch] = React.useState(
@@ -62,18 +82,21 @@ const [projects, setProjects] = React.useState({});
      dateTo: dateToDefault(),
    });
 
-
  const [searchFiltrado, setSearchFiltrado] = React.useState('');
-
 
  const handleSearchFiltradoChange = (event: React.ChangeEvent<{ value: unknown }>) => {
    setSearchFiltrado(event.target.value);
- };
+   if (event.target.value === 'usuarios')
+    setDataTableFilter(users);
+   if (event.target.value === 'proyectos')
+    setDataTableFilter(projects);
+};
 
  const handleInputsChange = e => {
    const { name, value } = e.target;
    setInputsSearch({ ...inputsSearch, [name]: value });
    loadCompleteErrors();
+   setSearchFiltrado('');
  };
 
  const getUsers = data => {
@@ -84,7 +107,8 @@ const [projects, setProjects] = React.useState({});
         map.set(item.userId, true)    // set any value to Map
         result.push({
             id: item.userId,
-            name: item.nameUser
+            name: item.nameUser,
+            selected: false
         })
       }
     }
@@ -99,7 +123,8 @@ const [projects, setProjects] = React.useState({});
         map.set(item.projectId, true)    // set any value to Map
         result.push({
             id: item.projectId,
-            name: item.nameProject
+            name: item.nameProject,
+            selected: false
         })
       }
     }
@@ -127,22 +152,31 @@ const [projects, setProjects] = React.useState({});
    .catch(function(error) {
      console.log(error);
    });
-
     let users = [];
  }
 
- const search = () => {
-  console.log ("buscando")
-  console.log(users);
-  console.log(projects);
+ const handleSelectedChange = (item) =>{
+   const data = [...dataTableFilter];
+   const position = data.indexOf(item);
+   //setEntries({data});
+   var newValue = !item.selected;
+   item.selected = newValue;
+   console.log(data)
+   setDataTableFilter(data);
+   console.log(position);
  }
 
-
+ const search = () => {
+  console.log(users);
+  console.log(projects);
+  if (searchFiltrado=='')
+    setErrorsTable(errors);
+  
+ }
 
 useEffect(() => {
 loadCompleteErrors();
 }, []);
-
 
     return (
       <div className={classes.root}>
@@ -151,7 +185,6 @@ loadCompleteErrors();
           <Paper className={classes.paper}>
           <Grid container style={{height: "100%"}}  alignItems="stretch"spacing={3}>
               <Grid item xs={12}>
-
               <form  className={classes.form} noValidate autoComplete="off">
                 <TextField
                   id="dateFrom"
@@ -176,7 +209,6 @@ loadCompleteErrors();
                   }}
                 />
                 </form>
-
                 </Grid>
             <Grid item xs={12}>
             <div id="filtradoInput">
@@ -203,8 +235,33 @@ loadCompleteErrors();
           </Select>
         </div>
         </Grid>
+        { searchFiltrado !== "" ?
         <Grid item xs={12}>
+        <TableContainer component={Paper}>
+             <Table className={classes.table} aria-label="simple table">
+               <TableHead>
+                 <TableRow>
+                   <TableCell>Nombre</TableCell>
+                   <TableCell align="center">Seleccionar</TableCell>
+                 </TableRow>
+               </TableHead>
+               <TableBody>
+               { dataTableFilter.length > 0 ? dataTableFilter.map(item => (
+                  <TableRow key={item.name}>
+                  <TableCell component="th" scope="row">
+                  {item.name}
+                  </TableCell>
+                  <TableCell align="center" >
+                  <CustomCheckbox checked={item.selected} onChange={() => handleSelectedChange (item)}/>
+                </TableCell>
 
+        </TableRow>
+      )):null}
+               </TableBody>
+             </Table>
+           </TableContainer>
+        </Grid> : null }
+        <Grid item xs={12}>
         <ColorButton onClick= {search}variant="contained" color="primary" className={classes.margin}>
           Buscar
         </ColorButton>
@@ -247,18 +304,20 @@ loadCompleteErrors();
                      }
                  }
              }}
-
             title="Errores"
             columns={[
-             { title: 'Nombre', field: 'selected.name' },
-             { title: 'Descripción', field: 'selected.description' },
+             { title: 'Usuario', field: 'nameUser' },
+             { title: 'Regla', field: 'ruleId' },
+             { title: 'Proyecto', field: 'nameProject' },
+             { title: 'Revisado', field: 'reviewed', render: error =>
+      				<CustomCheckbox checked={error.reviewed}  value="reviewedError"/>
+      			 }
           ]}
-            data={users.data}
+            data={errorsTable.data}
           />
           </Paper>
         </Grid>
       </Grid>
     </div>
     );
-
 }
