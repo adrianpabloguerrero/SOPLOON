@@ -3,37 +3,34 @@ import NavigationBar from '../utils/navigation-bar';
 
 class ExplorerNavigationBar extends React.Component {
 		
-	constructor(props) {
-		super(props);
-		this.state = { items: []};
-	}
-	
 	shouldComponentUpdate(nextProps, nextState) {
 		return (nextProps.data !== this.props.data);
 	}
   
-	static getDerivedStateFromProps(props, state) {
-		const {user, project, correction} = props.data;
-		const {selectInit, selectUser, selectProject} = props.actions;
+	structure = (data, actions) => {
+		const {user, project, correction} = data;
+		const {selectInit, selectUser, selectProject} = actions;
 
-		var newState = { items: [{'text': 'Inicio', 'action': selectInit }] };
+		var items = [{'text': 'Inicio', 'action': selectInit }];
 		
 		if (user != null) {
-			newState.items.push({'text': user.name, 'action': selectUser});
+			items.push({'text': user.name, 'action': selectUser});
 			if (project != null) {
-				newState.items.push({'text': project.name, 'action': selectProject});
+				items.push({'text': project.name, 'action': selectProject});
 				if (correction != null) {
-					newState.items.push({'text': new Date(correction.date).toLocaleString()});
+					items.push({'text': new Date(correction.date).toLocaleString()});
 				}
 			}
 		}
 		
-		return newState;
+		return items;
 	}
 	
 	render() {
+		var items = this.structure(this.props.data, this.props.actions);
+		
 		return (
-			<NavigationBar items={this.state.items}/>
+			<NavigationBar items={items}/>
 		)
 	}
 }
