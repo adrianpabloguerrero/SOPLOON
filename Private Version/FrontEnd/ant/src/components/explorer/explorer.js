@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ListItem  from '@material-ui/core/ListItem';
-import ListItemText  from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
@@ -16,6 +12,7 @@ import ExpandIcon from '@material-ui/icons/Add';
 import CollapseIcon from '@material-ui/icons/Remove';
 import FileIcon from '@material-ui/icons/Description';
 import ExplorerNavigationBar from './explorer-navigation-bar';
+import ExplorerVerticalList from './explorer-vertical-list';
 
 import Axios from 'axios';
 
@@ -59,23 +56,6 @@ export default function Explorer() {
 	const [sources, setSources] = React.useState([]);
 	const [sourceFile, setSourceFile] = React.useState({});
 
-	const structureUsers = () => {
-		return users.map(user => (
-		  <ListItem key={user.id} onClick={ () => selectUser(user) } button> <ListItemText primary={user.name} /> </ListItem>
-		));
-	};
-
-	const structureProjects = () => {
-		return projects.map(project => (
-		  <ListItem key={project.id} onClick={ () => selectProject(project) } button>  <ListItemText primary={project.name} /> </ListItem>
-		));
-	};
-	
-	const structureCorrections = () => {
-		return corrections.map(correction => (
-		  <ListItem key={correction.date} onClick={ () => selectCorrection(correction) } button> <ListItemText primary={ new Date(correction.date).toLocaleString() } /> </ListItem>
-		));
-	};
 	
 	const deselectUser = () => {
 		setState({user: null, project: null, correction: null});
@@ -103,31 +83,11 @@ export default function Explorer() {
 		setState({user: state.user, project: state.project, correction: correction});
 		structureSource(correction);
 	}
-	
-	const showUsers = () => {
-		return (state.user == null);
-	};
-
-	const showProjects = () => {
-		return (state.user != null && state.project == null);
-	};
-	
-	const showCorrections = () => {
-		return (state.project != null && state.correction == null);
-	};
-	
+		
 	const showSource = () => {
 		return (state.correction != null);
 	};
-	
-	const userName = () => {
-		return state.user != null ? state.user.name : '';
-	};
-	
-	const projectName = () => {
-		return state.project != null ? state.project.name : '';
-	};
-	
+		
 	const getUsers = () => {
 		let url = 'http://localhost:8080/soploon/api/users/';
 		Axios.get(url)
@@ -250,6 +210,22 @@ export default function Explorer() {
 	  );
 	};
 
+	const navigationBarActions = () => {
+		return {'selectInit': deselectUser, 'selectUser': deselectProject, 'selectProject': deselectCorrection};
+	}
+	
+	const navigationBarData = () => {
+		return state;
+	}
+
+	const verticalListData = () => {
+		return {'currentUser': state.user, 'currentProject': state.project, 'currentCorrection': state.correction, users, projects, corrections};
+	}
+	
+	const verticalListActions = () => {
+		return {selectUser, selectProject, selectCorrection};
+	}
+
 	useEffect(() => { getUsers(); }, []);
 
 	return (
@@ -257,20 +233,12 @@ export default function Explorer() {
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Paper className={classes.paper}>
-					  <ExplorerNavigationBar data={state} actions={{'selectInit': () => deselectUser(), 'selectUser': () => deselectProject(), 'selectProject': () => deselectCorrection()}}/>
+					  <ExplorerNavigationBar data={navigationBarData()} actions={navigationBarActions()}/>
 					</Paper>
 				</Grid>
 				<Grid item xs={3}>
 					<Paper className={classes.paper}>
-						<List hidden={!showUsers()} subheader={ <div><ListSubheader component="div"> Usuarios </ListSubheader></div> }>
-							{structureUsers()}
-						</List>
-						<List hidden={!showProjects()} subheader={<div> <ListSubheader component="div"> { "Projectos de " + userName() } </ListSubheader></div>}>
-							{structureProjects()}
-						</List>
-						<List hidden={!showCorrections()} subheader={<div> <ListSubheader component="div"> { "Correcciones de " + projectName() } </ListSubheader></div>}>
-							{structureCorrections()}
-						</List>
+						<ExplorerVerticalList data={verticalListData()} actions={verticalListActions()}/>
 						<div hidden={!showSource()} style={{'textAlign': 'left'}}>
 							<DataTreeView treeItems={sources} />
 						</div>

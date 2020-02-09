@@ -8,7 +8,10 @@ class NavigationBar extends React.Component {
 	render() {
 		return (
 			<Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-				{ this.props.items.map( (aux,index) => (<Link key={index} color="inherit" onClick={aux.action}>{aux.text}</Link>) ) }
+				{ this.props.items.map( 
+					(item,index) => 
+					(<Link key={index} color="inherit" onClick={item.action}>{item.text}</Link>) 
+				)}
 			</Breadcrumbs>
 		)
 	}

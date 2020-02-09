@@ -8,6 +8,10 @@ class ExplorerNavigationBar extends React.Component {
 		this.state = { items: []};
 	}
 	
+	shouldComponentUpdate(nextProps, nextState) {
+		return (nextProps.data !== this.props.data);
+	}
+  
 	static getDerivedStateFromProps(props, state) {
 		const {user, project, correction} = props.data;
 		const {selectInit, selectUser, selectProject} = props.actions;
@@ -26,7 +30,6 @@ class ExplorerNavigationBar extends React.Component {
 		
 		return newState;
 	}
-	
 	
 	render() {
 		return (
