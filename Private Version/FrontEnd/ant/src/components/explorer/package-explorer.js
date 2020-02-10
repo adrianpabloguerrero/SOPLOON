@@ -7,28 +7,13 @@ import ExpandIcon from '@material-ui/icons/Add';
 import CollapseIcon from '@material-ui/icons/Remove';
 import FileIcon from '@material-ui/icons/Description';
 import Typography from '@material-ui/core/Typography';
-
-const styles = makeStyles(theme => ({
-  labelRoot: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0.5, 0),
-  },
-  labelIcon: {
-    marginRight: theme.spacing(1),
-	fontSize: 'small',
-  },
-  labelText: {
-    fontWeight: 'inherit',
-    flexGrow: 1,
-  }
-}));
+import Style from '../utils/style';
 
 function ItemTreeView(props) {
 
 	const {item, action} = props;
 	
-	const classes = styles();
+	const style = Style();
 	
 	if (item.childrens.length === 0) {
 		return (
@@ -36,9 +21,9 @@ function ItemTreeView(props) {
 				key={item.id}
 				nodeId={item.id}
 				label={
-					<div className={classes.labelRoot}>
-					  <FileIcon color="inherit" className={classes.labelIcon} />
-					  <Typography variant="body2" className={classes.labelText} >
+					<div className={style.labelRoot}>
+					  <FileIcon color="inherit" className={style.labelIcon} />
+					  <Typography variant="body2" className={style.sourceCode} >
 						{item.name}
 					  </Typography>
 					</div>
@@ -51,16 +36,16 @@ function ItemTreeView(props) {
 				key={item.id}
 				nodeId={item.id}
 				label={
-					<div className={classes.labelRoot}>
-					  <PackageIcon color="inherit" className={classes.labelIcon} />
-					  <Typography variant="body2" className={classes.labelText} >
+					<div className={style.labelRoot}>
+					  <PackageIcon color="inherit" className={style.labelIcon} />
+					  <Typography variant="body2" className={style.sourceCode} >
 						{item.name}
 					  </Typography>
 					</div>
 				}
 				children={item.childrens.map( 
 					(children) => 
-					(<ItemTreeView classes={classes} key={children.id} item={children} action={action}/>) 
+					(<ItemTreeView style={style} key={children.id} item={children} action={action}/>) 
 				)}
 			/>
 		)
@@ -71,12 +56,12 @@ function ItemTreeView(props) {
 function PackageTreeView(props) {
 
 	const {items, action} = props;
-	const classes = styles();
+	const style = Style();
 
 	return (			
 		<TreeView
-			defaultExpandIcon={<ExpandIcon className={classes.labelIcon} />}
-			defaultCollapseIcon={<CollapseIcon className={classes.labelIcon} />} >
+			defaultExpandIcon={<ExpandIcon className={style.labelIcon} />}
+			defaultCollapseIcon={<CollapseIcon className={style.labelIcon} />} >
 		  
 			{ items.map( 
 				(item) => 

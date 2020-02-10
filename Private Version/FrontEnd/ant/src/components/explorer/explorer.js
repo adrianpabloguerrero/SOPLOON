@@ -98,7 +98,7 @@ export default function Explorer() {
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Paper className={style.paper}>
-					  <ExplorerNavigationBar data={navigationBarData()} actions={navigationBarActions()}/>
+					  <ExplorerNavigationBar style={style} data={navigationBarData()} actions={navigationBarActions()}/>
 					</Paper>
 				</Grid>
 			</Grid>

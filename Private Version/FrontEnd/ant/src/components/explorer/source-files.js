@@ -7,6 +7,10 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
+import Grid from '@material-ui/core/Grid';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import DownloadIcon from '@material-ui/icons/GetApp';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -47,31 +51,49 @@ class SourceFiles extends React.Component {
 		if (this.props.sourceFiles.length > 0) {
 			return (
 				<div>
-					<Tabs 
-					  indicatorColor="primary"
-					  textColor="primary"
-					  variant="scrollable"
-					  scrollButtons="auto"
-					  value={this.state.value} onChange={this.handleChange}>
-					  {
-						this.props.sourceFiles.map( 
-							(sourceFile, index) => 
-							( <Tab  key={sourceFile.id} label = {
-								<div className={this.props.style.smallText}>
-									{sourceFile.name}
-									<IconButton color="primary" component="span" onClick={(event) => this.handleClose(event,index,sourceFile)}>
-										<Close className={this.props.style.smallText} />
+					<Grid container>
+						<Grid item xs={8} sm={10}>
+							<Tabs 
+							  indicatorColor="primary"
+							  textColor="primary"
+							  variant="scrollable"
+							  scrollButtons="auto"
+							  value={this.state.value} onChange={this.handleChange}>
+							  {
+								this.props.sourceFiles.map( 
+									(sourceFile, index) => 
+									( <Tab  key={sourceFile.id} label = {
+										<div className={this.props.style.smallText}>
+											{sourceFile.name}
+											<IconButton className={this.props.style.iconButton} component="span" onClick={(event) => this.handleClose(event,index,sourceFile)}>
+												<Close className={this.props.style.smallText} />
+											</IconButton>
+										</div> } />
+									)
+								)
+							  }							  
+							</Tabs>
+						</Grid>
+						<Grid item xs={4} sm={2} style={{textAlign: 'right'}}>
+							<div>
+								<Tooltip title="Descargar" aria-label="download">
+									<IconButton className={this.props.style.iconButton}  component="span" >
+										<DownloadIcon className={this.props.style.mediumText} />
 									</IconButton>
-								</div> } />
-							)
-						)
-					  }							  
-					</Tabs>
+								</Tooltip>
+								<Tooltip title="Copiar" aria-label="copy">
+									<IconButton className={this.props.style.iconButton}  component="span" >
+										<FileCopyIcon className={this.props.style.mediumText} />
+									</IconButton>
+								</Tooltip>
+							</div>
+						</Grid>
+					</Grid>
 					{
 						this.props.sourceFiles.map( 
 							(sourceFile, index) =>
 							(
-								<TabPanel key={sourceFile.id} value={this.state.value} index={index}>
+								<TabPanel key={sourceFile.id} value={this.state.value} index={index} style={{overflow: 'auto'}}>
 									<div >
 										<SyntaxHighlighter className={this.props.style.sourceCode} language={this.props.language} style={docco}>
 											{ sourceFile.source.replace(/\t/g,"   ") }

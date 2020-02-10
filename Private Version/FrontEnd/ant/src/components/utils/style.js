@@ -26,8 +26,15 @@ const style = makeStyles(theme => ({
     fontWeight: 'inherit',
     flexGrow: 1,
   },
+  mediumText: {
+	fontSize: '1.2rem',
+  },
   smallText: {
 	fontSize: 'small',
+  },
+  iconButton: {
+	padding: '8px',
+	margin: '4px',
   },
   sourceCode: {
 	fontSize: 'small',

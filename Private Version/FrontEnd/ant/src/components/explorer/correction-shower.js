@@ -11,7 +11,6 @@ class CorrectionShower extends React.Component {
 		this.state = { 'show': props.correction != null, 'correction': props.correction, 'sourceFiles': [] };
 	}
 
-	
 	static getDerivedStateFromProps(props, state) {
 		const { correction } = props;
 		if (correction !== state.correction)
