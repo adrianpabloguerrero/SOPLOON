@@ -14,6 +14,13 @@ import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
 import ar.edu.unicen.isistan.si.soploon.server.models.Configuration;
 
 public class CorrectionDao {
+	
+	private static final String ID_USER_COL = "id_user";
+	private static final String ID_PROJECT_COL = "id_project";
+	private static final String DATE_COL = "date";
+	private static final String CODE_COL = "code";
+	private static final String REPRESENTATION_COL = "representation";
+	private static final String VERSION_SOPLOON_COL = "version_soploon";
 
 	private static final String TABLE_NAME = "soploon.correction";
 	private static final String COLUMNS_INSERT = "(id_user,id_project,date,code,representation,version_soploon)";
@@ -23,7 +30,8 @@ public class CorrectionDao {
 	private static final String CONDITION_ID = " WHERE id_user = ? AND id_project = ? AND date = ?";
 	private static final String CONDITION_PROJECT = " WHERE id_user = ? AND id_project = ?";
 	private static final String SIMPLE_SELECT = "SELECT * FROM " + TABLE_NAME + " " ;
-	private static final String SELECT_BY_PROJECT = SIMPLE_SELECT + CONDITION_PROJECT + ";";
+	private static final String REDUCED_SELECT = "SELECT id_user, id_project, date, version_soploon FROM " + TABLE_NAME + " " ;
+	private static final String SELECT_BY_PROJECT = REDUCED_SELECT + CONDITION_PROJECT + ";";
 	private static final String SELECT_BY_ID = SIMPLE_SELECT + CONDITION_ID + ";";
 	
 	private Database database;
@@ -59,7 +67,7 @@ public class CorrectionDao {
 		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				Correction correction = this.readRow(result);
+				Correction correction = this.readReducedRow(result);
 				out.add(correction);
 			}
 			return out;
@@ -93,15 +101,24 @@ public class CorrectionDao {
 	private Correction readRow(ResultSet result) throws SQLException {
 		Gson gson = new Gson();
 		Correction correction = new Correction();
-		correction.setProjectId(result.getInt(1));
-		correction.setUserId(result.getInt(2));
-		correction.setDate(result.getLong(3));
-		correction.setCode(gson.fromJson(result.getString(4), new TypeToken<ArrayList<SourceCode>>() {}.getType()));
-		correction.setRepresentation(gson.fromJson(result.getString(5), new TypeToken<ArrayList<String>>() {}.getType()));
-		correction.setConfiguration(gson.fromJson(result.getString(6), Configuration.class));
+		correction.setProjectId(result.getInt(ID_USER_COL));
+		correction.setUserId(result.getInt(ID_USER_COL));
+		correction.setDate(result.getLong(DATE_COL));
+		correction.setCode(gson.fromJson(result.getString(CODE_COL), new TypeToken<ArrayList<SourceCode>>() {}.getType()));
+		correction.setRepresentation(gson.fromJson(result.getString(REPRESENTATION_COL), new TypeToken<ArrayList<String>>() {}.getType()));
+		correction.setConfiguration(gson.fromJson(result.getString(VERSION_SOPLOON_COL), Configuration.class));
 		return correction;
 	}
 	
+	private Correction readReducedRow(ResultSet result) throws SQLException {
+		Gson gson = new Gson();
+		Correction correction = new Correction();
+		correction.setProjectId(result.getInt(ID_PROJECT_COL));
+		correction.setUserId(result.getInt(ID_USER_COL));
+		correction.setDate(result.getLong(DATE_COL));
+		correction.setConfiguration(gson.fromJson(result.getString(VERSION_SOPLOON_COL), Configuration.class));
+		return correction;
+	}
 } 
 
 
