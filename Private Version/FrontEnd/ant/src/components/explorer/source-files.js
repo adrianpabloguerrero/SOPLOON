@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import FileSaver from 'file-saver';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -70,6 +71,11 @@ class SourceFiles extends React.Component {
 		this.openCopyInfo(sourceFile);
 	}
 	
+	handleDownload = (sourceFile) => {
+		var blob = new Blob([sourceFile.source], {type: "text/plain;charset=utf-8"});
+		FileSaver.saveAs(blob, sourceFile.name);
+	}
+	
 	handleChange = (event, newValue) => {
 		this.setState({'value': newValue});
 	}
@@ -117,7 +123,7 @@ class SourceFiles extends React.Component {
 									<div style={{'position':'relative'}}>
 										<div style={{'position': 'absolute', 'top':'5px', 'right':'5px'}}>
 											<Tooltip title="Descargar" aria-label="download">
-												<Button color='inherit' component="span" >
+												<Button onClick={ () => this.handleDownload(sourceFile) } color='inherit' component="span" >
 													<DownloadIcon className={this.props.style.mediumText} />
 												</Button>
 											</Tooltip>
