@@ -11,6 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DownloadIcon from '@material-ui/icons/GetApp';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -33,7 +36,38 @@ class SourceFiles extends React.Component {
 			
 	constructor(props) {
 		super(props);
-		this.state = { 'value': 0 };
+		this.state = { 'value': 0, 'copyInfo': { 'open' : false, 'fileName': null } };
+		this.testRef = React.createRef();
+	}
+	
+	copyToClipboard = (textToCopy) => {
+		const el = document.createElement('textarea'); 
+		el.value = textToCopy;   
+		el.setAttribute('readonly', '');
+		el.style.position = 'absolute';                 
+		el.style.left = '-9999px';
+		document.body.appendChild(el);
+		const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+		if (selected) { 
+			document.getSelection().removeAllRanges();
+			document.getSelection().addRange(selected);
+		}
+	};
+	
+	openCopyInfo = (sourceFile) => {
+		this.setState({ 'value': this.state.value, 'copyInfo': { 'open': true, 'fileName': sourceFile.name } });
+	}
+	
+	closeCopyInfo = () => {
+		this.setState({ 'value': this.state.value, 'copyInfo': { 'open': false, 'fileName': this.state.copyInfo.fileName } });
+	}
+	
+	handleCopy = (sourceFile) => {
+		this.copyToClipboard(sourceFile.source);
+		this.openCopyInfo(sourceFile);
 	}
 	
 	handleChange = (event, newValue) => {
@@ -52,7 +86,7 @@ class SourceFiles extends React.Component {
 			return (
 				<div>
 					<Grid container>
-						<Grid item xs={8} sm={10}>
+						<Grid item xs={12}>
 							<Tabs 
 							  indicatorColor="primary"
 							  textColor="primary"
@@ -63,7 +97,7 @@ class SourceFiles extends React.Component {
 								this.props.sourceFiles.map( 
 									(sourceFile, index) => 
 									( <Tab  key={sourceFile.id} label = {
-										<div className={this.props.style.smallText}>
+										<div className={this.props.style.smallText} style={{'textTransform':'none'}}>
 											{sourceFile.name}
 											<IconButton className={this.props.style.iconButton} component="span" onClick={(event) => this.handleClose(event,index,sourceFile)}>
 												<Close className={this.props.style.smallText} />
@@ -74,27 +108,25 @@ class SourceFiles extends React.Component {
 							  }							  
 							</Tabs>
 						</Grid>
-						<Grid item xs={4} sm={2} style={{textAlign: 'right'}}>
-							<div>
-								<Tooltip title="Descargar" aria-label="download">
-									<IconButton className={this.props.style.iconButton}  component="span" >
-										<DownloadIcon className={this.props.style.mediumText} />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title="Copiar" aria-label="copy">
-									<IconButton className={this.props.style.iconButton}  component="span" >
-										<FileCopyIcon className={this.props.style.mediumText} />
-									</IconButton>
-								</Tooltip>
-							</div>
-						</Grid>
 					</Grid>
 					{
 						this.props.sourceFiles.map( 
 							(sourceFile, index) =>
 							(
 								<TabPanel key={sourceFile.id} value={this.state.value} index={index} style={{overflow: 'auto'}}>
-									<div >
+									<div style={{'position':'relative'}}>
+										<div style={{'position': 'absolute', 'top':'5px', 'right':'5px'}}>
+											<Tooltip title="Descargar" aria-label="download">
+												<Button color='inherit' component="span" >
+													<DownloadIcon className={this.props.style.mediumText} />
+												</Button>
+											</Tooltip>
+											<Tooltip title="Copiar" aria-label="copy">
+												<Button onClick={ () => this.handleCopy(sourceFile) } color='inherit' component="span" >
+													<FileCopyIcon className={this.props.style.mediumText} />
+												</Button>
+											</Tooltip>
+										</div>
 										<SyntaxHighlighter className={this.props.style.sourceCode} language={this.props.language} style={docco}>
 											{ sourceFile.source.replace(/\t/g,"   ") }
 										</SyntaxHighlighter>								
@@ -102,7 +134,11 @@ class SourceFiles extends React.Component {
 								</TabPanel>
 							)
 					)}
-
+					<Snackbar open={this.state.copyInfo.open} autoHideDuration={1500} onClose={this.closeCopyInfo}>
+						<Alert elevation={6} variant="filled" severity="info">
+							{ this.state.copyInfo.fileName } copiado al portapapeles!
+						</Alert>
+					</Snackbar>
 				</div>
 			)
 		} else {
