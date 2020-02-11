@@ -27,5 +27,4 @@ public class ErrorWS extends Error {
 		this.nameProject = nameProject;
 	}
 
-
 }

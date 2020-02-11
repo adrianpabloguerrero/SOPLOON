@@ -37,7 +37,7 @@ public class Synchronizer {
 		if (!this.registerUserIfNeeded())
 			return;
 
-		ArrayList<Integer> pending = this.storageManager.pendingCorrections();
+		ArrayList<Long> pending = this.storageManager.pendingCorrections();
 
 		for (long correctionId : pending) {
 			CorrectionData correctionData = this.storageManager.getCorrection(correctionId);

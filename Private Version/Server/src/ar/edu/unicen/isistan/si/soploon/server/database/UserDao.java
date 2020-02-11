@@ -13,13 +13,13 @@ public class UserDao {
 	
 	private static final String TABLE_NAME = "soploon.user";
 	private static final String COLUMNS = "(creation_date,name,role,password)";
-	private static final String VALUES = "(to_timestamp(?),?,?,?)";
+	private static final String VALUES = "(?,?,?,?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS + " VALUES";
 	private static final String SINGLE_INSERT = INSERT + " " + VALUES + ";";
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String SELECT_ALL_USERS = "SELECT * FROM " + TABLE_NAME + ";";
-	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , creation_date = to_timestamp(?) , name = ? , role = ?, password = ? " + CONDITION_ID;
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , creation_date = ? , name = ? , role = ?, password = ? " + CONDITION_ID;
 
 	private Database database;
 
@@ -128,7 +128,7 @@ public class UserDao {
 	private User readRow(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setId(result.getInt(1));
-		user.setCreationDate((result.getDate(2).getTime()));
+		user.setCreationDate((result.getLong(2)));
 		user.setName(result.getString(3));
 		user.setRole(Role.valueOf(result.getString(4)));
 		user.setPassword(result.getString(5));

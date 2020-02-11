@@ -11,7 +11,6 @@ import ar.edu.unicen.isistan.si.soploon.server.providers.CORSFilter;
 import ar.edu.unicen.isistan.si.soploon.server.providers.ExceptionCatcher;
 import ar.edu.unicen.isistan.si.soploon.server.providers.GsonServerProvider;
 
-
 @ApplicationPath("/api")
 public class SoploonApplication extends ResourceConfig {
 	

@@ -4,17 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import ar.edu.unicen.isistan.si.soploon.server.models.CodeLocation;
-import ar.edu.unicen.isistan.si.soploon.server.models.Error;
 import ar.edu.unicen.isistan.si.soploon.server.models.ErrorWS;
 
 public class ErrorWSDao {
-
 
 	private static final String TABLE_NAME = "soploon.complete_error";
 	private static final String CONDITION_ID = " id = ? ";
@@ -40,7 +37,7 @@ public class ErrorWSDao {
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, new Timestamp (time*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, time)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -77,7 +74,7 @@ public class ErrorWSDao {
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId,new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -97,7 +94,7 @@ public class ErrorWSDao {
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId,new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -117,7 +114,7 @@ public class ErrorWSDao {
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId,new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -137,7 +134,7 @@ public class ErrorWSDao {
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);

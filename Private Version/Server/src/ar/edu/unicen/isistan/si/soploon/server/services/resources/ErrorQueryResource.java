@@ -12,9 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
-import ar.edu.unicen.isistan.si.soploon.server.database.ErrorDao;
 import ar.edu.unicen.isistan.si.soploon.server.database.ErrorWSDao;
-import ar.edu.unicen.isistan.si.soploon.server.models.Error;
 import ar.edu.unicen.isistan.si.soploon.server.models.ErrorWS;
 
 public class ErrorQueryResource {

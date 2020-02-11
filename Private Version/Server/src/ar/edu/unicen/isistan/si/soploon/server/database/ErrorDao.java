@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class ErrorDao {
 
 	private static final String TABLE_NAME = "soploon.error";
 	private static final String COLUMNS_INSERT = "(id_project,id_user,date,id_rule,version_rule,code_location,representation_location,reviewed)";
-	private static final String VALUES = "(?,?,to_timestamp(?),?,?,to_json(?::json),to_json(?::json),?)";
+	private static final String VALUES = "(?,?,?,?,?,to_json(?::json),to_json(?::json),?)";
 	private static final String INSERT = "INSERT INTO " + TABLE_NAME + COLUMNS_INSERT + " VALUES";
 	private static final String CONDITION_ID = " id = ? ";
 	private static final String CONDITION_DATE = " date BETWEEN ? AND ? ";
@@ -33,7 +32,7 @@ public class ErrorDao {
 	private static final String SELECT_BY_USER_DATE = SIMPLE_SELECT + CONDITION_USER + " AND " + CONDITION_DATE + ";";
 	private static final String SELECT_BY_USER_RULE_DATE = SIMPLE_SELECT + CONDITION_USER + " AND " + CONDITION_RULE + " AND " + CONDITION_DATE + ";";
 	private static final String SELECT_BETWEEN_DATE = SIMPLE_SELECT + CONDITION_DATE + ";";
-	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , id_project = ? , id_user = ? , date = to_timestamp(?) , id_rule = ? , version_rule = ?, code_location = to_json(?::json) , representation_location = to_json(?::json), reviewed = ? " + " WHERE " + CONDITION_ID;
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , id_project = ? , id_user = ? , date = ? , id_rule = ? , version_rule = ?, code_location = to_json(?::json) , representation_location = to_json(?::json), reviewed = ? " + " WHERE " + CONDITION_ID;
 
 	private Database database;
 	
@@ -45,7 +44,7 @@ public class ErrorDao {
 		ArrayList<Error> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, new Timestamp (time*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, time)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -82,7 +81,7 @@ public class ErrorDao {
 		ArrayList<Error> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId,new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId, dateStart , dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -102,7 +101,7 @@ public class ErrorDao {
 		ArrayList<Error> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId,new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -122,7 +121,7 @@ public class ErrorDao {
 		ArrayList<Error> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId,new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId, dateStart , dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -142,7 +141,7 @@ public class ErrorDao {
 		ArrayList<Error> out = new ArrayList<>();
 
 		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, new Timestamp (dateStart*1000) , new Timestamp (dateEnd*1000))) {
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, dateStart , dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);

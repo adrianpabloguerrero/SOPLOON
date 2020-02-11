@@ -94,19 +94,19 @@ public class StorageManager {
 	
 	private void populate(CorrectionData correctionData) {
 		if (correctionData.getDate() == 0)
-			correctionData.setDate(System.currentTimeMillis()/1000);
+			correctionData.setDate(System.currentTimeMillis());
 		correctionData.setUserId(this.data.getUserId());
 		Integer projectId = this.data.getProjectId(correctionData.getProject());
 		if (projectId != null)
 			correctionData.setProjectId(projectId);	
 	}
 
-	public ArrayList<Integer> pendingCorrections() {
-		ArrayList<Integer> pendings = new ArrayList<Integer>();
+	public ArrayList<Long> pendingCorrections() {
+		ArrayList<Long> pendings = new ArrayList<Long>();
 		File correctionsFolder = new File(CORRECTIONS_PATH);
 		for (File file: correctionsFolder.listFiles()) {
 			try {
-				pendings.add(Integer.valueOf(file.getName().split("\\.")[0]));
+				pendings.add(Long.valueOf(file.getName().split("\\.")[0]));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

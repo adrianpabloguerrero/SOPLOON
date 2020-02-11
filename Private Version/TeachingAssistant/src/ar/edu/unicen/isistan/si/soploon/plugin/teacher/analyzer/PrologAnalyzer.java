@@ -60,8 +60,10 @@ public class PrologAnalyzer {
 
 			String auxiliary_predicates = new String();
 			
-			for (PrologPredicate predicate : this.predicates)
-				auxiliary_predicates += predicate.getCode() + System.lineSeparator();
+			for (PrologPredicate predicate : this.predicates) {
+				if (predicate.isActivated())
+					auxiliary_predicates += predicate.getCode() + System.lineSeparator();
+			}
 
 			Theory rule_theory = new Theory(rules_predicates);
 			Theory auxiliary_theory = new Theory(auxiliary_predicates);
