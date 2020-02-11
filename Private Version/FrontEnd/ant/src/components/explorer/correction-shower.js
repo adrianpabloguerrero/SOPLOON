@@ -3,6 +3,7 @@ import PackageExplorer from './package-explorer';
 import SourceFiles from './source-files';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class CorrectionShower extends React.Component {
 		
@@ -40,8 +41,8 @@ class CorrectionShower extends React.Component {
 		const { style } = this.props; 
 		
 		if (this.state.show)
-			return (
-				<Grid container spacing={3}>
+			if (this.state.correction.code !== undefined)
+				return (<Grid container spacing={3}>
 					<Grid item xs={3}>
 						<Paper className={style.paper}>
 							<PackageExplorer correction={this.state.correction} action={this.selectSourceFile} />
@@ -52,8 +53,11 @@ class CorrectionShower extends React.Component {
 							<SourceFiles style={style} language='java' closeAction={this.closeSourceFile} sourceFiles={this.state.sourceFiles} />
 						</Paper>
 					</Grid>
-				</Grid>
-			)
+				</Grid>)
+			else 
+				return (
+			      <div style={{'marginTop': '50px'}}> <CircularProgress style={{margin: 'auto'}} /> </div>
+				)
 		else
 			return null;
 	}

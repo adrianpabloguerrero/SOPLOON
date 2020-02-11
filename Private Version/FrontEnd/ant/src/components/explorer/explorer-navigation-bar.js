@@ -73,9 +73,11 @@ class ExplorerNavigationBar extends React.Component {
 					this.props.data.correction != null && 
 					(<Grid style={{textAlign: 'right'}} item xs={4} sm={2}>
 						<Tooltip title="Descargar proyecto" aria-label="download">
-							<Button onClick={ () => this.downloadProject(this.props.data.correction)} color='inherit' style={{textTransform:'none'}} endIcon= {<DownloadIcon/>}>
-								Descargar
-							</Button>
+							<span>
+								<Button disabled={this.props.data.correction.code === undefined}  onClick={ () => this.downloadProject(this.props.data.correction)} color='inherit' style={{textTransform:'none'}} endIcon= {<DownloadIcon/>}>
+									Descargar
+								</Button>
+							</span>
 						</Tooltip>
 					</Grid>)
 				}

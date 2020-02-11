@@ -25,7 +25,7 @@ class ExplorerVerticalList extends React.Component {
 					projects.forEach( project => { data.items.push( {'text': project.name, 'action': () => selectProject(project) } )});
 				}
 			} else {
-				data.title = 'Correction';
+				data.title = 'Correcciones';
 				corrections.forEach( correction => { data.items.push( {'text': new Date(correction.date).toLocaleString(), 'action': () => selectCorrection(correction) } )});
 			}
 		}
@@ -35,9 +35,8 @@ class ExplorerVerticalList extends React.Component {
 	
 	render() {
 		var data = this.structure(this.props);
-		
 		if (data.show)
-			return (<VerticalList title={data.title} items={data.items}/>)
+			return (<VerticalList title={data.title} loading={this.props.loading} items={data.items}/>)
 		else
 			return null;
 	}

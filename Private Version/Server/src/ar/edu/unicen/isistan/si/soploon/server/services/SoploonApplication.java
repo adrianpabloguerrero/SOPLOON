@@ -17,7 +17,7 @@ public class SoploonApplication extends ResourceConfig {
 	 @Inject
 	    public SoploonApplication(ServiceLocator locator) {
 	        ServiceLocatorUtilities.enableImmediateScope(locator);
-	        //this.register(CORSFilter.class);
+	        this.register(CORSFilter.class);
 	        this.register(GsonServerProvider.class);
 	        //this.register(ExceptionCatcher.class);
 	        this.register(SoploonManager.class);    
