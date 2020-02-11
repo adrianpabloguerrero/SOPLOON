@@ -7,6 +7,7 @@ import CollapseIcon from '@material-ui/icons/Remove';
 import FileIcon from '@material-ui/icons/Description';
 import Typography from '@material-ui/core/Typography';
 import Style from '../utils/style';
+import ExplorerUtils from './explorer-utils.js'
 
 function ItemTreeView(props) {
 
@@ -64,7 +65,7 @@ function PackageTreeView(props) {
 		  
 			{ items.map( 
 				(item) => 
-				(<ItemTreeView nodeId={item.id} key={item.id} item={item} action={action}/> )
+				( <ItemTreeView nodeId={item.id} key={item.id} item={item} action={action} /> )
 			)}
 		  
 		</TreeView>
@@ -74,63 +75,15 @@ function PackageTreeView(props) {
 		
 class PackageExplorer extends React.Component {
 	
-	structure = (correction) => {
-		let data = { 'show': false };
-		
-		if (correction != null) {
-			data.show = true;
-			
-			let folders = {childrens: []};
-		
-			correction.code.forEach(sourceFile => {
-				var paths = sourceFile.path.split("/");
-				paths = paths.slice(1,paths.length);
-				
-				var partialPath = "";
-				
-				var currentFolder = folders;
-				paths.forEach(path => {
-					var current = null;
-					partialPath = partialPath + "/" + path;
-					currentFolder.childrens.forEach(node => {
-						if (node.name === path)
-							current = node;
-					});
-					
-					if (current == null) {
-						current = {};
-						current.name = path;
-						current.id = partialPath;
-						current.childrens = [];
-						currentFolder.childrens.push(current);
-					}
-
-					currentFolder = current;
-					
-				});
-				
-				currentFolder.source = sourceFile.code;
-		
-			});
-			
-			data.folders = folders.childrens;
-		
-		}
-		
-		return data;
-	}
-	
 	shouldComponentUpdate(nextProps, nextState) {
 		return (nextProps.correction !== this.props.correction);
 	}
 	
 	render() {
-		var data = this.structure(this.props.correction);
-
-		if (data.show)
-			return (
-				<PackageTreeView items={data.folders} action={this.props.action} />
-			)
+		if (this.props.correction !== null) {
+			var data = ExplorerUtils.structureCorrection(this.props.correction);
+			return ( <PackageTreeView items={data} action={this.props.action} /> )
+		}
 		else
 			return null;
 	}
