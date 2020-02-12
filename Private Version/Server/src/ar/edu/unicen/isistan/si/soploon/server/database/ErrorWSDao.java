@@ -157,7 +157,7 @@ public class ErrorWSDao {
 		errorWS.setId(result.getInt(1));
 		errorWS.setProjectId(result.getInt(2));
 		errorWS.setUserId(result.getInt(3));
-		errorWS.setDate(result.getDate(4).getTime());
+		errorWS.setDate(result.getLong(4));
 		errorWS.setRuleId(result.getInt(5));
 		errorWS.setVersionRule(result.getInt(6));
 		errorWS.setCodeLocation(gson.fromJson(result.getString(7), new TypeToken<ArrayList<CodeLocation>>() {}.getType()));
@@ -165,6 +165,7 @@ public class ErrorWSDao {
 		errorWS.setReviewed(result.getInt(9));
 		errorWS.setNameProject(result.getString(10));
 		errorWS.setNameUser(result.getString(11));
+		errorWS.setNameRule(result.getString(12));
 		return errorWS;
 	}
 

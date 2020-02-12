@@ -9,8 +9,19 @@ public class ErrorWS extends Error {
 	
 	@Expose
 	private String nameProject;
+	
+	@Expose 
+	private String nameRule;
 
 	
+	public String getNameRule() {
+		return nameRule;
+	}
+
+	public void setNameRule(String nameRule) {
+		this.nameRule = nameRule;
+	}
+
 	public String getNameUser() {
 		return nameUser;
 	}
