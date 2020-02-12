@@ -67,15 +67,11 @@ root: {
 checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
- const dateToDefault = () => {return moment(new Date()).format('YYYY-MM-DD')}
+ const dateToDefault = () => {return moment(new Date()).utcOffset('GMT-03:00').format('YYYY-MM-DD')}
  const dateFromDefault = () => { return moment(dateToDefault()).subtract(1, 'months').format('YYYY-MM-DD')}
 
- const [errors, setErrors] = React.useState({
-   data:[]
- });
- const [errorsTable, setErrorsTable] = React.useState({
-   data:[]
- });
+ const [errors, setErrors] = React.useState([]);
+ const [errorsTable, setErrorsTable] = React.useState([]);
  const [inputsSearch, setInputsSearch] = React.useState(
    {
      dateFrom: dateFromDefault() ,
@@ -91,6 +87,8 @@ checked: {},
    if (event.target.value === 'proyectos')
     setDataTableFilter(projects);
 };
+
+
 
  const handleInputsChange = e => {
    const { name, value } = e.target;
@@ -133,9 +131,10 @@ checked: {},
 
  const loadCompleteErrors = () => {
    const params = {
-     date_start: new Date (inputsSearch.dateFrom).getTime()/1000,
-     date_end: new Date (inputsSearch.dateTo).getTime()/1000,
+     date_start: moment(inputsSearch.dateFrom).unix()*1000,
+     date_end: moment(inputsSearch.dateTo).add('days',1).subtract('second',1).unix()*1000,
    }
+
    let data = [];
    Axios
    .get('http://localhost:8080/soploon/api/errors/',{params})
@@ -143,7 +142,7 @@ checked: {},
      Object.entries(response.data).forEach(keyvalue => {
        data.push(keyvalue[1]);
      });
-     setErrors ({ data: data });
+     setErrors (data);
      const usuarios = getUsers(data);
      const projects = getProjects(data);
      setUsers (usuarios);
@@ -158,20 +157,87 @@ checked: {},
  const handleSelectedChange = (item) =>{
    const data = [...dataTableFilter];
    const position = data.indexOf(item);
-   //setEntries({data});
    var newValue = !item.selected;
    item.selected = newValue;
-   console.log(data)
    setDataTableFilter(data);
-   console.log(position);
  }
 
+ const handleReviewedChange = (e,error) => {
+
+   //Actualizo la lista de errores general
+   const errorsAux = [...errors];
+   let position = errorsAux.indexOf(error);
+   errorsAux[position].reviewed = e.target.value;
+   setErrors(errorsAux);
+
+   //Actualizo la tabla
+   const errorsTableAux = [...errorsTable];
+   position = errorsTableAux.indexOf(error);
+   errorsTableAux[position].reviewed = e.target.value;
+   setErrorsTable(errorsTableAux);
+
+console.log(errors);
+   const path = {
+     id:error.id,
+     userId: error.userId,
+     projectId: error.projectId,
+     date: error.date
+   }
+
+   const modifiedError = {
+     id:error.id,
+     userId: error.userId,
+     projectId: error.projectId,
+     date: error.date/1000,
+     ruleId: error.ruleId,
+     versionRule: error.versionRule,
+     codeLocation: error.codeLocation,
+     representationLocation: error.representationLocation,
+     reviewed: e.target.value
+   }
+
+   let url = 'http://localhost:8080/soploon/api/users/'+path.userId+'/projects/'+path.projectId+'/corrections/'+path.date+'/errors/'+path.id;
+   console.log(url);
+   Axios.put(url, modifiedError)
+     .then(response => {
+       console.log("then")
+       //const data = [...entries.data];
+       //const position = buscarIndice(data,rule.selected);
+       //data[position].versions.forEach( el => { if (el.version !== reglaSeleccionada.version) {el.activated = false} else {el.activated = response.data.activated}});
+       //setEntries({ data });
+     })
+     .catch(response => {});
+
+
+
+  }
+
  const search = () => {
-  console.log(users);
-  console.log(projects);
-  if (searchFiltrado=='')
+  if (searchFiltrado==='')
     setErrorsTable(errors);
-  
+  if (searchFiltrado==='usuarios'){
+    const data = [];
+    users.forEach((user, i) => {
+      if (user.selected)
+        errors.forEach((error, i) => {
+          if (error.userId === user.id)
+            data.push(error);
+        });
+    });
+    setErrorsTable(data);
+  }
+  if (searchFiltrado==='proyectos'){
+    const data = [];
+    projects.forEach((project, i) => {
+      if (project.selected)
+        errors.forEach((error, i) => {
+          if (error.projectId === project.id)
+            data.push(error);
+        });
+    });
+    setErrorsTable(data);
+  }
+
  }
 
 useEffect(() => {
@@ -181,7 +247,7 @@ loadCompleteErrors();
     return (
       <div className={classes.root}>
       <Grid container style={{height: "100%"}}  alignItems="stretch"spacing={3}>
-        <Grid item xs={5}>
+        <Grid item xs={4}>
           <Paper className={classes.paper}>
           <Grid container style={{height: "100%"}}  alignItems="stretch"spacing={3}>
               <Grid item xs={12}>
@@ -193,6 +259,7 @@ loadCompleteErrors();
                   name="dateFrom"
                   value={inputsSearch.dateFrom}
                   onChange={handleInputsChange}
+                  style={{width: "45%"}}
                   InputLabelProps={{
                   shrink: true,
                   }}
@@ -204,6 +271,7 @@ loadCompleteErrors();
                   name="dateTo"
                   value={inputsSearch.dateTo}
                   onChange={handleInputsChange}
+                  style={{width: "45%"}}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -269,12 +337,10 @@ loadCompleteErrors();
           </Grid>
           </Paper>
         </Grid>
-        <Grid item xs={7}>
-          <Paper className={classes.paper}>
+        <Grid item xs={8}>
           <MaterialTable
           localization={{
                  pagination: {
-                     labelDisplayedRows: '{from}-{to} de {count}',
                      labelRowsPerPage:'Filas por página',
                      labelRowsSelect: 'Filas',
                      firstAriaLabel: 'Primera página',
@@ -307,16 +373,19 @@ loadCompleteErrors();
             title="Errores"
             columns={[
              { title: 'Usuario', field: 'nameUser' },
-             { title: 'Regla', field: 'ruleId' },
+             { title: 'Regla', field: 'nameRule' },
              { title: 'Proyecto', field: 'nameProject' },
-             { title: 'Revisado', field: 'reviewed', render: error =>
-      				<CustomCheckbox checked={error.reviewed}  value="reviewedError"/>
+             { title: 'Estado', field: 'reviewed', render: error =>
+             <Select labelId="label" name="reviewed" id="select" onChange={(event) => handleReviewedChange(event,error)} value={error.reviewed}>
+                  <MenuItem key="0" value="0">No revisado</MenuItem>
+                  <MenuItem key="1" value="1">Falso positivo</MenuItem>
+                  <MenuItem key="2" value="2">Confirmado</MenuItem>
+             </Select>
       			 }
           ]}
-            data={errorsTable.data}
+            data={errorsTable}
           />
-          </Paper>
-        </Grid>
+          </Grid>
       </Grid>
     </div>
     );
