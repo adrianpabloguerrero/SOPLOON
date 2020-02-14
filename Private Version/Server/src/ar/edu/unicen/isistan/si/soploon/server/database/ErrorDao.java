@@ -214,7 +214,7 @@ public class ErrorDao {
 		error.setId(result.getInt(1));
 		error.setProjectId(result.getInt(2));
 		error.setUserId(result.getInt(3));
-		error.setDate(result.getDate(4).getTime());
+		error.setDate(result.getLong(4));
 		error.setRuleId(result.getInt(5));
 		error.setVersionRule(result.getInt(6));
 		error.setCodeLocation(gson.fromJson(result.getString(7), new TypeToken<ArrayList<CodeLocation>>() {}.getType()));

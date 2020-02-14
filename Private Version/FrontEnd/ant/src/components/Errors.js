@@ -188,7 +188,7 @@ console.log(errors);
      id:error.id,
      userId: error.userId,
      projectId: error.projectId,
-     date: error.date/1000,
+     date: error.date,
      ruleId: error.ruleId,
      versionRule: error.versionRule,
      codeLocation: error.codeLocation,
@@ -200,16 +200,10 @@ console.log(errors);
    console.log(url);
    Axios.put(url, modifiedError)
      .then(response => {
-       console.log("then")
-       //const data = [...entries.data];
-       //const position = buscarIndice(data,rule.selected);
-       //data[position].versions.forEach( el => { if (el.version !== reglaSeleccionada.version) {el.activated = false} else {el.activated = response.data.activated}});
-       //setEntries({ data });
+       console.log(response);
+       
      })
-     .catch(response => {});
-
-
-
+     .catch(response => {console.log(response);});
   }
 
  const search = () => {
@@ -377,9 +371,9 @@ loadCompleteErrors();
              { title: 'Proyecto', field: 'nameProject' },
              { title: 'Estado', field: 'reviewed', render: error =>
              <Select labelId="label" name="reviewed" id="select" onChange={(event) => handleReviewedChange(event,error)} value={error.reviewed}>
-                  <MenuItem key="0" value="0">No revisado</MenuItem>
-                  <MenuItem key="1" value="1">Falso positivo</MenuItem>
-                  <MenuItem key="2" value="2">Confirmado</MenuItem>
+                  <MenuItem key="0" value={0}>No revisado</MenuItem>
+                  <MenuItem key="1" value={1}>Falso positivo</MenuItem>
+                  <MenuItem key="2" value={2}>Confirmado</MenuItem>
              </Select>
       			 }
           ]}
