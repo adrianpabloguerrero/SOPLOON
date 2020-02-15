@@ -43,4 +43,46 @@ ExplorerUtils.structureCorrection = (correction) => {
 	
 }
 
+ExplorerUtils.simplifiedStructureCorrection = (correction) => {
+	
+	if (correction !== null) {
+
+		var folders = ExplorerUtils.structureCorrection(correction);
+		
+		var toAnalyze = new Array();
+
+		folders.forEach(folder => {
+			toAnalyze.push(folder);
+		});
+
+		
+		for (var index = 0; index < toAnalyze.length; index++) { 
+			var folder = toAnalyze[index];
+				
+			if (folder.source === undefined) {
+				if (folder.childrens.length == 1) {
+					var children = folder.childrens[0];
+					folder.id = children.id;
+					folder.childrens = children.childrens;
+					folder.name = folder.name + '/' + children.name;
+					index--;
+				} else {
+					folder.childrens.forEach(children => {
+						toAnalyze.push(children);
+					});
+					index++;
+				}
+			} else {
+				index++;
+			}
+		}
+				
+		return folders;
+		
+	}
+	
+}
+
+
+
 export default ExplorerUtils;

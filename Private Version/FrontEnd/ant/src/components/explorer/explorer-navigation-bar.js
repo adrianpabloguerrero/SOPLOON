@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import JSZip from 'jszip';
 import ExplorerUtils from './explorer-utils.js'
 import FileSaver from 'file-saver';
+import Hidden from '@material-ui/core/Hidden';
 
 class ExplorerNavigationBar extends React.Component {
 		
@@ -66,16 +67,17 @@ class ExplorerNavigationBar extends React.Component {
 		
 		return (
 			<Grid container>
-				<Grid item xs={8} sm={10}>
+				<Grid item xs={10} sm={11}>
 						<NavigationBar items={items}/>
 				</Grid>
 				{
 					this.props.data.correction != null && 
-					(<Grid style={{textAlign: 'right'}} item xs={4} sm={2}>
-						<Tooltip title="Descargar proyecto" aria-label="download">
+					(<Grid style={{ 'position': 'relative'}} item xs={2} sm={1}>
+						<Tooltip style={{ 'position': 'absolute', 'right': '5px'}} title="Descargar proyecto" aria-label="download">
 							<span>
-								<Button disabled={this.props.data.correction.code === undefined}  onClick={ () => this.downloadProject(this.props.data.correction)} color='inherit' style={{textTransform:'none'}} endIcon= {<DownloadIcon/>}>
-									Descargar
+								<Button disabled={this.props.data.correction.code === undefined}  onClick={ () => this.downloadProject(this.props.data.correction)} color='inherit' style={{textTransform:'none'}}>
+									<Hidden smDown> <span style={{ 'marginRight': '5px'}}>Descargar</span> </Hidden>
+									<DownloadIcon/>
 								</Button>
 							</span>
 						</Tooltip>

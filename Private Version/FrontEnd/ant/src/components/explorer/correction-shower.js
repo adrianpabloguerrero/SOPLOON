@@ -43,12 +43,12 @@ class CorrectionShower extends React.Component {
 		if (this.state.show)
 			if (this.state.correction.code !== undefined)
 				return (<Grid container spacing={3}>
-					<Grid item xs={3}>
+					<Grid item xs={12} sm={4}>
 						<Paper className={style.paper}>
 							<PackageExplorer correction={this.state.correction} action={this.selectSourceFile} />
 						</Paper>
 					</Grid>
-					<Grid item xs={9}>
+					<Grid item xs={12} sm={8}>
 						<Paper className={style.paper}>
 							<SourceFiles style={style} language='java' closeAction={this.closeSourceFile} sourceFiles={this.state.sourceFiles} />
 						</Paper>

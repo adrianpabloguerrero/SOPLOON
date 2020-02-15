@@ -19,10 +19,10 @@ class ExplorerVerticalList extends React.Component {
 			if (currentProject == null) {
 				if (currentUser == null) {
 					data.title = 'Usuarios';
-					users.forEach( user => { data.items.push( {'text': user.name, 'action': () => selectUser(user) } )});
+					users.forEach( user => { data.items.push( {'text': 'U' + user.id + ' - ' + user.name, 'action': () => selectUser(user) } )});
 				} else {
 					data.title = 'Projectos';
-					projects.forEach( project => { data.items.push( {'text': project.name, 'action': () => selectProject(project) } )});
+					projects.forEach( project => { data.items.push( {'text': 'P' + project.id + ' - ' + project.name, 'action': () => selectProject(project) } )});
 				}
 			} else {
 				data.title = 'Correcciones';

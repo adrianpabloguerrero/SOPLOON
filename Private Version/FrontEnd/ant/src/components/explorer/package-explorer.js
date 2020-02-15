@@ -81,7 +81,7 @@ class PackageExplorer extends React.Component {
 
 	render() {
 		if (this.props.correction !== null && this.props.correction.code !== undefined) {
-			var data = ExplorerUtils.structureCorrection(this.props.correction);
+			var data = ExplorerUtils.simplifiedStructureCorrection(this.props.correction);
 			return ( <PackageTreeView items={data} action={this.props.action} /> )
 		}
 		else

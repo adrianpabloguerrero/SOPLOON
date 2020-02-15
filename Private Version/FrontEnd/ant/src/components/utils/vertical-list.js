@@ -13,7 +13,7 @@ class VerticalList extends React.Component {
 			: 
 			this.props.items.map( 
 				(item,index) => 
-				(<ListItem key={index} onClick={item.action} button> <ListItemText primary={item.text}/> </ListItem>)
+				(<ListItem key={index} style={{'textAlign': 'center'}} onClick={item.action} button> <ListItemText primary={item.text}/> </ListItem>)
 			)	
 			
 		return (

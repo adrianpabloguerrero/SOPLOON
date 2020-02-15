@@ -178,7 +178,7 @@ export default function Explorer() {
 				state.correction == null ? 
 				(
 					<Grid container spacing={3}>
-						<Grid item xs={3}>
+						<Grid item xs={12} sm={12} md={4} >
 							<Paper className={style.paper}>
 								<ExplorerVerticalList loading={request.source !== null} data={verticalListData()} actions={verticalListActions()}/>
 							</Paper>
