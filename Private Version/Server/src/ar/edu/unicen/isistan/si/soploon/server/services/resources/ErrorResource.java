@@ -69,7 +69,7 @@ public class ErrorResource {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/{error_id}/")
+	@Path("{error_id}")
 	public Response updateError(@PathParam("user_id") int userId, @PathParam("project_id") int projectId, @PathParam("time") long time, @PathParam("error_id") int errorId, Error updatedError, @Context UriInfo uriInfo) throws Exception {
 		Error error = dao.getErrorsById(errorId);
 

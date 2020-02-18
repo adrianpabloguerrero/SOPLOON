@@ -176,7 +176,6 @@ checked: {},
    errorsTableAux[position].reviewed = e.target.value;
    setErrorsTable(errorsTableAux);
 
-console.log(errors);
    const path = {
      id:error.id,
      userId: error.userId,
@@ -200,8 +199,7 @@ console.log(errors);
    console.log(url);
    Axios.put(url, modifiedError)
      .then(response => {
-       console.log(response);
-       
+
      })
      .catch(response => {console.log(response);});
   }
@@ -369,6 +367,7 @@ loadCompleteErrors();
              { title: 'Usuario', field: 'nameUser' },
              { title: 'Regla', field: 'nameRule' },
              { title: 'Proyecto', field: 'nameProject' },
+             { title: 'Clase', field:'nameclass', render: error => error.codeLocation[0].path.substring(error.codeLocation[0].path.lastIndexOf("/")+1,error.codeLocation[0].path.length)},
              { title: 'Estado', field: 'reviewed', render: error =>
              <Select labelId="label" name="reviewed" id="select" onChange={(event) => handleReviewedChange(event,error)} value={error.reviewed}>
                   <MenuItem key="0" value={0}>No revisado</MenuItem>
