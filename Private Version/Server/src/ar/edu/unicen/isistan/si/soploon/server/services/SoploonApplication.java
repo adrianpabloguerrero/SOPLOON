@@ -8,7 +8,6 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import ar.edu.unicen.isistan.si.soploon.server.providers.CORSFilter;
-import ar.edu.unicen.isistan.si.soploon.server.providers.ExceptionCatcher;
 import ar.edu.unicen.isistan.si.soploon.server.providers.GsonServerProvider;
 
 @ApplicationPath("/api")

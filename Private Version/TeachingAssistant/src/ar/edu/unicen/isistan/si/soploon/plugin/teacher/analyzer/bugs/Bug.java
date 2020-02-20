@@ -104,6 +104,7 @@ public class Bug implements Comparable<Bug> {
 		
 		ArrayList<CodeLocation> codeLocations = new ArrayList<CodeLocation>();
 		ArrayList<Integer> representation = new ArrayList<Integer>();
+		
 		for (BuggedCode buggedCode: this.codes) {
 			CodeLocation codeLocation = buggedCode.toCodeLocation();
 			codeLocations.add(codeLocation);
