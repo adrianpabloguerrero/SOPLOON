@@ -18,18 +18,48 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import PieChartIcon from '@material-ui/icons/PieChart';
+import StorageIcon from '@material-ui/icons/Storage';
+import Highcharts from 'highcharts';
+import PieChart from 'highcharts-react-official';
+import exporting from "highcharts/modules/exporting";
+
+exporting(Highcharts);
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    paperInfo: {
+      height:500,
+      display:'flex',
+      alignItems:'center',
+      justifyContent:'center'
+    },
+    container: {
+      display:'flex',
+      flexDirection:'column',
+      maxHeight:"100%"
+    },
+    itemGrafico: {
+      maxHeight:"40%",
+    },
+
     root: {
      flexGrow: 1,
-     height: "100%",
+     minHeight: "120%",
+     maxHeight: "120%",
      width: '100%',
    },
    paper: {
-     padding: theme.spacing(2),
+     padding: "0px 16px 16px 16px",
      color: theme.palette.text.secondary,
      width: '100%',
+     minHeight:575,
+     maxHeight: 575,
+     overflow: 'auto'
    },
    form: {
      display: 'flex',
@@ -43,8 +73,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Erros() {
-  const classes = useStyles();
-  const ColorButton = withStyles((theme: Theme) => ({
+
+var sort = null;
+
+const [optionsChart,setOptionsChart] = React.useState ({title: {
+  text: 'No hay datos para mostrar',
+},});
+const [dataPieChart,setDataPieChart] = React.useState({});
+const [projects, setProjects] = React.useState({});
+const [users, setUsers] = React.useState({});
+const [dataTableFilter, setDataTableFilter] = React.useState([]);
+const [valueNavBar, setValueNavBar] = React.useState(0);
+const classes = useStyles();
+const ColorButton = withStyles((theme: Theme) => ({
   root: {
     color: 'white',
     backgroundColor: orange[400],
@@ -53,10 +94,11 @@ export default function Erros() {
     },
   },
 }))(Button);
-const [users, setUsers] = React.useState({});
-const [projects, setProjects] = React.useState({});
-const [dataTableFilter, setDataTableFilter] = React.useState([]);
-
+const [estados, setEstados] = React.useState([
+  {id: 0, name: "No revisado", selected: false},
+  {id: 1, name: "Falso positivo", selected: false},
+  {id: 2, name: "Confirmado", selected: false},
+]);
 const CustomCheckbox = withStyles({
 root: {
  color: orange[400],
@@ -70,8 +112,11 @@ checked: {},
  const dateToDefault = () => {return moment(new Date()).utcOffset('GMT-03:00').format('YYYY-MM-DD')}
  const dateFromDefault = () => { return moment(dateToDefault()).subtract(1, 'months').format('YYYY-MM-DD')}
 
+ //Todos los errores
  const [errors, setErrors] = React.useState([]);
+ //Errores visibles en la tabla
  const [errorsTable, setErrorsTable] = React.useState([]);
+ //Valores de busqueda
  const [inputsSearch, setInputsSearch] = React.useState(
    {
      dateFrom: dateFromDefault() ,
@@ -86,9 +131,9 @@ checked: {},
     setDataTableFilter(users);
    if (event.target.value === 'proyectos')
     setDataTableFilter(projects);
+   if (event.target.value === 'estado')
+    setDataTableFilter(estados);
 };
-
-
 
  const handleInputsChange = e => {
    const { name, value } = e.target;
@@ -98,11 +143,12 @@ checked: {},
  };
 
  const getUsers = data => {
+   //Devuelve un arreglo con los diferentes usuarios
    const result = [];
    const map = new Map();
    for (const item of data ) {
      if(!map.has(item.userId)){
-        map.set(item.userId, true)    // set any value to Map
+        map.set(item.userId, true)
         result.push({
             id: item.userId,
             name: item.nameUser,
@@ -111,6 +157,23 @@ checked: {},
       }
     }
     return result;
+ }
+
+ const getTypeErrorsPercent = errors => {
+   const result = [];
+   const map = new Map();
+   for (const item of errors){
+     if (!map.has(item.nameRule)){
+       map.set(item.nameRule,1);
+     }
+     else {
+       map.set(item.nameRule,map.get(item.nameRule)+1);
+     }
+   }
+   map.forEach((item, i) => {
+    result.push({name:i,y:(100*item/(errors.length))})
+   });
+   return result;
  }
 
  const getProjects = data => {
@@ -204,9 +267,33 @@ checked: {},
      .catch(response => {console.log(response);});
   }
 
+ const processDataChart = (errors) => {
+    setOptionsChart ({
+      title: {
+        text: 'Errores'
+      },
+      chart: {
+      type: "pie"
+    },
+    exporting: {
+             enabled: true
+           },
+    tooltip: {
+        pointFormat: "Cantidad: {point.y:.2f} %"
+    },
+      series: [{
+        name:"Cantidad",
+        data: getTypeErrorsPercent(errors)
+      }]
+    })
+
+ }
+
  const search = () => {
-  if (searchFiltrado==='')
+  if (searchFiltrado===''){
     setErrorsTable(errors);
+    processDataChart (errors);
+  }
   if (searchFiltrado==='usuarios'){
     const data = [];
     users.forEach((user, i) => {
@@ -217,6 +304,8 @@ checked: {},
         });
     });
     setErrorsTable(data);
+    processDataChart (data);
+
   }
   if (searchFiltrado==='proyectos'){
     const data = [];
@@ -228,8 +317,33 @@ checked: {},
         });
     });
     setErrorsTable(data);
-  }
+    processDataChart (data);
 
+  }
+  if (searchFiltrado==='estado'){
+    const data = [];
+    estados.forEach((estado, i) => {
+      if (estado.selected)
+        errors.forEach((error, i) => {
+          if (error.reviewed === estado.id)
+            data.push(error);
+        });
+    });
+    setErrorsTable(data);
+    processDataChart (data);
+  }
+ }
+
+ let nombreClases = (error) => {
+   let out = "";
+   error.codeLocation.forEach((item, i) => {
+     if (out.length > 0){
+       out += ", ";
+    }
+     let clase = item.path.substring(item.path.lastIndexOf("/")+1,item.path.length).substring();
+     out += clase.substring(0,clase.indexOf("."));
+   });
+   return out;
  }
 
 useEffect(() => {
@@ -237,11 +351,14 @@ loadCompleteErrors();
 }, []);
 
     return (
-      <div className={classes.root}>
-      <Grid container style={{height: "100%"}}  alignItems="stretch"spacing={3}>
+      <div className={classes.root} >
+      <Grid container alignItems="stretch"spacing={3}>
         <Grid item xs={4}>
           <Paper className={classes.paper}>
-          <Grid container style={{height: "100%"}}  alignItems="stretch"spacing={3}>
+          <Typography variant="h6" component="h2" style={{display:"flex", margin:"10px 10px 10px 0px"}}>
+         Filtrar
+       </Typography>
+          <Grid container alignItems="stretch"spacing={3}>
               <Grid item xs={12}>
               <form  className={classes.form} noValidate autoComplete="off">
                 <TextField
@@ -292,6 +409,9 @@ loadCompleteErrors();
             <MenuItem value="proyectos">
               <em>Proyectos</em>
             </MenuItem>
+            <MenuItem value="estado">
+              <em>Estado</em>
+            </MenuItem>
           </Select>
         </div>
         </Grid>
@@ -305,7 +425,10 @@ loadCompleteErrors();
                    <TableCell align="center">Seleccionar</TableCell>
                  </TableRow>
                </TableHead>
-               <TableBody>
+              </Table>
+              <div style={{ overflow: 'auto', height: "250px" }}>
+              <Table>
+               <TableBody >
                { dataTableFilter.length > 0 ? dataTableFilter.map(item => (
                   <TableRow key={item.name}>
                   <TableCell component="th" scope="row">
@@ -319,6 +442,7 @@ loadCompleteErrors();
       )):null}
                </TableBody>
              </Table>
+             </div>
            </TableContainer>
         </Grid> : null }
         <Grid item xs={12}>
@@ -329,7 +453,20 @@ loadCompleteErrors();
           </Grid>
           </Paper>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={8} className={classes.container}>
+        <BottomNavigation style = {{marginBottom: "18px"}}
+        showLabels
+        value={valueNavBar}
+        onChange={(event, newValue) => {
+        setValueNavBar(newValue);
+      }}
+      showLabels
+        >
+        <BottomNavigationAction label="Listado" icon={<StorageIcon />} />
+        <BottomNavigationAction label="Pie Chart" icon={<PieChartIcon />} />
+        <BottomNavigationAction label="Bar Chart" icon={<BarChartIcon />} />
+        </BottomNavigation>
+        { valueNavBar == 0 ?
           <MaterialTable
           localization={{
                  pagination: {
@@ -362,12 +499,19 @@ loadCompleteErrors();
                      }
                  }
              }}
+             actions={[
+                {
+                  icon: 'search',
+                  tooltip: 'Ver en el explorador',
+                  onClick: () => console.log("ver error")
+                }
+              ]}
             title="Errores"
             columns={[
              { title: 'Usuario', field: 'nameUser' },
              { title: 'Regla', field: 'nameRule' },
              { title: 'Proyecto', field: 'nameProject' },
-             { title: 'Clase', field:'nameclass', render: error => error.codeLocation[0].path.substring(error.codeLocation[0].path.lastIndexOf("/")+1,error.codeLocation[0].path.length)},
+             { title: 'Clase', field:'nameclass', render: error => nombreClases(error)},
              { title: 'Estado', field: 'reviewed', render: error =>
              <Select labelId="label" name="reviewed" id="select" onChange={(event) => handleReviewedChange(event,error)} value={error.reviewed}>
                   <MenuItem key="0" value={0}>No revisado</MenuItem>
@@ -377,7 +521,13 @@ loadCompleteErrors();
       			 }
           ]}
             data={errorsTable}
-          />
+          /> : <Paper className={classes.paperInfo}>
+          <PieChart
+          highcharts={Highcharts}
+          options={optionsChart}
+    />
+          </Paper>}
+
           </Grid>
       </Grid>
     </div>
