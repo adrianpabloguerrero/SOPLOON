@@ -82,7 +82,7 @@ public class BuggedCode {
 		CodeLocation codeLocation = new CodeLocation();
 		codeLocation.setPath(this.getPath().toString());
 		codeLocation.setStartChar(this.node.getStartPosition());
-		codeLocation.setStartChar(this.node.getStartPosition() + this.node.getLength());
+		codeLocation.setEndChar(this.node.getStartPosition() + this.node.getLength());
 		return codeLocation;
 	}
 	
