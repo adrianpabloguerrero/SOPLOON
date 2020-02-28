@@ -15,7 +15,7 @@ import ar.edu.unicen.isistan.si.soploon.server.services.resources.UserResource;
 @Path("/")
 public class SoploonManager extends Application {
 
-	static final String URL = "jdbc:postgresql://192.168.2.101:5432/soploon";
+	static final String URL = "jdbc:postgresql://192.168.2.26:5432/soploon";
 	static final String USER = "soploon_admin";
 	static final String PASS = "soploononon";
 
