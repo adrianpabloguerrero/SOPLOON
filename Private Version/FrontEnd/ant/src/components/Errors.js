@@ -23,9 +23,11 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import StorageIcon from '@material-ui/icons/Storage';
 import Highcharts from 'highcharts';
 import PieChart from 'highcharts-react-official';
+import HighchartsReact from 'highcharts-react-official';
 import exporting from "highcharts/modules/exporting";
 
 exporting(Highcharts);
@@ -176,14 +178,32 @@ checked: {},
    return result;
  }
 
+ const getTypeErrorsNumber = errors => {
+   const result = [];
+   const map = new Map();
+   for (const item of errors){
+     if (!map.has(item.nameRule)){
+       map.set(item.nameRule,1);
+     }
+     else {
+       map.set(item.nameRule,map.get(item.nameRule)+1);
+     }
+   }
+   map.forEach((item, i) => {
+    result.push({name:i,y:item})
+   });
+   return result;
+ }
+
  const getProjects = data => {
    const result = [];
    const map = new Map();
    for (const item of data ) {
-     if(!map.has(item.projectId)){
-        map.set(item.projectId, true)    // set any value to Map
+     if(!map.has(item.projectId + " " + item.userId)){
+        map.set(item.projectId + " " + item.userId, true)    // set any value to Map
         result.push({
             id: item.projectId,
+            userId: item.userId,
             name: item.nameProject,
             selected: false
         })
@@ -198,6 +218,7 @@ checked: {},
      date_end: moment(inputsSearch.dateTo).add('days',1).subtract('second',1).unix()*1000,
    }
 
+   console.log(params);
    let data = [];
    Axios
    .get('http://localhost:8080/soploon/api/errors/',{params})
@@ -217,12 +238,12 @@ checked: {},
     let users = [];
  }
 
- const handleSelectedChange = (item) =>{
-   const data = [...dataTableFilter];
-   const position = data.indexOf(item);
-   var newValue = !item.selected;
-   item.selected = newValue;
-   setDataTableFilter(data);
+ const handleSelectedChange = (e,item) =>{
+   const dataTableFilterAux = [...dataTableFilter];
+   let position = dataTableFilterAux.indexOf(item);
+   const newValue = !item.selected;
+   dataTableFilterAux[position].selected = newValue;
+   setDataTableFilter(dataTableFilterAux);
  }
 
  const handleReviewedChange = (e,error) => {
@@ -292,7 +313,6 @@ checked: {},
  const search = () => {
   if (searchFiltrado===''){
     setErrorsTable(errors);
-    processDataChart (errors);
   }
   if (searchFiltrado==='usuarios'){
     const data = [];
@@ -304,21 +324,17 @@ checked: {},
         });
     });
     setErrorsTable(data);
-    processDataChart (data);
-
   }
   if (searchFiltrado==='proyectos'){
     const data = [];
     projects.forEach((project, i) => {
       if (project.selected)
         errors.forEach((error, i) => {
-          if (error.projectId === project.id)
+          if ((error.projectId === project.id) && (error.userId === project.userId))
             data.push(error);
         });
     });
     setErrorsTable(data);
-    processDataChart (data);
-
   }
   if (searchFiltrado==='estado'){
     const data = [];
@@ -330,7 +346,6 @@ checked: {},
         });
     });
     setErrorsTable(data);
-    processDataChart (data);
   }
  }
 
@@ -435,7 +450,7 @@ loadCompleteErrors();
                   {item.name}
                   </TableCell>
                   <TableCell align="center" >
-                  <CustomCheckbox checked={item.selected} onChange={() => handleSelectedChange (item)}/>
+                  <CustomCheckbox checked={item.selected} onChange={(event) => handleSelectedChange (event,item)}/>
                 </TableCell>
 
         </TableRow>
@@ -462,9 +477,11 @@ loadCompleteErrors();
       }}
       showLabels
         >
-        <BottomNavigationAction label="Listado" icon={<StorageIcon />} />
+        <BottomNavigationAction label="Lista" icon={<StorageIcon />} />
         <BottomNavigationAction label="Pie Chart" icon={<PieChartIcon />} />
-        <BottomNavigationAction label="Bar Chart" icon={<BarChartIcon />} />
+        <BottomNavigationAction label="Bar Chart" icon={<BarChartIcon />}  />
+        <BottomNavigationAction label="Time Line" icon={<TimelineIcon />}  />
+
         </BottomNavigation>
         { valueNavBar == 0 ?
           <MaterialTable
@@ -521,12 +538,117 @@ loadCompleteErrors();
       			 }
           ]}
             data={errorsTable}
-          /> : <Paper className={classes.paperInfo}>
+          /> : null}
+          { valueNavBar == 1 ?
+          <Paper className={classes.paperInfo}>
           <PieChart
           highcharts={Highcharts}
-          options={optionsChart}
+          options={{
+            title: {
+              text: 'Porcentaje de errores'
+            },
+            chart: {
+            type: "pie"
+          },
+          exporting: {
+                   enabled: true
+                 },
+          tooltip: {
+              pointFormat: "Cantidad: {point.y:.2f} %"
+          },
+            series: [{
+              name:"Cantidad",
+              data: getTypeErrorsPercent(errorsTable)
+            }]
+          }}
     />
-          </Paper>}
+          </Paper> : null }
+          { valueNavBar == 2 ?
+          <Paper className={classes.paperInfo}>
+          <HighchartsReact
+          highcharts={Highcharts}
+          options={{
+            title: {
+              text: 'Cantidad de errores'
+            },
+            chart: {
+              type: 'column'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '7px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                      min: 0,
+                      title: {
+                          text: 'Cantidad total de errores'
+                      }
+                  },
+          legend: {
+            enabled: false
+        },
+          exporting: {
+                   enabled: true
+                 },
+
+            series: [{
+              name:"Cantidad total",
+              data: getTypeErrorsNumber(errorsTable)
+            }]
+          }}
+
+    />
+          </Paper> : null }
+
+          { valueNavBar == 3 ?
+          <Paper className={classes.paperInfo}>
+          <HighchartsReact
+          highcharts={Highcharts}
+          options={{
+            title: {
+              text: 'Cantidad de errores'
+            },
+            chart: {
+              type: 'column'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '7px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                      min: 0,
+                      title: {
+                          text: 'Cantidad total de errores'
+                      }
+                  },
+          legend: {
+            enabled: false
+          },
+          exporting: {
+                   enabled: true
+                 },
+
+            series: [{
+              name:"Cantidad total",
+              data: getTypeErrorsNumber(errorsTable)
+            }]
+          }}
+
+          />
+          </Paper> : null }
+
 
           </Grid>
       </Grid>
