@@ -23,7 +23,6 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import PieChartIcon from '@material-ui/icons/PieChart';
-import TimelineIcon from '@material-ui/icons/Timeline';
 import StorageIcon from '@material-ui/icons/Storage';
 import Highcharts from 'highcharts';
 import PieChart from 'highcharts-react-official';
@@ -140,7 +139,12 @@ checked: {},
  const handleInputsChange = e => {
    const { name, value } = e.target;
    setInputsSearch({ ...inputsSearch, [name]: value });
-   loadCompleteErrors();
+   if (name === "dateFrom") {
+     loadCompleteErrors(value,inputsSearch.dateTo);
+   }
+   else {
+     loadCompleteErrors(inputsSearch.dateFrom,value);
+   }
    setSearchFiltrado('');
  };
 
@@ -195,6 +199,11 @@ checked: {},
    return result;
  }
 
+ const getErrosLineChart = errors => {
+   const result = [];
+   return result;
+ }
+
  const getProjects = data => {
    const result = [];
    const map = new Map();
@@ -212,10 +221,11 @@ checked: {},
     return result;
  }
 
- const loadCompleteErrors = () => {
+ const loadCompleteErrors = (dateFrom,dateTo) => {
+
    const params = {
-     date_start: moment(inputsSearch.dateFrom).unix()*1000,
-     date_end: moment(inputsSearch.dateTo).add('days',1).subtract('second',1).unix()*1000,
+     date_start: moment(dateFrom).unix()*1000,
+     date_end: moment(dateTo).add('days',1).subtract('second',1).unix()*1000,
    }
 
    console.log(params);
@@ -362,7 +372,7 @@ checked: {},
  }
 
 useEffect(() => {
-loadCompleteErrors();
+loadCompleteErrors(inputsSearch.dateFrom,inputsSearch.dateTo);
 }, []);
 
     return (
@@ -480,8 +490,6 @@ loadCompleteErrors();
         <BottomNavigationAction label="Lista" icon={<StorageIcon />} />
         <BottomNavigationAction label="Pie Chart" icon={<PieChartIcon />} />
         <BottomNavigationAction label="Bar Chart" icon={<BarChartIcon />}  />
-        <BottomNavigationAction label="Time Line" icon={<TimelineIcon />}  />
-
         </BottomNavigation>
         { valueNavBar == 0 ?
           <MaterialTable
@@ -605,51 +613,6 @@ loadCompleteErrors();
 
     />
           </Paper> : null }
-
-          { valueNavBar == 3 ?
-          <Paper className={classes.paperInfo}>
-          <HighchartsReact
-          highcharts={Highcharts}
-          options={{
-            title: {
-              text: 'Cantidad de errores'
-            },
-            chart: {
-              type: 'column'
-            },
-            xAxis: {
-                type: 'category',
-                labels: {
-                    rotation: -45,
-                    style: {
-                        fontSize: '7px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
-            },
-            yAxis: {
-                      min: 0,
-                      title: {
-                          text: 'Cantidad total de errores'
-                      }
-                  },
-          legend: {
-            enabled: false
-          },
-          exporting: {
-                   enabled: true
-                 },
-
-            series: [{
-              name:"Cantidad total",
-              data: getTypeErrorsNumber(errorsTable)
-            }]
-          }}
-
-          />
-          </Paper> : null }
-
-
           </Grid>
       </Grid>
     </div>
