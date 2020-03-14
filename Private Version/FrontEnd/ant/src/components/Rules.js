@@ -13,7 +13,7 @@ import Soploon from '../images/soploon.png';
 import TextField from "@material-ui/core/TextField";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
+import {CustomCheckbox} from './utils/CustomCheckbox';
 import Axios from 'axios';
 
 
@@ -127,8 +127,6 @@ export default function Rules() {
 
   }
 
-
-
   const guardarNuevaRegla = () => {
     let url = 'http://localhost:8080/soploon/api/rules/';
     Axios.post(url, inputs)
@@ -176,21 +174,10 @@ export default function Rules() {
      activated: 'true',
    });
 
-
    const handleChange = e => {
      const { name, value } = e.target;
      setInputs({ ...inputs, [name]: value });
    };
-
-   const CustomCheckbox = withStyles({
-  root: {
-    color: orange[400],
-    '&$checked': {
-      color: orange[600],
-    },
-  },
-  checked: {},
-})(props => <Checkbox color="default" {...props} />);
 
    const handleCleaner = e => {
       setInputs(initState);
