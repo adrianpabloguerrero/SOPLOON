@@ -28,6 +28,8 @@ import Highcharts from 'highcharts';
 import PieChart from 'highcharts-react-official';
 import HighchartsReact from 'highcharts-react-official';
 import exporting from "highcharts/modules/exporting";
+import TableFilterRow from "../components/errors/TableFilterRow";
+
 
 exporting(Highcharts);
 
@@ -73,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Erros() {
+export default function Errors() {
 
 var sort = null;
 
@@ -248,12 +250,12 @@ checked: {},
     let users = [];
  }
 
- const handleSelectedChange = (e,item) =>{
+ const handleFilterClick = async (event,item) =>{
    const dataTableFilterAux = [...dataTableFilter];
    let position = dataTableFilterAux.indexOf(item);
    const newValue = !item.selected;
    dataTableFilterAux[position].selected = newValue;
-   setDataTableFilter(dataTableFilterAux);
+   await setDataTableFilter(dataTableFilterAux);
  }
 
  const handleReviewedChange = (e,error) => {
@@ -454,17 +456,7 @@ loadCompleteErrors(inputsSearch.dateFrom,inputsSearch.dateTo);
               <div style={{ overflow: 'auto', height: "250px" }}>
               <Table>
                <TableBody >
-               { dataTableFilter.length > 0 ? dataTableFilter.map(item => (
-                  <TableRow key={item.name}>
-                  <TableCell component="th" scope="row">
-                  {item.name}
-                  </TableCell>
-                  <TableCell align="center" >
-                  <CustomCheckbox checked={item.selected} onChange={(event) => handleSelectedChange (event,item)}/>
-                </TableCell>
-
-        </TableRow>
-      )):null}
+                <TableFilterRow handleClick={handleFilterClick} listItems={dataTableFilter}/>
                </TableBody>
              </Table>
              </div>
