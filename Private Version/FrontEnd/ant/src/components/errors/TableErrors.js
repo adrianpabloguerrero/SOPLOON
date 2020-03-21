@@ -17,18 +17,18 @@ let nameClasses = (error) => {
 }
 
 
-export default function TableErrors ({ errors, setErrors }) {
+export default function TableErrors ({ errors, setErrorsSelected }) {
 
-  let handleReviewedChange = (e,error) => {
+  const handleReviewedChange = (e,error) => {
     //Actualizo la lista de errores general
     //const errorsAux = [...errors];
     //let position = errorsAux.indexOf(error);
     //errorsAux[position].reviewed = e.target.value;
     //setErrors(errorsAux);
-    
+
     //Actualizo la tabla
     errors[errors.indexOf(error)].reviewed = e.target.value;
-    setErrors(errors);
+    setErrorsSelected(errors);
 
     const path = {
       id:error.id,

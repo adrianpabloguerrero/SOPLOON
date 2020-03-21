@@ -20,9 +20,6 @@ const style = Style();
  //Errores visibles
 const [errorsSelected, setErrorsSelected] = React.useState([]);
 
-const handleChange = (errores) => {
-  setErrorsSelected(errores);
-}
     return (
       <div className={style.root} >
       <Grid container alignItems="stretch"spacing={3}>
@@ -42,7 +39,7 @@ const handleChange = (errores) => {
               <BottomNavigationAction label="Pie Chart" icon={<PieChartIcon />} />
               <BottomNavigationAction label="Bar Chart" icon={<BarChartIcon />}  />
               </BottomNavigation>
-        { (valueNavBar === 0) && (<TableErrors errors={errorsSelected} setErrors={handleChange}/>) }
+        { (valueNavBar === 0) && (<TableErrors errors={errorsSelected} setErrorsSelected={setErrorsSelected}/>) }
         { (valueNavBar === 1) && (<Paper className={style.paperInfo}>
           <PieChart errors={errorsSelected} />
         </Paper>) }
