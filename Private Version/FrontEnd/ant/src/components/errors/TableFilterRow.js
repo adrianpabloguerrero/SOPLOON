@@ -1,23 +1,17 @@
-import React, { useEffect } from 'react';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+import React from 'react';
 import {CustomCheckbox} from '../utils/CustomCheckbox';
 
-const Checkbox = ({ index, item, handleClick }) => {
-  return <CustomCheckbox checked={item.selected} value={index} onClick={(event) => handleClick(event,item)} />;
+const Checkbox = ({ item, handleClick }) => {
+  return <CustomCheckbox checked={item.selected} onClick={(event) => handleClick(event,item)} />;
 }
 
-export default function TableFilterRow ({ listItems, handleClick }) {
-  return (listItems.length > 0) && (
-      listItems.map((item,index) => (
-         <TableRow key={index}>
-           <TableCell component="th" scope="row">
+export default function TableFilterRow ({ item, handleClick, style}) {
+  return(
+        <div style={style}>
+              <div style={{"display":"flex", "alignItems":"center","justifyContent":"space-between"}}>
               {item.name}
-           </TableCell>
-           <TableCell align="center">
-             <Checkbox {...{ index, item, handleClick }} />
-           </TableCell>
-         </TableRow>
-     ))
-  );
+               <Checkbox {...{ item, handleClick }} />
+              </div>
+        </div>
+       )
 }
