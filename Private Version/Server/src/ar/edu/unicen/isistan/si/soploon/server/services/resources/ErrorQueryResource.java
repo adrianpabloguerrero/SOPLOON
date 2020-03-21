@@ -49,9 +49,6 @@ public class ErrorQueryResource {
 					errorsWS.addAll(this.dao.getErrorsBetweenDate(dateStart, dateEnd));
 			}
 		}
-		if (!errorsWS.isEmpty())
 			return Response.ok(errorsWS).build();
-		else
-			return Response.status(Response.Status.NOT_FOUND).build();
 	}
 }
