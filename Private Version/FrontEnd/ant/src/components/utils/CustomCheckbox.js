@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import {withStyles} from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';

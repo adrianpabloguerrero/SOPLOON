@@ -1,6 +1,5 @@
 import React, { useEffect} from 'react';
-import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
-import { orange } from '@material-ui/core/colors';
+import { createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import Button from "@material-ui/core/Button";
 import Dialog from '@material-ui/core/Dialog';
@@ -174,7 +173,7 @@ export default function Predicates() {
      const { name, value } = e.target;
      setInputs({ ...inputs, [name]: value });
    };
-   
+
    const handleCleaner = e => {
       setInputs(initState);
       setOldData(initState);
