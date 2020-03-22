@@ -92,7 +92,32 @@ itemFilterTable:{
 },
  tableFilter:{
   margin: "30px 8px 10px 0px",
- }
+},
+//Rules
+appBar: {
+  position: 'relative',
+  backgroundColor:"#222",
+},
+image: {
+  width:"30px",
+  marginLeft:"10px"
+},
+rootRule: {
+  display: "flex",
+  flexWrap: "wrap"
+},
+textField: {
+  marginLeft: theme.spacing(5),
+  marginRight: theme.spacing(5)
+},
+button: {
+  margin: theme.spacing(1)
+},
+title: {
+  marginLeft: theme.spacing(2),
+  color:"#9d9d9d"
+}
+
 
 }));
 
