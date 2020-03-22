@@ -20,15 +20,11 @@ let nameClasses = (error) => {
 export default function TableErrors ({ errors, setErrorsSelected }) {
 
   const handleReviewedChange = (e,error) => {
-    //Actualizo la lista de errores general
-    //const errorsAux = [...errors];
-    //let position = errorsAux.indexOf(error);
-    //errorsAux[position].reviewed = e.target.value;
-    //setErrors(errorsAux);
-
+  
     //Actualizo la tabla
     errors[errors.indexOf(error)].reviewed = e.target.value;
-    setErrorsSelected(errors);
+    let aux = [...errors];
+    setErrorsSelected(aux);
 
     const path = {
       id:error.id,
