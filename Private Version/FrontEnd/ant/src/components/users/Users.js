@@ -47,8 +47,6 @@ export default function MaterialTableDemo() {
 
   return (
     <MaterialTable
-
-
     localization={{
            pagination: {
                labelDisplayedRows: '{from}-{to} de {count}',
