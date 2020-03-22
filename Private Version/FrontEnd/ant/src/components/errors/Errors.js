@@ -6,11 +6,11 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import StorageIcon from '@material-ui/icons/Storage';
-import TableErrors from "../components/errors/TableErrors";
-import PieChart from "../components/errors/PieChart";
-import BarChart from "../components/errors/BarChart";
-import Filter from "../components/errors/Filter";
-import Style from './utils/style';
+import TableErrors from "./TableErrors";
+import PieChart from "./PieChart";
+import BarChart from "./BarChart";
+import Filter from "./Filter";
+import Style from '../utils/style';
 
 export default function Errors() {
 
