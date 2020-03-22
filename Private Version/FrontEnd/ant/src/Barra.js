@@ -21,20 +21,18 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
 import TocIcon from '@material-ui/icons/Toc';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import Soploon from './images/soploon.png';
-import TableUsers from './components/Users.js';
+import Soploon from './components/utils/images/soploon.png';
+import TableUsers from './components/users/Users.js';
 import 'antd/dist/antd.css';
 import { Result } from 'antd';
-import Rules from './components/Rules.js';
+import Rules from './components/rules/Rules.js';
 import Predicates from './components/Predicates.js';
 import Errors from './components/errors/Errors.js';
 import Explorer from './components/explorer/explorer.js';
 
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
-
 const drawerWidth = 240;
-
 
 const useStyles = makeStyles(theme => ({
   root: {
