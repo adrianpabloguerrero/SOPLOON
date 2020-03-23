@@ -1,9 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import MaterialTable from 'material-table';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import {CustomCheckbox} from '../utils/CustomCheckbox';
-import Axios from 'axios';
 
 function TableRules ({handleClickOpen, handleVersionChange, handleActivatedChange, entries}){
 

@@ -6,7 +6,6 @@ import { Switch, Route, useRouteMatch, withRouter } from "react-router-dom";
 
 function Rules({ history }) {
   let { path, url } = useRouteMatch();
-  const [open, setOpen] = React.useState(false);
   const [oldData, setOldData] = React.useState({
     id: "",
     version: "",
@@ -202,7 +201,7 @@ function Rules({ history }) {
         />
       </Route>
       <Route exact path={`${path}/form`}>
-        <EditRule {...{ open, handleClose, guardar, handleChange, inputs }} />
+        <EditRule {...{ handleClose, guardar, handleChange, inputs }} />
       </Route>
     </Switch>
   );
