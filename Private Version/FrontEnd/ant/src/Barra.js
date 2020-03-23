@@ -214,7 +214,9 @@ export default function MiniDrawer() {
         <Switch>
           <Route exact path="/" render={() => <div>Home Page</div>} />
           <Route path="/users" render={() => <div> <TableUsers/></div>} />
-          <Route path="/rules" render={() => <div> <Rules/></div>} />
+          <Route path="/rules">
+          <Rules/>
+          </Route>
           <Route path="/predicates" render={() => <div> <Predicates/></div>} />
           <Route path="/explorer" render={() => <div> <Explorer/></div>} />
 		  <Route path="/errors" render={() => <div> <Errors/></div>} />

@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {CustomCheckbox} from '../utils/CustomCheckbox';
 import Axios from 'axios';
 
-export default function TableRules ({handleClickOpen, handleVersionChange, handleActivatedChange, entries}){
+function TableRules ({handleClickOpen, handleVersionChange, handleActivatedChange, entries}){
 
   return (
     <MaterialTable
@@ -78,3 +78,5 @@ export default function TableRules ({handleClickOpen, handleVersionChange, handl
     />
   )
 }
+
+export default React.memo(TableRules);
