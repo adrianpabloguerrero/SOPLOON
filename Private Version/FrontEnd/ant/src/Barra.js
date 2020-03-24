@@ -29,7 +29,6 @@ import Rules from "./components/rules/Rules.js";
 import Predicates from "./components/predicates/Predicates.js";
 import Errors from "./components/errors/Errors.js";
 import Explorer from "./components/explorer/explorer.js";
-
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
 const drawerWidth = 240;
