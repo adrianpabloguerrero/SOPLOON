@@ -9,6 +9,7 @@ import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.ErrorQueryResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.PredicateResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.RuleResource;
+import ar.edu.unicen.isistan.si.soploon.server.services.resources.StatsResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.UserResource;
 
 @Immediate
@@ -25,6 +26,7 @@ public class SoploonManager extends Application {
 	private PredicateResource predicateResorce;
 //	private CorrectionResource correctionResource;
 	private ErrorQueryResource errorQueryResource;
+	private StatsResource statsResource;
 	private Database database;
 
 	@PostConstruct
@@ -37,6 +39,7 @@ public class SoploonManager extends Application {
 		this.predicateResorce = new PredicateResource (this.database);
 //		this.correctionResource = new CorrectionResource(this.database);
 		this.errorQueryResource = new ErrorQueryResource (this.database);
+		this.statsResource = new StatsResource (this.database);
 	}
 
 	@Path("/rules/")
@@ -62,6 +65,11 @@ public class SoploonManager extends Application {
 	@Path("/errors/")
 	public ErrorQueryResource getErrorQueryResource() {
 		return this.errorQueryResource;
+	}
+	
+	@Path("/stats/")
+	public StatsResource getStatsResource () {
+		return this.statsResource;
 	}
 	
 	/*@Path("/correction/")
