@@ -29,6 +29,7 @@ import Rules from "./components/rules/Rules.js";
 import Predicates from "./components/predicates/Predicates.js";
 import Errors from "./components/errors/Errors.js";
 import Explorer from "./components/explorer/explorer.js";
+import Dashboard from "./components/dashboard/Dashboard.js";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -255,6 +256,15 @@ export default function MiniDrawer() {
                 <div>
                   {" "}
                   <Errors />
+                </div>
+              )}
+            />
+            <Route
+              path="/home"
+              render={() => (
+                <div>
+                  {" "}
+                  <Dashboard />
                 </div>
               )}
             />
