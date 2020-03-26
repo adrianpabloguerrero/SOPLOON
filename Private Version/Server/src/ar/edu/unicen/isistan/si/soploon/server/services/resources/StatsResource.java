@@ -31,6 +31,7 @@ public class StatsResource {
 			stats.setCorrectionsQuantity(this.dao.getCorrectionsQuantity(dateStart, dateEnd));
 			stats.setProjectsQuantity(this.dao.getProjectsQuantity(dateStart, dateEnd));
 			stats.setErrorsRateElement(this.dao.getErrorsRateElement(dateStart,dateEnd));
+			stats.setErrorsTopFive(this.dao.getErrosTopFive(dateStart,dateEnd));
 		return Response.ok(stats).build();
 	}
 }

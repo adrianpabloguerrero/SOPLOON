@@ -26,7 +26,8 @@ export default function Dashboard() {
     errorsQuantity: "",
     correctionsQuantity: "",
     projectsQuantity: "",
-    errorsRateElement: []
+    errorsRateElement: [],
+    errorsTopFive: []
   });
 
   const loadStats = () => {
@@ -77,7 +78,7 @@ export default function Dashboard() {
         <ErrorsRate data={data.errorsRateElement} />
       </div>
       <div className={style.rowDashboard}>
-        <TopErrors />
+        <TopErrors data={data.errorsTopFive} />
       </div>
     </div>
   );

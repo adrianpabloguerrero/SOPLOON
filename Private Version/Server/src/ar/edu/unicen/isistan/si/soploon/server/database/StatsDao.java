@@ -23,6 +23,7 @@ public class StatsDao {
 	private static final String SELECT_COUNT_CORRECTIONS_BETWEEN_DATES = SELECT_COUNT + TABLE_CORRECTION + " WHERE " + CONDITION_DATE;
 	private static final String SELECT_COUNT_ERRORS_BETWEEN_DATES = SELECT_COUNT + TABLE_ERROR + " WHERE " + CONDITION_DATE;
 	private static final String SELECT_RATE_ERRORS_BETWEEN_DATES = "SELECT  rule_name, COUNT (*) * 100 /SUM(COUNT(*)) OVER() FROM " + VIEW_COMPLETE_ERROR + " WHERE " + CONDITION_DATE +  "GROUP BY  rule_name";
+	private static final String SELECT_TOP_ERRORS_BETWEEN_DATES = "SELECT rule_name, COUNT (*) FROM " + VIEW_COMPLETE_ERROR + " WHERE " + CONDITION_DATE + "GROUP BY (id_rule, rule_name) ORDER BY (COUNT (*)) DESC LIMIT 5" ;
 
 	private Database database;
 	
@@ -104,6 +105,27 @@ public class StatsDao {
 		ArrayList<ErrorRateElement> out = new ArrayList<>();
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_RATE_ERRORS_BETWEEN_DATES, dateStart, dateEnd)) {
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				ErrorRateElement errorRateElement = new ErrorRateElement();
+				errorRateElement.setName(result.getString(1));
+				errorRateElement.setY(result.getFloat(2));
+				out.add(errorRateElement);
+			}
+			return out;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	public ArrayList<ErrorRateElement> getErrosTopFive(Long dateStart, Long dateEnd) throws SQLException {
+		ArrayList<ErrorRateElement> out = new ArrayList<>();
+		Connection connection = this.database.connection();
+		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_TOP_ERRORS_BETWEEN_DATES, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorRateElement errorRateElement = new ErrorRateElement();

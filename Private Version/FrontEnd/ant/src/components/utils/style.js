@@ -173,7 +173,23 @@ const style = makeStyles(theme => ({
     marginTop: theme.spacing(3),
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
-    width: "40%"
+    width: "30%"
+  },
+  rowErrors: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1)
+  },
+  headerTopErrors: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    fontWeight: "bold"
   }
 }));
 
