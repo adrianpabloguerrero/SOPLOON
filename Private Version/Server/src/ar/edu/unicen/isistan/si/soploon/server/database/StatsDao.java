@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ar.edu.unicen.isistan.si.soploon.server.models.ErrorRateElement;
+import ar.edu.unicen.isistan.si.soploon.server.models.ErrorStatsElement;
 import ar.edu.unicen.isistan.si.soploon.server.models.ErrorWS;
 
 public class StatsDao {
@@ -101,13 +101,13 @@ public class StatsDao {
 		}
 	}
 
-	public ArrayList<ErrorRateElement> getErrorsRateElement(Long dateStart, Long dateEnd) throws SQLException {
-		ArrayList<ErrorRateElement> out = new ArrayList<>();
+	public ArrayList<ErrorStatsElement> getErrorsRateElement(Long dateStart, Long dateEnd) throws SQLException {
+		ArrayList<ErrorStatsElement> out = new ArrayList<>();
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_RATE_ERRORS_BETWEEN_DATES, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				ErrorRateElement errorRateElement = new ErrorRateElement();
+				ErrorStatsElement errorRateElement = new ErrorStatsElement();
 				errorRateElement.setName(result.getString(1));
 				errorRateElement.setY(result.getFloat(2));
 				out.add(errorRateElement);
@@ -122,13 +122,13 @@ public class StatsDao {
 		}
 	}
 
-	public ArrayList<ErrorRateElement> getErrosTopFive(Long dateStart, Long dateEnd) throws SQLException {
-		ArrayList<ErrorRateElement> out = new ArrayList<>();
+	public ArrayList<ErrorStatsElement> getErrosTopFive(Long dateStart, Long dateEnd) throws SQLException {
+		ArrayList<ErrorStatsElement> out = new ArrayList<>();
 		Connection connection = this.database.connection();
 		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_TOP_ERRORS_BETWEEN_DATES, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				ErrorRateElement errorRateElement = new ErrorRateElement();
+				ErrorStatsElement errorRateElement = new ErrorStatsElement();
 				errorRateElement.setName(result.getString(1));
 				errorRateElement.setY(result.getFloat(2));
 				out.add(errorRateElement);

@@ -15,9 +15,9 @@ public class Stats {
 	@Expose
 	private int projectsQuantity;
 	@Expose
-	private ArrayList <ErrorRateElement> errorsRateElement;
+	private ArrayList <ErrorStatsElement> errorsRateElement;
 	@Expose 
-	private ArrayList <ErrorRateElement> errorsTopFive;
+	private ArrayList <ErrorStatsElement> errorsTopFive;
 	
 
 	public int getUsersQuantity() {
@@ -44,16 +44,16 @@ public class Stats {
 	public void setProjectsQuantity(int projectsQuantity) {
 		this.projectsQuantity = projectsQuantity;
 	}
-	public ArrayList<ErrorRateElement> getErrorsRateElement() {
+	public ArrayList<ErrorStatsElement> getErrorsRateElement() {
 		return errorsRateElement;
 	}
-	public void setErrorsRateElement(ArrayList<ErrorRateElement> errorsRateElement) {
+	public void setErrorsRateElement(ArrayList<ErrorStatsElement> errorsRateElement) {
 		this.errorsRateElement = errorsRateElement;
 	}
-	public ArrayList<ErrorRateElement> getErrorsTopFive() {
+	public ArrayList<ErrorStatsElement> getErrorsTopFive() {
 		return errorsTopFive;
 	}
-	public void setErrorsTopFive(ArrayList<ErrorRateElement> errorsTopFive) {
+	public void setErrorsTopFive(ArrayList<ErrorStatsElement> errorsTopFive) {
 		this.errorsTopFive = errorsTopFive;
 	}
 	

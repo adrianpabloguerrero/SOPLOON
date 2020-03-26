@@ -2,7 +2,7 @@ package ar.edu.unicen.isistan.si.soploon.server.models;
 
 import com.google.gson.annotations.Expose;
 
-public class ErrorRateElement {
+public class ErrorStatsElement {
 
 	@Expose
 	private String name;
