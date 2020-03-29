@@ -126,7 +126,11 @@ const style = makeStyles(theme => ({
   },
   rowDashboard: {
     display: "flex",
-    width: "100%"
+    width: "100%",
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   },
   smallPaper: {
     marginLeft: theme.spacing(1),
@@ -138,13 +142,11 @@ const style = makeStyles(theme => ({
     alignItems: "flex-start"
   },
   chartTRE: {
-    marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: "40em"
   },
   errorsRate: {
-    marginTop: theme.spacing(3),
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     width: "100%"
@@ -159,7 +161,8 @@ const style = makeStyles(theme => ({
   },
   titlePaper: {
     fontWeight: "bold",
-    fontSize: "20px"
+    fontSize: "20px",
+    marginBottom: theme.spacing(2)
   },
   numberPaper: {
     fontWeight: "bold",
@@ -170,23 +173,30 @@ const style = makeStyles(theme => ({
     fontSize: 90
   },
   topErrors: {
-    marginTop: theme.spacing(3),
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
-    width: "30%"
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    width: "35%"
+  },
+  lastUse: {
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    display: "flex",
+    flexDirection: "column",
+    width: "35%"
   },
   rowErrors: {
     display: "flex",
     justifyContent: "space-between",
-    marginTop: theme.spacing(2),
     marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   headerTopErrors: {
     display: "flex",
     justifyContent: "space-between",
-    marginTop: theme.spacing(2),
-    marginTop: theme.spacing(2),
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     fontWeight: "bold"

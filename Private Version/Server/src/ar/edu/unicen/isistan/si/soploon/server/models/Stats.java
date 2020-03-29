@@ -18,6 +18,10 @@ public class Stats {
 	private ArrayList <ErrorStatsElement> errorsRateElement;
 	@Expose 
 	private ArrayList <ErrorStatsElement> errorsTopFive;
+	@Expose
+	private ArrayList <ErrorStatsElement> acumCorrections;
+	@Expose
+	private LastUse lastUse;
 	
 
 	public int getUsersQuantity() {
@@ -55,6 +59,18 @@ public class Stats {
 	}
 	public void setErrorsTopFive(ArrayList<ErrorStatsElement> errorsTopFive) {
 		this.errorsTopFive = errorsTopFive;
+	}
+	public ArrayList<ErrorStatsElement> getAcumCorrections() {
+		return acumCorrections;
+	}
+	public void setAcumCorrections(ArrayList<ErrorStatsElement> acumCorrections) {
+		this.acumCorrections = acumCorrections;
+	}
+	public LastUse getLastUse() {
+		return lastUse;
+	}
+	public void setLastUse(LastUse lastUse) {
+		this.lastUse = lastUse;
 	}
 	
 }

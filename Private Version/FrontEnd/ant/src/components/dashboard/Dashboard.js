@@ -5,9 +5,11 @@ import GroupIcon from "@material-ui/icons/Group";
 import ErrorIcon from "@material-ui/icons/Error";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FolderIcon from "@material-ui/icons/Folder";
+import AcumCorrections from "./AcumCorrections";
 import TRE from "./TRE";
 import ErrorsRate from "./ErrorsRate";
 import TopErrors from "./TopErrors";
+import LastUse from "./LastUse";
 import * as moment from "moment";
 import Axios from "axios";
 
@@ -15,7 +17,7 @@ const dateToDefault = () => {
   return moment(new Date()).utcOffset("GMT-03:00").unix() * 1000;
 };
 const dateFromDefault = () => {
-  return moment(dateToDefault()).subtract(2, "years").unix() * 1000;
+  return moment(dateToDefault()).subtract(1, "years").unix() * 1000;
 };
 
 export default function Dashboard() {
@@ -27,7 +29,9 @@ export default function Dashboard() {
     correctionsQuantity: "",
     projectsQuantity: "",
     errorsRateElement: [],
-    errorsTopFive: []
+    errorsTopFive: [],
+    acumCorrections: [],
+    lastUse: []
   });
 
   const loadStats = () => {
@@ -78,7 +82,12 @@ export default function Dashboard() {
         <ErrorsRate data={data.errorsRateElement} />
       </div>
       <div className={style.rowDashboard}>
+        <AcumCorrections data={data.acumCorrections} />
         <TopErrors data={data.errorsTopFive} />
+      </div>
+      <div className={style.rowDashboard}>
+        <LastUse data={data.lastUse} />
+        <AcumCorrections data={data.acumCorrections} />
       </div>
     </div>
   );

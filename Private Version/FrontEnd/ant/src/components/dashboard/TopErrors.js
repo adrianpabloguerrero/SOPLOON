@@ -8,20 +8,18 @@ export default function TopErrors({ data }) {
   return (
     <Paper className={style.topErrors}>
       <div className={style.titlePaper}> Errores más frecuentes</div>
-      <div>
-        <div className={style.headerTopErrors}>
-          <div> Nombre </div>
-          <div> Ocurrencias </div>
-        </div>
-        {data.map((dato, index) => (
-          <div className={style.rowErrors}>
-            <div>
-              {index + 1} - {dato.name}
-            </div>
-            <div>{dato.y}</div>
-          </div>
-        ))}
+      <div className={style.headerTopErrors}>
+        <div> Nombre </div>
+        <div> Ocurrencias </div>
       </div>
+      {data.map((dato, index) => (
+        <div key={index} className={style.rowErrors}>
+          <div>
+            {index + 1} - {dato.name}
+          </div>
+          <div>{dato.y}</div>
+        </div>
+      ))}
     </Paper>
   );
 }
