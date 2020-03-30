@@ -18,7 +18,7 @@ public class StatsDao {
 	private static final String TABLE_USER = " soploon.user ";
 	private static final String VIEW_COMPLETE_ERROR = " soploon.complete_error ";
 	private static final String SELECT_COUNT_USER = "SELECT COUNT (DISTINCT id_user) FROM ";
-	private static final String SELECT_COUNT_PROJECT = "SELECT COUNT (DISTINCT id_project) FROM ";
+	private static final String SELECT_COUNT_PROJECT = "SELECT COUNT (DISTINCT(id_project,id_user)) FROM ";
 	private static final String SELECT_COUNT = "SELECT COUNT (*) FROM ";
 	private static final String CONDITION_DATE = " date BETWEEN ? AND ? ";
 	private static final String CONDITION_ID = " id_project = ? AND id_user = ?  AND date=? ";
