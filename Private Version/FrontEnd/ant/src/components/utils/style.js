@@ -152,17 +152,26 @@ const style = makeStyles(theme => ({
     width: "100%"
   },
   ColumnTextSmallPaper: {
-    width: "60%" // is 50% of container width
+    display: "flex",
+    flexDirection: "column",
+    width: "60%",
+    alignItems: "center",
+    justifyContent: "center" // is 50% of container width
   },
   ColumnIconSmallPaper: {
     width: "40%",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    flexDirection: "column",
+    display: "flex"
   },
   titlePaper: {
+    marginTop: theme.spacing(1),
     fontWeight: "bold",
     fontSize: "20px",
-    marginBottom: theme.spacing(2)
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center"
   },
   numberPaper: {
     fontWeight: "bold",
@@ -170,7 +179,7 @@ const style = makeStyles(theme => ({
   },
   iconSmallPaper: {
     color: "#fdb039",
-    fontSize: 90
+    fontSize: 100
   },
   topErrors: {
     marginRight: theme.spacing(1),
