@@ -9,6 +9,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import ar.edu.unicen.isistan.si.soploon.server.providers.CORSFilter;
 import ar.edu.unicen.isistan.si.soploon.server.providers.GsonServerProvider;
+import ar.edu.unicen.isistan.si.soploon.server.providers.AuthenticationFilter;
 
 @ApplicationPath("/api")
 public class SoploonApplication extends ResourceConfig {
@@ -19,6 +20,7 @@ public class SoploonApplication extends ResourceConfig {
 	        this.register(CORSFilter.class);
 	        this.register(GsonServerProvider.class);
 	        //this.register(ExceptionCatcher.class);
+	        this.register(AuthenticationFilter.class);    
 	        this.register(SoploonManager.class);    
 	    }
 }

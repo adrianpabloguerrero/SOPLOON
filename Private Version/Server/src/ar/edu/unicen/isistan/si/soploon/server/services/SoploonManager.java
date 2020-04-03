@@ -6,6 +6,7 @@ import javax.ws.rs.core.Application;
 import org.glassfish.hk2.api.Immediate;
 
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
+import ar.edu.unicen.isistan.si.soploon.server.services.resources.AuthenticationResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.ErrorQueryResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.PredicateResource;
 import ar.edu.unicen.isistan.si.soploon.server.services.resources.RuleResource;
@@ -27,6 +28,7 @@ public class SoploonManager extends Application {
 //	private CorrectionResource correctionResource;
 	private ErrorQueryResource errorQueryResource;
 	private StatsResource statsResource;
+	private AuthenticationResource authenticationResource;
 	private Database database;
 
 	@PostConstruct
@@ -40,6 +42,7 @@ public class SoploonManager extends Application {
 //		this.correctionResource = new CorrectionResource(this.database);
 		this.errorQueryResource = new ErrorQueryResource (this.database);
 		this.statsResource = new StatsResource (this.database);
+		this.authenticationResource = new AuthenticationResource (this.database);
 	}
 
 	@Path("/rules/")
@@ -70,6 +73,11 @@ public class SoploonManager extends Application {
 	@Path("/stats/")
 	public StatsResource getStatsResource () {
 		return this.statsResource;
+	}
+	
+	@Path("/authentication")
+	public AuthenticationResource getAuthenticationResource () {
+		return this.authenticationResource;
 	}
 	
 	/*@Path("/correction/")
