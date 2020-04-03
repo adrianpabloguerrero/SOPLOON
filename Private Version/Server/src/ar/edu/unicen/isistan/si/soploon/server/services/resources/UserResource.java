@@ -2,6 +2,7 @@ package ar.edu.unicen.isistan.si.soploon.server.services.resources;
 
 import java.util.ArrayList;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.UserDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
 public class UserResource {
 
@@ -60,6 +62,7 @@ public class UserResource {
 	}
 
 	@GET
+    @Secured
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers() throws Exception {
 		ArrayList<User> users = this.dao.getUsers();

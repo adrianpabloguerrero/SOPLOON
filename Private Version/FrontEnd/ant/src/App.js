@@ -1,13 +1,17 @@
 import React from "react";
-import "./App.css";
-import Barra from "./Barra.js";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Login from "./components/login/login";
+import Barra from "./Barra";
 
-export const Context = React.createContext();
-
-const App = () => (
-  <div id="container" className="App">
-    <Barra />
-  </div>
-);
-
-export default App;
+export default function App() {
+  return (
+    <div className="app-routes">
+      <BrowserRouter>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/index" component={Barra} />
+        </Switch>
+      </BrowserRouter>
+    </div>
+  );
+}

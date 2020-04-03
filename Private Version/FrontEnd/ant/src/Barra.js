@@ -30,6 +30,7 @@ import Predicates from "./components/predicates/Predicates.js";
 import Errors from "./components/errors/Errors.js";
 import Explorer from "./components/explorer/explorer.js";
 import Dashboard from "./components/dashboard/Dashboard.js";
+import Sigin from "./components/login/login.js";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -219,7 +220,7 @@ export default function MiniDrawer() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/" render={() => <Dashboard />} />
+            <Route path="/" render={() => <Dashboard />} />
             <Route
               path="/users"
               render={() => (

@@ -17,7 +17,7 @@ const dateToDefault = () => {
   return moment(new Date()).utcOffset("GMT-03:00").unix() * 1000;
 };
 const dateFromDefault = () => {
-  return moment(dateToDefault()).subtract(1, "years").unix() * 1000;
+  return moment(dateToDefault()).subtract(2, "years").unix() * 1000;
 };
 
 export default function Dashboard() {
