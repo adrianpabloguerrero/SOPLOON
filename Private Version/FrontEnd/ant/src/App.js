@@ -4,18 +4,15 @@ import Login from "./components/login/login";
 import auth from "./components/utils/Auth.js";
 import PrivateRouter from "./components/utils/PrivateRouter.js";
 import Barra from "./Barra";
+import { Result } from "antd";
 
 export default function App() {
-  useEffect(() => {
-    localStorage.clear();
-  }, []);
-
   return (
     <div className="app-routes">
       <BrowserRouter>
         <Switch>
           <Route exact path="/login" component={Login} />
-          <PrivateRouter user={auth} path="/" component={Barra} />
+          <PrivateRouter path="/" component={Barra} />
         </Switch>
       </BrowserRouter>
     </div>

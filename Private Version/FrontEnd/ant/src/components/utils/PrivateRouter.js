@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Redirect, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
 class PrivateRouter extends Component {
   render() {
-    const { user, component, ...rest } = this.props;
-    return user.isAuthenticated() ? (
+    const { component, ...rest } = this.props;
+    let user = JSON.parse(localStorage.getItem("auth"));
+    return user != null && user.authenticated ? (
       <Route component={component} {...rest} />
     ) : (
       <Redirect

@@ -74,16 +74,10 @@ export default function Login({ history }) {
       config
     )
       .then(response => {
-        localStorage.setItem(
-          "login",
-          JSON.stringify({
-            login: true,
-            token: response.data
-          })
-        );
         Axios.defaults.headers.common["Authorization"] =
           "Bearer " + response.data;
         auth.login();
+        localStorage.setItem("auth", JSON.stringify(auth));
         history.push("/");
       })
       .catch(function (error) {

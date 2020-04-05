@@ -32,6 +32,7 @@ import Explorer from "./components/explorer/explorer.js";
 import Dashboard from "./components/dashboard/Dashboard.js";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
+import auth from "./components/utils/Auth";
 
 const drawerWidth = 240;
 
@@ -117,7 +118,8 @@ export default function MiniDrawer({ history }) {
   };
 
   const handleLogOut = () => {
-    localStorage.clear();
+    auth.logout();
+    localStorage.setItem("auth", JSON.stringify(auth));
     history.push("/login");
   };
 
