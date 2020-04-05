@@ -1,19 +1,14 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { ColorButton } from "../utils/ColorButton";
 import Soploon from "../utils/images/soploon.png";
+import auth from "../utils/Auth.js";
 import Axios from "axios";
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +31,9 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     width: "70px"
+  },
+  error: {
+    color: "red"
   }
 }));
 
@@ -54,7 +52,7 @@ function Copyright() {
 
 export default function Login({ history }) {
   const classes = useStyles();
-  const [logged, setLogged] = React.useState(false);
+  const [error, setError] = React.useState(false);
   const [data, setData] = React.useState({
     userName: "",
     password: ""
@@ -83,10 +81,13 @@ export default function Login({ history }) {
             token: response.data
           })
         );
-        history.push("/index");
+        Axios.defaults.headers.common["Authorization"] =
+          "Bearer " + response.data;
+        auth.login();
+        history.push("/");
       })
       .catch(function (error) {
-        console.log(error);
+        setError(true);
       });
   };
 
@@ -127,17 +128,23 @@ export default function Login({ history }) {
             id="password"
             onChange={handleChange}
           />
-          <ColorButton
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            className={classes.submit}
-          >
-            Ingresar
-          </ColorButton>
         </form>
+        {error && (
+          <Typography className={classes.error}>
+            Usuario y/o contraseña incorrecta
+          </Typography>
+        )}
+        <ColorButton
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          className={classes.submit}
+        >
+          Ingresar
+        </ColorButton>
       </div>
+
       <Box mt={8}>
         <Copyright />
       </Box>

@@ -62,7 +62,6 @@ public class UserResource {
 	}
 
 	@GET
-    @Secured
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers() throws Exception {
 		ArrayList<User> users = this.dao.getUsers();

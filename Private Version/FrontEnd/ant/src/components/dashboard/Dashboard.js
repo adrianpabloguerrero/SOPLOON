@@ -6,7 +6,6 @@ import ErrorIcon from "@material-ui/icons/Error";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FolderIcon from "@material-ui/icons/Folder";
 import AcumCorrections from "./AcumCorrections";
-import TRE from "./TRE";
 import ErrorsRate from "./ErrorsRate";
 import TopErrors from "./TopErrors";
 import LastUse from "./LastUse";
@@ -34,24 +33,24 @@ export default function Dashboard() {
     lastUse: []
   });
 
-  const loadStats = () => {
+  useEffect(() => {
+    let source = Axios.CancelToken.source();
+
     const params = {
       date_start: dateFromDefault(),
       date_end: dateToDefault()
     };
 
-    Axios.get("http://localhost:8080/soploon/api/stats", { params })
+    Axios.get("http://localhost:8080/soploon/api/stats", {
+      params,
+      cancelToken: source.token
+    })
       .then(response => {
-        console.log(response.data);
         setData(response.data);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+      .catch(function (error) {});
 
-  useEffect(() => {
-    loadStats();
+    return () => source.cancel();
   }, []);
 
   return (

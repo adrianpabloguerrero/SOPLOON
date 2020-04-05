@@ -197,9 +197,10 @@ export default function Explorer() {
 
   useEffect(() => {
     //ACA DEJO EL OBJETO ERROR! (location.state)
+    //ACOMODAR EL AXIOS CANCEL TOKEN CUANDO SE TERMINE ESTA CLASE
     console.log(location.state);
     getUsers();
-  }, []);
+  }, [location]);
 
   return (
     <div>

@@ -6,6 +6,7 @@ import { Switch, Route, useRouteMatch, withRouter } from "react-router-dom";
 
 function Rules({ history }) {
   let { path, url } = useRouteMatch();
+
   const [oldData, setOldData] = React.useState({
     id: "",
     version: "",
@@ -174,7 +175,11 @@ function Rules({ history }) {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/soploon/api/rules/")
+    let source = Axios.CancelToken.source();
+
+    Axios.get("http://localhost:8080/soploon/api/rules/", {
+      cancelToken: source.token
+    })
       .then(response => {
         let data = [];
         var result = processData(response.data);
@@ -183,11 +188,9 @@ function Rules({ history }) {
         });
         setEntries({ data: data });
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch(function (thrown) {});
+    return () => source.cancel();
   }, []);
-  console.log(`${path}/form`);
   return (
     <Switch>
       <Route exact path={path}>

@@ -30,7 +30,7 @@ import Predicates from "./components/predicates/Predicates.js";
 import Errors from "./components/errors/Errors.js";
 import Explorer from "./components/explorer/explorer.js";
 import Dashboard from "./components/dashboard/Dashboard.js";
-import Sigin from "./components/login/login.js";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -107,13 +107,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer({ history }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
+  };
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    history.push("/login");
   };
 
   const handleDrawerClose = () => {
@@ -172,15 +177,13 @@ export default function MiniDrawer() {
           </div>
           <Divider />
           <List>
-            <ListItem button component={Link} to={"/home"}>
+            <ListItem button component={Link} to={"/"}>
               <ListItemIcon>
                 <TrendingUpIcon />
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
-          </List>
-          <Divider />
-          <List>
+            <Divider />
             <ListItem button component={Link} to={"/users"}>
               <ListItemIcon>
                 <PersonIcon />
@@ -199,9 +202,7 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary="Predicados" />
             </ListItem>
-          </List>
-          <Divider />
-          <List>
+            <Divider />
             <ListItem button component={Link} to={"/explorer"}>
               <ListItemIcon>
                 <FolderIcon />
@@ -214,73 +215,43 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary="Errores" />
             </ListItem>
+            <Divider />
+            <ListItem button onClick={handleLogOut}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Log out" />
+            </ListItem>
           </List>
-          <Divider />
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route path="/" render={() => <Dashboard />} />
-            <Route
-              path="/users"
-              render={() => (
-                <div>
-                  {" "}
-                  <TableUsers />
-                </div>
-              )}
-            />
+            <Route path="/users">
+              <TableUsers />
+            </Route>
             <Route path="/rules">
               <Rules />
             </Route>
-            <Route
-              path="/predicates"
-              render={() => (
-                <div>
-                  {" "}
-                  <Predicates />
-                </div>
-              )}
-            />
-            <Route
-              path="/explorer"
-              render={() => (
-                <div>
-                  {" "}
-                  <Explorer />
-                </div>
-              )}
-            />
-            <Route
-              path="/errors"
-              render={() => (
-                <div>
-                  {" "}
-                  <Errors />
-                </div>
-              )}
-            />
-            <Route
-              path="/home"
-              render={() => (
-                <div>
-                  {" "}
-                  <Dashboard />
-                </div>
-              )}
-            />
-            <Route
-              render={() => (
-                <div>
-                  {" "}
-                  <Result
-                    status="404"
-                    title="404"
-                    subTitle="La página que intenta visitar no existe"
-                  />{" "}
-                </div>
-              )}
-            />
+            <Route path="/predicates">
+              <Predicates />
+            </Route>
+            <Route path="/explorer">
+              <Explorer />
+            </Route>
+            <Route path="/errors">
+              <Errors />
+            </Route>
+            <Route exact path="/">
+              <Dashboard />
+            </Route>
+            <Route>
+              <Result
+                status="404"
+                title="404"
+                subTitle="La página que intenta visitar no existe"
+              />
+            </Route>
           </Switch>
         </main>
       </BrowserRouter>

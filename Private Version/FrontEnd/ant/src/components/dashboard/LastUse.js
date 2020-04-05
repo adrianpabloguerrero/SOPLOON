@@ -5,7 +5,6 @@ import * as moment from "moment";
 
 export default function lastUse({ data }) {
   const style = Style();
-  console.log(data);
   return (
     <Paper className={style.lastUse}>
       <div className={style.titlePaper}> Ultima corrección</div>

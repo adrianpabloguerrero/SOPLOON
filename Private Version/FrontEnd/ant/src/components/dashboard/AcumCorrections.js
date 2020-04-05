@@ -5,14 +5,13 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import ChartOptions from "../utils/ChartOptions.js";
 import exporting from "highcharts/modules/exporting";
-import * as moment from "moment";
 exporting(Highcharts);
 
 ChartOptions(Highcharts);
 
 const processData = data => {
   let out = [];
-  data.map(element => {
+  data.forEach(element => {
     let newElement = [];
     newElement[0] = Date.parse(element.name);
     newElement[1] = element.y;

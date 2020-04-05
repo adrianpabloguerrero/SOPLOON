@@ -4,7 +4,6 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Axios from "axios";
 import { useHistory } from "react-router-dom";
-import { Context } from "../../App";
 
 let nameClasses = error => {
   let out = "";
