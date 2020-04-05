@@ -12,7 +12,9 @@ import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.StatsDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.LastUse;
 import ar.edu.unicen.isistan.si.soploon.server.models.Stats;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
+@Secured
 public class StatsResource {
 	
 	private Database database;

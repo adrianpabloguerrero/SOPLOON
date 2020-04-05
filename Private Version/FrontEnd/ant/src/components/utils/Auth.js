@@ -1,10 +1,12 @@
 class Auth {
   constructor() {
     this.authenticated = false;
+    this.token = "";
   }
 
-  login() {
+  login(token) {
     this.authenticated = true;
+    this.token = token;
   }
 
   logout() {

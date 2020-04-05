@@ -20,7 +20,9 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.PredicateDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.Predicate;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
+@Secured
 public class PredicateResource {
 
 	private Database database;

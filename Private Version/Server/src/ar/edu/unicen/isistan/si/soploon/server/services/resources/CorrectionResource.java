@@ -18,7 +18,9 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.CorrectionDao;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.models.Correction;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
+@Secured
 public class CorrectionResource {
 
 	private Database database;

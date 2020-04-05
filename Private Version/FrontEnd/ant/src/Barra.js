@@ -33,6 +33,7 @@ import Dashboard from "./components/dashboard/Dashboard.js";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import auth from "./components/utils/Auth";
+import Axios from "axios";
 
 const drawerWidth = 240;
 
@@ -120,6 +121,7 @@ export default function MiniDrawer({ history }) {
   const handleLogOut = () => {
     auth.logout();
     localStorage.setItem("auth", JSON.stringify(auth));
+    Axios.defaults.headers.common["Authorization"] = "";
     history.push("/login");
   };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
@@ -76,7 +76,7 @@ export default function Login({ history }) {
       .then(response => {
         Axios.defaults.headers.common["Authorization"] =
           "Bearer " + response.data;
-        auth.login();
+        auth.login(response.data);
         localStorage.setItem("auth", JSON.stringify(auth));
         history.push("/");
       })
@@ -89,6 +89,13 @@ export default function Login({ history }) {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
+
+  useEffect(() => {
+    let user = JSON.parse(localStorage.getItem("auth"));
+    if (user != null && user.authenticated) {
+      history.push("/");
+    }
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">

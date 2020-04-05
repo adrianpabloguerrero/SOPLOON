@@ -1,12 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./components/login/login";
-import auth from "./components/utils/Auth.js";
 import PrivateRouter from "./components/utils/PrivateRouter.js";
 import Barra from "./Barra";
-import { Result } from "antd";
+import Axios from "axios";
 
 export default function App() {
+  const cargarToken = () => {
+    console.log("seteando token");
+    let user = JSON.parse(localStorage.getItem("auth"));
+    if (user != null && user.authenticated) {
+      Axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+      console.log(user.token);
+    }
+  };
+
+  cargarToken();
+
   return (
     <div className="app-routes">
       <BrowserRouter>

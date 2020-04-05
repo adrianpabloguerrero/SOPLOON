@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Redirect, Route } from "react-router-dom";
-import { connect } from "react-redux";
 
 class PrivateRouter extends Component {
   render() {

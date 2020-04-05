@@ -18,10 +18,13 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.RuleDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+
+@Secured
 public class RuleResource {
 
 	private Database database;

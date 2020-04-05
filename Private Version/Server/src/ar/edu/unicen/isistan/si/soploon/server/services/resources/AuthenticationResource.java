@@ -57,7 +57,7 @@ public class AuthenticationResource {
         // Issue a token (can be a random String persisted to a database or a JWT token)
         // The issued token must be associated to a user
         // Return the issued token
-    	String key = "passKey";
+    	String key = "SoploonKey";
     	String token = Jwts.builder()
     					.signWith(SignatureAlgorithm.HS512, key)
     					.setSubject(username)

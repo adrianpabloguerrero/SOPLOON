@@ -22,6 +22,7 @@ import ar.edu.unicen.isistan.si.soploon.server.database.UserDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
+@Secured
 public class UserResource {
 
 	private Database database;

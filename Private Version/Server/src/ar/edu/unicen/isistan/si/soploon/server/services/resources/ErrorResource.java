@@ -19,7 +19,9 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.ErrorDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.Error;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
+@Secured
 public class ErrorResource {
 
 	private Database database;

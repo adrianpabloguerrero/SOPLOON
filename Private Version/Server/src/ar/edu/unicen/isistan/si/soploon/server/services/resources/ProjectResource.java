@@ -18,7 +18,9 @@ import javax.ws.rs.core.Response.Status;
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.ProjectDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.Project;
+import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
+@Secured
 public class ProjectResource {
 
 	private Database database;

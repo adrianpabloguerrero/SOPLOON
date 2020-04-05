@@ -7,6 +7,9 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+
+import io.jsonwebtoken.Jwts;
+
 import javax.ws.rs.Priorities;
 
 @Secured
@@ -14,7 +17,8 @@ import javax.ws.rs.Priorities;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
-    private static final String REALM = "example";
+    private static final String REALM = "Soploon";
+    private static final String KEY = "SoploonKeey";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Override
@@ -67,5 +71,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private void validateToken(String token) throws Exception {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
+    	try {
+    	      Jwts.parser().setSigningKey(KEY).parseClaimsJws(token);
+    	    }
+    	catch (Exception e){
+            throw new Exception ("Usuario o pass incorrecta");
+    	}	
     }
 }
