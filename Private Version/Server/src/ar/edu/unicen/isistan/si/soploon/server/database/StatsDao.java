@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ar.edu.unicen.isistan.si.soploon.server.models.ErrorStatsElement;
-import ar.edu.unicen.isistan.si.soploon.server.models.ErrorWS;
 import ar.edu.unicen.isistan.si.soploon.server.models.LastUse;
 
 public class StatsDao {

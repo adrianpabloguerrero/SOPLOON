@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>Soploon</display-name>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>Soploon</display-name>
+	<context-param>
+		<description>Database path</description>
+		<param-name>database_path</param-name>
+		<param-value>jdbc:postgresql://192.168.2.26:5432/soploon</param-value>
+	</context-param>
+	<context-param>
+		<description>Database user</description>
+		<param-name>database_user</param-name>
+		<param-value>soploon_writer</param-value>
+	</context-param>
+	<context-param>
+		<description>Database password</description>
+		<param-name>database_password</param-name>
+		<param-value>soploonwritererer</param-value>
+	</context-param>
+	<context-param>
+		<description>JWT Secret</description>
+		<param-name>jwt_secret</param-name>
+		<param-value>5f3e2566ed756fbeb68d9c0fa6852c3c59206578ba1acdee6a185e1faa3397ed</param-value>
+	</context-param>
 </web-app>

@@ -63,7 +63,7 @@ export default function Explorer() {
   };
 
   const getUsers = () => {
-    let url = "http://localhost:8080/soploon/api/users/";
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/users/";
 
     const source = Axios.CancelToken.source();
 
@@ -84,8 +84,7 @@ export default function Explorer() {
   };
 
   const getProjects = user => {
-    let url =
-      "http://localhost:8080/soploon/api/users/" + user.id + "/projects/";
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/users/" + user.id + "/projects/";
     const source = Axios.CancelToken.source();
 
     Axios.get(url, { cancelToken: source.token })
@@ -105,8 +104,7 @@ export default function Explorer() {
   };
 
   const getCorrections = project => {
-    let url =
-      "http://localhost:8080/soploon/api/users/" +
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/users/" +
       project.userId +
       "/projects/" +
       project.id +
@@ -131,8 +129,7 @@ export default function Explorer() {
 
   const getCorrection = correction => {
     const { userId, projectId, date } = correction;
-    let url =
-      "http://localhost:8080/soploon/api/users/" +
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/users/" +
       userId +
       "/projects/" +
       projectId +

@@ -18,7 +18,7 @@ export default function MaterialTableDemo() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/soploon/api/users")
+      .get("https://si.isistan.unicen.edu.ar/soploon/api/users")
       .then(response => {
         var dateFormat = require("dateformat");
 
@@ -103,7 +103,7 @@ export default function MaterialTableDemo() {
               };
               console.log(newProject);
               axios.put(
-                `http://localhost:8080/soploon/api/users/${oldData.id}`,
+                `https://si.isistan.unicen.edu.ar/soploon/api/users/${oldData.id}`,
                 newProject
               );
               setEntries({ ...entries, data });

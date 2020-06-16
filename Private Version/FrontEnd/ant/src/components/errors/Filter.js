@@ -74,7 +74,7 @@ class Filter extends React.Component {
         moment(dateTo).add(1, "days").subtract(1, "second").unix() * 1000
     };
     let data = [];
-    Axios.get("http://localhost:8080/soploon/api/errors", { params })
+    Axios.get("https://si.isistan.unicen.edu.ar/soploon/api/errors", { params })
       .then(response => {
         Object.entries(response.data).forEach(keyvalue => {
           data.push(keyvalue[1]);

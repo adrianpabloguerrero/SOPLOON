@@ -29,7 +29,7 @@ function Predicates({ history }) {
     predicadoSeleccionado.activated = newValue;
 
     let url =
-      "http://localhost:8080/soploon/api/predicates/" +
+      "https://si.isistan.unicen.edu.ar/soploon/api/predicates/" +
       predicadoSeleccionado.id;
     Axios.put(url, predicadoSeleccionado)
       .then(response => {
@@ -76,7 +76,7 @@ function Predicates({ history }) {
   };
 
   const guardarEditar = () => {
-    let url = "http://localhost:8080/soploon/api/predicates/" + inputs.id;
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/predicates/" + inputs.id;
     Axios.post(url, inputs)
       .then(response => {
         const data = [...entries.data];
@@ -93,7 +93,7 @@ function Predicates({ history }) {
   };
 
   const guardarNuevoPredicado = () => {
-    let url = "http://localhost:8080/soploon/api/predicates/";
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/predicates/";
     Axios.post(url, inputs)
       .then(response => {
         var predicateObject = {};
@@ -177,7 +177,7 @@ function Predicates({ history }) {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/soploon/api/predicates/")
+    Axios.get("https://si.isistan.unicen.edu.ar/soploon/api/predicates/")
       .then(response => {
         let data = [];
         var result = processData(response.data);

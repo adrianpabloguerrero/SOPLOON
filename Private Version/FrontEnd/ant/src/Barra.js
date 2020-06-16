@@ -156,7 +156,7 @@ export default function MiniDrawer({ history }) {
           <img src={Soploon} alt="Soploon" className={classes.image} />
         </Toolbar>
       </AppBar>
-      <BrowserRouter>
+      <BrowserRouter basename={'/soploon/admin'}>
         <Drawer
           variant="permanent"
           className={clsx(classes.drawer, {
@@ -231,19 +231,19 @@ export default function MiniDrawer({ history }) {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route path="/users">
+            <Route exact path="/users">
               <TableUsers />
             </Route>
-            <Route path="/rules">
+            <Route exact path="/rules">
               <Rules />
             </Route>
-            <Route path="/predicates">
+            <Route exact path="/predicates">
               <Predicates />
             </Route>
-            <Route path="/explorer">
+            <Route exact path="/explorer">
               <Explorer />
             </Route>
-            <Route path="/errors">
+            <Route exact path="/errors">
               <Errors />
             </Route>
             <Route exact path="/">

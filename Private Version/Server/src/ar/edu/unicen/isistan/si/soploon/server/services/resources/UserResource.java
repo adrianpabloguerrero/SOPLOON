@@ -2,7 +2,6 @@ package ar.edu.unicen.isistan.si.soploon.server.services.resources;
 
 import java.util.ArrayList;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

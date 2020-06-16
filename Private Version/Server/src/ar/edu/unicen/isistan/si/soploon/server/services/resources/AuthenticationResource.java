@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,16 +15,16 @@ import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-
-
 public class AuthenticationResource {
 	
 	Database database;
 	AuthenticationDao dao;
+	private String key;
 	
-	public AuthenticationResource (Database database) {
+	public AuthenticationResource (Database database, String key) {
 		this.database = database;
 		this.dao = new AuthenticationDao(this.database);
+		this.key = key;
 	}
 
     @POST
@@ -57,9 +56,8 @@ public class AuthenticationResource {
         // Issue a token (can be a random String persisted to a database or a JWT token)
         // The issued token must be associated to a user
         // Return the issued token
-    	String key = "SoploonKey";
     	String token = Jwts.builder()
-    					.signWith(SignatureAlgorithm.HS512, key)
+    					.signWith(SignatureAlgorithm.HS256, this.key)
     					.setSubject(username)
     					.setIssuedAt(new Date(System.currentTimeMillis()))
     					.setExpiration(new Date(System.currentTimeMillis() + 900000))

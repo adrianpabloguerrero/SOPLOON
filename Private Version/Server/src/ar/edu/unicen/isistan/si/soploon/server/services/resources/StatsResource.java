@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response;
 
 import ar.edu.unicen.isistan.si.soploon.server.database.Database;
 import ar.edu.unicen.isistan.si.soploon.server.database.StatsDao;
-import ar.edu.unicen.isistan.si.soploon.server.models.LastUse;
 import ar.edu.unicen.isistan.si.soploon.server.models.Stats;
 import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 

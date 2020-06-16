@@ -18,7 +18,7 @@ import javax.ws.rs.Priorities;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     private static final String REALM = "Soploon";
-    private static final String KEY = "SoploonKeey";
+    public static String KEY;
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Override

@@ -68,15 +68,17 @@ export default function Login({ history }) {
     params.append("userName", data.userName);
     params.append("password", data.password);
 
+	var credentials = { "userName": data.userName, "password": data.password }
+	
     Axios.post(
-      "http://localhost:8080/soploon/api/authentication/",
+      "https://si.isistan.unicen.edu.ar/soploon/api/authentication/",
       params,
       config
     )
       .then(response => {
         Axios.defaults.headers.common["Authorization"] =
           "Bearer " + response.data;
-        auth.login(response.data);
+        auth.login(credentials,response.data);
         localStorage.setItem("auth", JSON.stringify(auth));
         history.push("/");
       })

@@ -30,7 +30,7 @@ function Rules({ history }) {
     var newValue = !reglaSeleccionada.activated;
     reglaSeleccionada.activated = newValue;
 
-    let url = "http://localhost:8080/soploon/api/rules/" + reglaSeleccionada.id;
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/rules/" + reglaSeleccionada.id;
     Axios.put(url, reglaSeleccionada)
       .then(response => {
         const data = [...entries.data];
@@ -73,7 +73,7 @@ function Rules({ history }) {
   };
 
   const guardarEditar = () => {
-    let url = "http://localhost:8080/soploon/api/rules/" + inputs.id;
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/rules/" + inputs.id;
     Axios.post(url, inputs)
       .then(response => {
         const data = [...entries.data];
@@ -90,7 +90,7 @@ function Rules({ history }) {
   };
 
   const guardarNuevaRegla = () => {
-    let url = "http://localhost:8080/soploon/api/rules/";
+    let url = "https://si.isistan.unicen.edu.ar/soploon/api/rules/";
     Axios.post(url, inputs)
       .then(response => {
         var ruleObject = {};
@@ -177,7 +177,7 @@ function Rules({ history }) {
   useEffect(() => {
     let source = Axios.CancelToken.source();
 
-    Axios.get("http://localhost:8080/soploon/api/rules/", {
+    Axios.get("https://si.isistan.unicen.edu.ar/soploon/api/rules/", {
       cancelToken: source.token
     })
       .then(response => {
