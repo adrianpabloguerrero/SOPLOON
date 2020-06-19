@@ -43,8 +43,7 @@ public class RuleDao {
 		args[4] = rule.getCode();
 		args[5] = rule.getActivated();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -57,17 +56,12 @@ public class RuleDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
+		} 
 	}
 
 	public Rule getRule(int id) throws SQLException {
-		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Rule rule = this.readRow(result);
@@ -77,19 +71,13 @@ public class RuleDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public ArrayList<Rule> getRules() throws SQLException {
 		ArrayList<Rule> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_RULES)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SELECT_RULES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = this.readRow(result);
@@ -99,10 +87,6 @@ public class RuleDao {
 		}
 		catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
@@ -144,18 +128,14 @@ public class RuleDao {
 			throw e;   
 		}finally {
 			connection.setAutoCommit(true);
-			if (connection != null) {
-				connection.close();
-			}
+			connection.close();	
 		}
 	}
 
 	public ArrayList<Rule> getRuleVersions(int id) throws SQLException {
 		ArrayList<Rule> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_VERSIONS,id)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_VERSIONS,id)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = this.readRow(result);
@@ -165,10 +145,6 @@ public class RuleDao {
 		}
 		catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 	
@@ -214,9 +190,8 @@ public class RuleDao {
 					throw e;   
 				}finally {
 					connection.setAutoCommit(true);
-					if (connection != null) {
-						connection.close();
-					}
+					connection.close();
+					
 				}
 	}
 

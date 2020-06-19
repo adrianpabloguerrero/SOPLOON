@@ -34,8 +34,7 @@ public class ProjectDao {
 		args[1] = project.getUserId();
 		args[2] = project.getName();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -48,18 +47,13 @@ public class ProjectDao {
 			}
 		} catch (SQLException e) {
 			return false;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public ArrayList<Project> getProjectsByUser(int idUser) throws SQLException {
 		ArrayList<Project> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_USER, idUser)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_USER, idUser)) {
 			ResultSet result = statement.executeQuery();
 
 			while (result.next()) {
@@ -69,17 +63,12 @@ public class ProjectDao {
 			return out;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public Project getProject(int user_id, int project_id) throws SQLException {
-		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, user_id, project_id)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, user_id, project_id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Project project = readRow(result);
@@ -89,18 +78,13 @@ public class ProjectDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public ArrayList<Project> getProjects() throws SQLException {
 		ArrayList<Project> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PROJECTS)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PROJECTS)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Project project = readRow(result);
@@ -109,10 +93,6 @@ public class ProjectDao {
 			return out;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 	

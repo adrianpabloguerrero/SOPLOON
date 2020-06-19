@@ -62,9 +62,7 @@ public class CorrectionDao {
 
 	public ArrayList<Correction> getCorrectionsByProject(int userId, int projectId) throws SQLException {
 		ArrayList<Correction> out = new ArrayList<>();
-
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
+		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Correction correction = this.readReducedRow(result);
@@ -73,17 +71,13 @@ public class CorrectionDao {
 			return out;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public Correction getCorrection(int userId, int projectId, long time) throws SQLException {
-		Connection connection = this.database.connection();
 		
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId, time)) {
+		
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId, time)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next())
  				return this.readRow(result);
@@ -91,10 +85,6 @@ public class CorrectionDao {
 				return null;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 	

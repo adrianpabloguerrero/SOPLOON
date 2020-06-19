@@ -10,7 +10,7 @@ import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.models.User.Role;
 
 public class UserDao {
-	
+
 	private static final String TABLE_NAME = "soploon.user";
 	private static final String COLUMNS = "(creation_date,name,role,password)";
 	private static final String VALUES = "(?,?,?,?)";
@@ -19,7 +19,8 @@ public class UserDao {
 	private static final String CONDITION_ID = " WHERE id = ? ";
 	private static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " " + CONDITION_ID + ";";
 	private static final String SELECT_ALL_USERS = "SELECT * FROM " + TABLE_NAME + ";";
-	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "+ "id = ? , creation_date = ? , name = ? , role = ?, password = ? " + CONDITION_ID;
+	private static final String UPDATE = "UPDATE " + TABLE_NAME + " SET "
+			+ "id = ? , creation_date = ? , name = ? , role = ?, password = ? " + CONDITION_ID;
 
 	private Database database;
 
@@ -34,8 +35,8 @@ public class UserDao {
 		args[2] = user.getRole().toString();
 		args[3] = user.getPassword();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
+		try (Connection connection = this.database.connection();
+				PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -48,17 +49,13 @@ public class UserDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public User getUser(int id) throws SQLException {
-		Connection connection = this.database.connection();
 
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
+		try (Connection connection = this.database.connection();
+				PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				User user = readRow(result);
@@ -68,18 +65,14 @@ public class UserDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public ArrayList<User> getUsers() throws SQLException {
 		ArrayList<User> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_USERS)) {
+		try (Connection connection = this.database.connection();
+				PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_USERS)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				User user = this.readRow(result);
@@ -88,15 +81,10 @@ public class UserDao {
 			return out;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public boolean updateUser(User user) throws SQLException {
-
 
 		Object[] args = new Object[6];
 		args[0] = user.getId();
@@ -106,9 +94,8 @@ public class UserDao {
 		args[4] = user.getPassword();
 		args[5] = user.getId();
 
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
+		try (Connection connection = this.database.connection();
+				PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				return true;
@@ -117,14 +104,10 @@ public class UserDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 
 	}
-	
+
 	private User readRow(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setId(result.getInt(1));
@@ -134,5 +117,5 @@ public class UserDao {
 		user.setPassword(result.getString(5));
 		return user;
 	}
-	
+
 }

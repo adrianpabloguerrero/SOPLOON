@@ -21,9 +21,7 @@ public class AuthenticationDao {
 	}
 	
 	public User getUser(String name) throws SQLException {
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE, name)) {
+		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE, name)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				User user = new User();
@@ -36,10 +34,6 @@ public class AuthenticationDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 	

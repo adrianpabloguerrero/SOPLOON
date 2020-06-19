@@ -17,6 +17,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AuthenticationResource {
 	
+	private static final long ONE_HOUR = 3600000L;
+	
 	Database database;
 	AuthenticationDao dao;
 	private String key;
@@ -30,8 +32,7 @@ public class AuthenticationResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response authenticateUser(@FormParam("userName") String username, 
-                                     @FormParam("password") String password) {
+    public Response authenticateUser(@FormParam("userName") String username, @FormParam("password") String password) {
 
         try {
             // Authenticate the user using the credentials provided
@@ -60,7 +61,7 @@ public class AuthenticationResource {
     					.signWith(SignatureAlgorithm.HS256, this.key)
     					.setSubject(username)
     					.setIssuedAt(new Date(System.currentTimeMillis()))
-    					.setExpiration(new Date(System.currentTimeMillis() + 900000))
+    					.setExpiration(new Date(System.currentTimeMillis() + ONE_HOUR))
     					.compact();
     	return token;
     }

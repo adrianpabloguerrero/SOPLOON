@@ -43,8 +43,7 @@ public class PredicateDao {
 		args[2] = predicate.getCode();
 		args[3] = predicate.getActivated();
 
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -57,18 +56,12 @@ public class PredicateDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public Predicate getPredicate(int id) throws SQLException {
 
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
+		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -78,19 +71,13 @@ public class PredicateDao {
 			}
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
 	public ArrayList<Predicate> getPredicates() throws SQLException {
 		ArrayList<Predicate> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PREDICATES)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PREDICATES)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -99,10 +86,6 @@ public class PredicateDao {
 			return out;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
@@ -147,9 +130,7 @@ public class PredicateDao {
 			throw e;
 		} finally {
 			connection.setAutoCommit(true);
-			if (connection != null) {
-				connection.close();
-			}
+			connection.close();
 		}
 
 	}
@@ -168,9 +149,7 @@ public class PredicateDao {
 	public ArrayList<Predicate> getPredicateVersions(int id) throws SQLException {
 		ArrayList<Predicate> out = new ArrayList<>();
 
-		Connection connection = this.database.connection();
-
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_VERSIONS, id)) {
+		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_VERSIONS, id)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -179,10 +158,6 @@ public class PredicateDao {
 			return out;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
@@ -224,9 +199,7 @@ public class PredicateDao {
 			throw e;
 		} finally {
 			connection.setAutoCommit(true);
-			if (connection != null) {
-				connection.close();
-			}
+			connection.close();
 		}
 	}
 }
