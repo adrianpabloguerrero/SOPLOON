@@ -20,10 +20,14 @@ public class Synchronizer {
 
 	private SoploonClient client;
 	private StorageManager storageManager;
-
+	
 	private Synchronizer() {
-		this.client = new SoploonClient(Soploon.BASE_HOST);
 		this.storageManager = StorageManager.getInstance();
+		User user = this.storageManager.getData().getUser();
+		if (user != null)
+			this.client = new SoploonClient(Soploon.BASE_HOST, user);
+		else
+			this.client = new SoploonClient(Soploon.BASE_HOST);
 	}
 	
 	public synchronized static Synchronizer getInstance() {
@@ -37,6 +41,8 @@ public class Synchronizer {
 		if (!this.registerUserIfNeeded())
 			return;
 
+		this.client.authenticate();
+		
 		ArrayList<Long> pending = this.storageManager.pendingCorrections();
 
 		for (long correctionId : pending) {
@@ -62,20 +68,25 @@ public class Synchronizer {
 			return true;
 
 		User user = new User();
-		user.setCreationDate(System.currentTimeMillis() / 1000);
-		user.setName(System.getProperty("user.name"));
+		user.setCreationDate(System.currentTimeMillis());
+		String time = String.valueOf(user.getCreationDate());
+		user.setName(System.getProperty("user.name") + "-" + time.substring(time.length()-3));
 		user.setPassword(UUID.randomUUID().toString());
 		user.setRole(Role.student);
-		user = client.postUser(user);
-
-		if (user == null)
+		User newUser = client.postUser(user);
+		
+		if (newUser == null) {
 			return false;
+		}
 
+		user.setId(newUser.getId());
 		Data data = this.storageManager.getData();
 		data.setUser(user);
 
 		if (!this.storageManager.store(data))
 			return false;
+
+		this.client = new SoploonClient(Soploon.BASE_HOST, user);
 
 		return true;
 	}
@@ -83,6 +94,7 @@ public class Synchronizer {
 	private boolean postProjectIfNeeded(CorrectionData correctionData) {
 
 		Project project = correctionData.getProject();
+
 		if (project.getId() != 0)
 			return true;
 
@@ -115,7 +127,11 @@ public class Synchronizer {
 	private boolean postErrorsIfNeeded(CorrectionData correctionData) {
 		ArrayList<Error> errors = correctionData.getErrors();
 		ArrayList<Error> result = this.client.postErrors(errors);
-		return (result != null);
+		if (result != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

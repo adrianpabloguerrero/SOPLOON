@@ -18,7 +18,7 @@ import ar.edu.unicen.isistan.si.soploon.server.models.SourceCode;
 
 public class CodeParser {
 
-	private static final String MONITOR_TITLE = "C�digo Java -> Arbol Sint�ctico";
+	private static final String MONITOR_TITLE = "Generando arbol sintactico";
 
 	private ASTParser parser;
 	private HashMap<CompilationUnit,String> units;

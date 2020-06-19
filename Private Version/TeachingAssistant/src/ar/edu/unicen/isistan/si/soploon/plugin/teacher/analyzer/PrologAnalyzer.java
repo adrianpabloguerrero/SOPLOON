@@ -25,8 +25,8 @@ import ar.edu.unicen.isistan.si.soploon.server.models.Error;
 
 public class PrologAnalyzer {
 
-	private static final String MONITOR_TITLE = "Analyzing the Prolog representation";
-	private static final String MONITOR_TITLE_PRE = "Creating threads for analysis";
+	private static final String MONITOR_TITLE = "Buscando errores";
+	private static final String MONITOR_TITLE_PRE = "Preparando analisis";
 
 	private List<PrologRule> rules;
 	private List<PrologPredicate> predicates;

@@ -9,7 +9,7 @@ import ar.edu.unicen.isistan.si.soploon.plugin.teacher.modeler.converters.NodeCo
 
 public class ModelGenerator {
 
-	private static final String MONITOR_TITLE = "Arbol Sintáctico -> Código Prolog";
+	private static final String MONITOR_TITLE = "Traduciendo arbol sintactico";
 
 	private PrologCode prologCode;
 	private Mapper mapper;

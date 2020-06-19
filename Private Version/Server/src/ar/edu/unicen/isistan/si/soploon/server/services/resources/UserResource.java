@@ -21,7 +21,6 @@ import ar.edu.unicen.isistan.si.soploon.server.database.UserDao;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.providers.Secured;
 
-@Secured
 public class UserResource {
 
 	private Database database;
@@ -53,6 +52,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{user_id}/")
+	@Secured
 	public Response getUser(@PathParam("user_id") int userId) throws Exception {
 		User user = this.dao.getUser(userId);
 		if (user == null)
@@ -63,6 +63,7 @@ public class UserResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@Secured
 	public Response getUsers() throws Exception {
 		ArrayList<User> users = this.dao.getUsers();
 		return Response.ok(users).build();
@@ -73,6 +74,7 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{user_id}/")
+	@Secured
 	public Response editUser(@PathParam("user_id") int userId, User updatedUser) throws Exception {
 		if (updatedUser == null || updatedUser.getId() != userId || !updatedUser.check())
 			return Response.status(Status.BAD_REQUEST).build();
@@ -88,6 +90,7 @@ public class UserResource {
 	}
 
 	@Path("/{user_id}/projects")
+	@Secured
 	public ProjectResource projects(@PathParam("user_id") int userId) throws Exception {
 		User user = this.dao.getUser(userId);
 		if (user == null)

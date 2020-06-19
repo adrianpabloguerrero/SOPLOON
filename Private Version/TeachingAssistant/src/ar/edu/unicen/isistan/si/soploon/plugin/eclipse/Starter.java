@@ -9,8 +9,13 @@ public class Starter implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		new Thread(Updater.getInstance()::update).start();
-		new Thread(Synchronizer.getInstance()::sync).start();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Synchronizer.getInstance().sync();
+				Updater.getInstance().update();
+			}
+		}).start();
 	}
 
 }
