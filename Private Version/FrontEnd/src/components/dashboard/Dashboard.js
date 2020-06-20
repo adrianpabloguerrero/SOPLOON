@@ -41,7 +41,7 @@ export default function Dashboard() {
       date_end: dateToDefault()
     };
 
-    Axios.get("http://localhost:8080/soploon/api/stats", {
+    Axios.get("https://si.isistan.unicen.edu.ar/soploon/api/stats", {
       params,
       cancelToken: source.token
     })
