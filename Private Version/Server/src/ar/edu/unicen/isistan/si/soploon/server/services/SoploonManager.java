@@ -41,7 +41,7 @@ public class SoploonManager extends Application {
 	
 		AuthenticationFilter.KEY = jwtSecret;
 		this.database = new Database(path, user, password);
-		this.database.connect();
+		this.database.isConnected();
 		this.ruleResource = new RuleResource(this.database);
 		this.userResource = new UserResource (this.database);
 		this.predicateResorce = new PredicateResource (this.database);

@@ -2,7 +2,7 @@
 <feature
       id="ayudante_virtual"
       label="Ayudante Virtual"
-      version="1.2.0"
+      version="1.0.0"
       provider-name="Isistan">
 
    <description url="http://si.isistan.unicen.edu.ar/asistente-virtual/">
@@ -22,10 +22,10 @@
    </url>
 
    <plugin
-         id="AyudanteVirtual"
+         id="TeachingAssistant"
          download-size="0"
          install-size="0"
-         version="1.2.0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

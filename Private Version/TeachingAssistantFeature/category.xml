@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <bundle id="AyudanteVirtual" version="1.0.0">
-      <category name="Educación"/>
-   </bundle>
-   <category-def name="Educación" label="Ayudante Virtual"/>
+   <feature url="features/ayudante_virtual_1.0.0.jar" id="ayudante_virtual" version="1.0.0">
+      <category name="education"/>
+   </feature>
+   <category-def name="education" label="Educación">
+      <description>
+         Herramientas diseñadas con fines educativos
+      </description>
+   </category-def>
 </site>

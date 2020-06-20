@@ -31,7 +31,7 @@ public class Database {
 		this.dataSource.setMaxOpenPreparedStatements(100);
 	}
 	
-	public boolean connect() {
+	public boolean isConnected() {
 		return !this.dataSource.isClosed();		
 	}
 
@@ -43,12 +43,16 @@ public class Database {
 		}
 	}
 	
-	public Connection connection() {
+	
+	public Connection getConnection() {
 		try {
-			if (this.connect())
-				return this.dataSource.getConnection();
-			else
+			if (this.isConnected()) {
+				Connection connection = this.dataSource.getConnection();
+				connection.setAutoCommit(true);
+				return connection;
+			} else {
 				return null;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -56,28 +60,34 @@ public class Database {
 	}
 		
 	public PreparedStatement getStatement(Connection connection, String query, Object... args) {
-		if (this.connect()) {
-			PreparedStatement statement = null;
-			try {
+		PreparedStatement statement = null;
+		try {
+			if (connection != null && !connection.isClosed()) {
 				statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-				if (args != null) {
-					for (int index = 0; index < args.length; index++)
-						statement.setObject(index+1, args[index]);
+				try {
+					if (args != null)
+						for (int index = 0; index < args.length; index++) {
+							statement.setObject(index+1, args[index]);
+						}
+					return statement;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
 				}
-				return statement;
-			} catch (Exception e) {
-				e.printStackTrace();
-				if (statement != null) {
-					try {
-						statement.close();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-				}
+			} else {
 				return null;
 			}
-		} else
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
 			return null;
+		}
 	}
 		
 }

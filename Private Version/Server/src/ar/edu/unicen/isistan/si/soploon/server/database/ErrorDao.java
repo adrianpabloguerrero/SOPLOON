@@ -43,7 +43,7 @@ public class ErrorDao {
 	public ArrayList<Error> getErrorsByCorrection(int userId, int projectId, long time) throws SQLException {
 		ArrayList<Error> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, time)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, time)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -56,7 +56,7 @@ public class ErrorDao {
 	}
 
 	public Error getErrorsById(int id) throws SQLException {
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next())
 				return this.readRow(result);
@@ -70,7 +70,7 @@ public class ErrorDao {
 	public ArrayList<Error> getErrorsByUserBetweenDate(int userId,long dateStart, long dateEnd) throws SQLException{
 		ArrayList<Error> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId, dateStart , dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId, dateStart , dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -85,7 +85,7 @@ public class ErrorDao {
 	public ArrayList<Error> getErrorsByRuleBetweenDate(int ruleId,long dateStart, long dateEnd) throws SQLException{
 		ArrayList<Error> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId, dateStart, dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -100,7 +100,7 @@ public class ErrorDao {
 	public ArrayList<Error> getErrorsByUserAndRuleBetweenDate(int userId, int ruleId,long dateStart, long dateEnd) throws SQLException{
 		ArrayList<Error> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId, dateStart , dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId, dateStart , dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -115,7 +115,7 @@ public class ErrorDao {
 	public ArrayList<Error> getErrorsBetweenDate(long dateStart, long dateEnd) throws SQLException{
 		ArrayList<Error> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, dateStart , dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, dateStart , dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Error error = this.readRow(result);
@@ -153,7 +153,7 @@ public class ErrorDao {
 			index += 8;
 		}
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,query,args)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection,query,args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows >= 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -204,7 +204,7 @@ public class ErrorDao {
 		args[8] = error.getReviewed();
 		args[9] = error.getId();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				return true;

@@ -20,8 +20,8 @@ public class AuthenticationDao {
 		this.database = database;
 	}
 	
-	public User getUser(String name) throws SQLException {
-		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE, name)) {
+	public User getUser(String name) {
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE, name)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				User user = new User();
@@ -33,7 +33,8 @@ public class AuthenticationDao {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw e;
+			e.printStackTrace();
+			return null;
 		}
 	}
 	

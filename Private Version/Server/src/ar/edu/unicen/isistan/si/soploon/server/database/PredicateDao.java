@@ -43,7 +43,7 @@ public class PredicateDao {
 		args[2] = predicate.getCode();
 		args[3] = predicate.getActivated();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -61,7 +61,7 @@ public class PredicateDao {
 
 	public Predicate getPredicate(int id) throws SQLException {
 
-		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -77,7 +77,7 @@ public class PredicateDao {
 	public ArrayList<Predicate> getPredicates() throws SQLException {
 		ArrayList<Predicate> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PREDICATES)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_PREDICATES)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -104,7 +104,7 @@ public class PredicateDao {
 		argsNV[4] = predicate.getCode();
 		argsNV[5] = predicate.getActivated();
 
-		Connection connection = this.database.connection();
+		Connection connection = this.database.getConnection();
 
 		try {
 			connection.setAutoCommit(false);
@@ -149,7 +149,7 @@ public class PredicateDao {
 	public ArrayList<Predicate> getPredicateVersions(int id) throws SQLException {
 		ArrayList<Predicate> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_VERSIONS, id)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID_VERSIONS, id)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Predicate predicate = this.readRow(result);
@@ -173,7 +173,7 @@ public class PredicateDao {
 		argsSA[1] = predicate.getId();
 		argsSA[2] = predicate.getVersion();
 
-		Connection connection = this.database.connection();
+		Connection connection = this.database.getConnection();
 
 		try {
 			connection.setAutoCommit(false);

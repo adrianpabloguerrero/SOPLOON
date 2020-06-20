@@ -9,48 +9,55 @@
          <toolbar
                id="TeachingAssistant.toolbar"
                label="Ayudante Virtual">
-            <command
-                  commandId="TeachingAssistant.update"
-                  icon="icons/update.png"
-                  style="push"
-                  tooltip="Actualizar Ayudante">
-            </command>
-            <command
+                 <command
                   commandId="TeachingAssistant.check"
                   icon="icons/lupa.png"
                   style="push"
                   tooltip="Corregir Código">
             </command>
+                 <command
+                       commandId="TeachingAssistant.update"
+                       icon="icons/update.png"
+                       style="push"
+                       tooltip="Actualizar Ayudante">
+                 </command>
          </toolbar>
       </menuContribution>
    </extension>
-   <extension point="org.eclipse.ui.commands">
+   <extension
+         id="UpdateCommand"
+         point="org.eclipse.ui.commands">
       <command
-            defaultHandler="ar.edu.unicen.isistan.si.soploon.plugin.eclipse.handlers.CheckHandler"
+            defaultHandler="ar.edu.unicen.isistan.si.teachingassistant.plugin.eclipse.handlers.CheckHandler"
             id="TeachingAssistant.check"
             name="CheckCommand">
       </command>
       <command
-            defaultHandler="ar.edu.unicen.isistan.si.soploon.plugin.eclipse.handlers.UpdateHandler"
+            defaultHandler="ar.edu.unicen.isistan.si.teachingassistant.plugin.eclipse.handlers.UpdateHandler"
             id="TeachingAssistant.update"
             name="UpdateCommand">
       </command>
    </extension>
-   <extension point="org.eclipse.ui.views">
-      <category
-            id="TeachingAssistant.category"
-            name="Ayudante">
-      </category>
+   <extension
+         point="org.eclipse.ui.views">
       <view
             category="TeachingAssistant.category"
-            class="ar.edu.unicen.isistan.si.soploon.plugin.eclipse.views.CorrectionsView"
+            class="ar.edu.unicen.isistan.si.teachingassistant.plugin.eclipse.views.CorrectionsView"
             icon="icons/icon.png"
             id="TeachingAssistant.corrections"
             name="Correcciones">
       </view>
+      <category
+            id="TeachingAssistant.category"
+            name="Ayudante Virtual">
+      </category>
    </extension>
-   <extension point="org.eclipse.ui.startup">
-   		<startup class="ar.edu.unicen.isistan.si.soploon.plugin.eclipse.Starter"/>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="ar.edu.unicen.isistan.si.teachingassistant.plugin.eclipse.Starter">
+      </startup>
    </extension>
+
 
 </plugin>

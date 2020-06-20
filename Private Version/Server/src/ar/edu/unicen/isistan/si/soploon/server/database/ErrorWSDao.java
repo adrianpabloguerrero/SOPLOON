@@ -36,7 +36,7 @@ public class ErrorWSDao {
 	public ArrayList<ErrorWS> getErrorsByCorrection(int userId, int projectId, long time) throws SQLException {
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, time)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_CORRECTION, userId ,projectId, time)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -49,8 +49,8 @@ public class ErrorWSDao {
 	}
 
 	public ErrorWS getErrorsById(int id) throws SQLException {
-		Connection connection = this.database.connection();
-		try (PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
+	
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next())
 				return this.readRow(result);
@@ -58,17 +58,13 @@ public class ErrorWSDao {
 				return null;
 		} catch (SQLException e) {
 			throw e;
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 	
 	public ArrayList<ErrorWS> getErrorsByUserBetweenDate(int userId,long dateStart, long dateEnd) throws SQLException{
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId, dateStart, dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_DATE, userId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -83,7 +79,7 @@ public class ErrorWSDao {
 	public ArrayList<ErrorWS> getErrorsByRuleBetweenDate(int ruleId,long dateStart, long dateEnd) throws SQLException{
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId, dateStart, dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_RULE_DATE, ruleId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -98,7 +94,7 @@ public class ErrorWSDao {
 	public ArrayList<ErrorWS> getErrorsByUserAndRuleBetweenDate(int userId, int ruleId,long dateStart, long dateEnd) throws SQLException{
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId, dateStart, dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_USER_RULE_DATE, userId,ruleId, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);
@@ -113,7 +109,7 @@ public class ErrorWSDao {
 	public ArrayList<ErrorWS> getErrorsBetweenDate(long dateStart, long dateEnd) throws SQLException{
 		ArrayList<ErrorWS> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, dateStart, dateEnd)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BETWEEN_DATE, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				ErrorWS errorWS = this.readRow(result);

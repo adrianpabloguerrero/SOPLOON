@@ -41,7 +41,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Herramienta de estadística y gestión "}
-      <Link color="inherit" href="https://si.isistan.unicen.edu.ar/soploon/#/">
+      <Link color="inherit" href="http://localhost:8080/soploon/#/">
         Soploon
       </Link>{" "}
       {new Date().getFullYear()}
@@ -71,7 +71,7 @@ export default function Login({ history }) {
 	var credentials = { "userName": data.userName, "password": data.password }
 	
     Axios.post(
-      "https://si.isistan.unicen.edu.ar/soploon/api/authentication/",
+      "http://localhost:8080/soploon/api/authentication/",
       params,
       config
     ).then(response => {

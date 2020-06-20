@@ -35,7 +35,7 @@ public class UserDao {
 		args[2] = user.getRole().toString();
 		args[3] = user.getPassword();
 
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, SINGLE_INSERT, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
@@ -54,7 +54,7 @@ public class UserDao {
 
 	public User getUser(int id) throws SQLException {
 
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
@@ -71,7 +71,7 @@ public class UserDao {
 	public ArrayList<User> getUsers() throws SQLException {
 		ArrayList<User> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, SELECT_ALL_USERS)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
@@ -94,7 +94,7 @@ public class UserDao {
 		args[4] = user.getPassword();
 		args[5] = user.getId();
 
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, UPDATE, args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {

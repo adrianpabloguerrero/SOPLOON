@@ -52,7 +52,7 @@ public class StatsDao {
 	}
 
 	public int getUsersQuantity(Long dateStart, Long dateEnd) throws SQLException {
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, SELECT_COUNT_USERS_BETWEEN_DATES,
 						dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
@@ -66,7 +66,7 @@ public class StatsDao {
 	}
 
 	public int getProjectsQuantity(Long dateStart, Long dateEnd) throws SQLException {
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection,
 						SELECT_COUNT_PROJECTS_BETWEEN_DATES, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
@@ -80,7 +80,7 @@ public class StatsDao {
 	}
 
 	public int getErrorsQuantity(Long dateStart, Long dateEnd) throws SQLException {
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, SELECT_COUNT_ERRORS_BETWEEN_DATES,
 						dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
@@ -94,7 +94,7 @@ public class StatsDao {
 	}
 
 	public int getCorrectionsQuantity(Long dateStart, Long dateEnd) throws SQLException {
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection,
 						SELECT_COUNT_CORRECTIONS_BETWEEN_DATES, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
@@ -109,7 +109,7 @@ public class StatsDao {
 
 	public ArrayList<ErrorStatsElement> getErrorsRateElement(Long dateStart, Long dateEnd) throws SQLException {
 		ArrayList<ErrorStatsElement> out = new ArrayList<>();
-		try (Connection connection = this.database.connection();
+		try (Connection connection = this.database.getConnection();
 				PreparedStatement statement = this.database.getStatement(connection, SELECT_RATE_ERRORS_BETWEEN_DATES,
 						dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
@@ -127,8 +127,7 @@ public class StatsDao {
 
 	public ArrayList<ErrorStatsElement> getErrosTopFive(Long dateStart, Long dateEnd) throws SQLException {
 		ArrayList<ErrorStatsElement> out = new ArrayList<>();
-		try (Connection connection = this.database.connection();
-				PreparedStatement statement = this.database.getStatement(connection, SELECT_TOP_ERRORS_BETWEEN_DATES,
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_TOP_ERRORS_BETWEEN_DATES,
 						dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
@@ -145,8 +144,7 @@ public class StatsDao {
 
 	public ArrayList<ErrorStatsElement> getAcumCorrections(Long dateStart, Long dateEnd) throws SQLException {
 		ArrayList<ErrorStatsElement> out = new ArrayList<>();
-		try (Connection connection = this.database.connection();
-				PreparedStatement statement = this.database.getStatement(connection,
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection,
 						SELECT_ACUM_CORRECTIONS_BETWEEN_DATES, dateStart, dateEnd)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
@@ -166,8 +164,7 @@ public class StatsDao {
 		long date;
 		int idUser;
 		int idProject;
-		Connection connection = this.database.connection();
-		try {
+		try (Connection connection = this.database.getConnection()) {
 			PreparedStatement infoStatement = this.database.getStatement(connection, SELECT_LAST_CORRECTION);
 			ResultSet rsInfo = infoStatement.executeQuery();
 			if (rsInfo.next()) {
@@ -202,7 +199,6 @@ public class StatsDao {
 				}
 				lastUse.setErrors(listErrors);
 			}
-
 		} catch (SQLException e) {
 			throw e;
 		}

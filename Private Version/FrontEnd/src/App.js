@@ -21,7 +21,7 @@ export default function App() {
 			   const params = new URLSearchParams();
 				params.append("userName", oldAuth.credentials.userName);
 				params.append("password", oldAuth.credentials.password);
-			   return Axios.post("https://si.isistan.unicen.edu.ar/soploon/api/authentication/", params, { headers: {'Content-Type': 'application/x-www-form-urlencoded' }} )
+			   return Axios.post("http://localhost:8080/soploon/api/authentication/", params, { headers: {'Content-Type': 'application/x-www-form-urlencoded' }} )
 			   .then(response => {
 				   if (response.status === 200) {
 						Axios.defaults.headers.common["Authorization"] = "Bearer " + response.data;

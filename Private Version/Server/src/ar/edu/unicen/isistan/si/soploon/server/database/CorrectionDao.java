@@ -51,7 +51,7 @@ public class CorrectionDao {
 		args[4] = gson.toJson(correction.getRepresentation());
 		args[5] = gson.toJson(correction.getConfiguration());
 		
-		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 			int modifiedRows = statement.executeUpdate();
 			return (modifiedRows == 1);
 		} catch (SQLException e) {
@@ -62,7 +62,7 @@ public class CorrectionDao {
 
 	public ArrayList<Correction> getCorrectionsByProject(int userId, int projectId) throws SQLException {
 		ArrayList<Correction> out = new ArrayList<>();
-		try (Connection connection = this.database.connection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_PROJECT, userId ,projectId)) {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Correction correction = this.readReducedRow(result);
@@ -77,7 +77,7 @@ public class CorrectionDao {
 	public Correction getCorrection(int userId, int projectId, long time) throws SQLException {
 		
 		
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId, time)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection, SELECT_BY_ID, userId ,projectId, time)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next())
  				return this.readRow(result);

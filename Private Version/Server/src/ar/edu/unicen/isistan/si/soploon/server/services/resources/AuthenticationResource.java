@@ -33,8 +33,7 @@ public class AuthenticationResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response authenticateUser(@FormParam("userName") String username, @FormParam("password") String password) {
-
-        try {
+    	try {
             // Authenticate the user using the credentials provided
             authenticate(username, password);
             // Issue a token for the user
@@ -43,6 +42,7 @@ public class AuthenticationResource {
             return Response.ok(token).build();
 
         } catch (Exception e) {
+        	e.printStackTrace();
             return Response.status(Response.Status.FORBIDDEN).build();
         }      
     }

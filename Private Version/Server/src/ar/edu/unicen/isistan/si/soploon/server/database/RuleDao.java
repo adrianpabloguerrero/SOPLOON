@@ -43,7 +43,7 @@ public class RuleDao {
 		args[4] = rule.getCode();
 		args[5] = rule.getActivated();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection,SINGLE_INSERT,args)) {
 			int modifiedRows = statement.executeUpdate();
 			if (modifiedRows == 1) {
 				ResultSet keys = statement.getGeneratedKeys();
@@ -61,7 +61,7 @@ public class RuleDao {
 
 	public Rule getRule(int id) throws SQLException {
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID,id)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				Rule rule = this.readRow(result);
@@ -77,7 +77,7 @@ public class RuleDao {
 	public ArrayList<Rule> getRules() throws SQLException {
 		ArrayList<Rule> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SELECT_RULES)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection,SELECT_RULES)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = this.readRow(result);
@@ -102,7 +102,7 @@ public class RuleDao {
 		argsSA[1] = rule.getId();
 		argsSA[2] = rule.getVersion();
 
-		Connection connection = this.database.connection();
+		Connection connection = this.database.getConnection();
 
 		try {
 			connection.setAutoCommit(false);
@@ -135,7 +135,7 @@ public class RuleDao {
 	public ArrayList<Rule> getRuleVersions(int id) throws SQLException {
 		ArrayList<Rule> out = new ArrayList<>();
 
-		try (Connection connection = this.database.connection();PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_VERSIONS,id)) {
+		try (Connection connection = this.database.getConnection();PreparedStatement statement = this.database.getStatement(connection,SELECT_BY_ID_VERSIONS,id)) {
 			ResultSet result = statement.executeQuery(); 
 			while (result.next()) {
 				Rule rule = this.readRow(result);
@@ -164,7 +164,7 @@ public class RuleDao {
 				argsNV[6] = rule.getCode();
 				argsNV[7] = true;	
 
-				Connection connection = this.database.connection();
+				Connection connection = this.database.getConnection();
 
 				try {
 					connection.setAutoCommit(false);
