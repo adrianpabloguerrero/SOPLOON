@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/ayudante_virtual_1.0.0.jar" id="ayudante_virtual" version="1.0.0">
+   <feature id="ayudante_virtual">
       <category name="education"/>
    </feature>
    <category-def name="education" label="Educación">
