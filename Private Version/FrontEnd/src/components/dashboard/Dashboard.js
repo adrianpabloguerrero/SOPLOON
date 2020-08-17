@@ -78,15 +78,12 @@ export default function Dashboard() {
         />
       </div>
 	  <div className={style.rowDashboard}>
-        <ErrorsRate data={data.errorsRateElement} />
+	   <TopErrors data={data.errorsTopFive} />
+          <ErrorsRate data={data.errorsRateElement} />
       </div>
       <div className={style.rowDashboard}>
         <AcumCorrections data={data.acumCorrections} />
-        <TopErrors data={data.errorsTopFive} />
-      </div>
-      <div className={style.rowDashboard}>
-        <LastUse data={data.lastUse} />
-        <AcumCorrections data={data.acumCorrections} />
+	<LastUse data={data.lastUse} />
       </div>
     </div>
   );

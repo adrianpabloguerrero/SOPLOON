@@ -186,7 +186,6 @@ const style = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
     width: "35%"
   },
   lastUse: {
