@@ -42,7 +42,7 @@ public class ProjectResource {
 		
 		if (this.dao.insert(project)) {
 			UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-			uriBuilder.path(Integer.toString(project.getId()));
+			uriBuilder.path(Long.toString(project.getId()));
 			return Response.created(uriBuilder.build()).entity(project).build();
 		} else {
 			return Response.status(Status.CONFLICT).build();

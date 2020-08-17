@@ -1,5 +1,7 @@
 package ar.edu.unicen.isistan.si.soploon.server.models;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import com.google.gson.annotations.Expose;
 
 public class User {
@@ -9,7 +11,7 @@ public class User {
 	}
 	
 	@Expose
-	private int id;
+	private long id;
 	@Expose
 	private long creationDate;
 	@Expose
@@ -43,11 +45,11 @@ public class User {
 		this.name = name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -60,12 +62,16 @@ public class User {
 	}
 
 	public boolean check() {
-		return this.role != null && (this.role != Role.profesor || this.password != null);
+		return this.role != null && this.password != null;
 	}
 	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", creationDate=" + creationDate + ", name=" + name + ", role=" + role + ", password=" + password + "]";
+	}
+
+	public void prepare() {
+		this.password = DigestUtils.sha256Hex(this.password);
 	}
 
 }

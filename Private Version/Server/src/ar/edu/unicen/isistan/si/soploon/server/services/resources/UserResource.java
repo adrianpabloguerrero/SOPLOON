@@ -40,9 +40,11 @@ public class UserResource {
 		if (user == null || user.getId() != 0 || !user.check())
 			return Response.status(Status.BAD_REQUEST).build();
 
+		user.prepare();
+		
 		if (this.dao.insert(user)) {
 			UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-			uriBuilder.path(Integer.toString(user.getId()));
+			uriBuilder.path(Long.toString(user.getId()));
 			return Response.created(uriBuilder.build()).entity(user).build();
 		} else {
 			return Response.status(Status.BAD_REQUEST).build();
@@ -65,9 +67,9 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Secured
 	public Response getUsers() throws Exception {
+		System.out.println("Listando");
 		ArrayList<User> users = this.dao.getUsers();
 		return Response.ok(users).build();
-
 	}
 
 	@PUT
@@ -79,6 +81,7 @@ public class UserResource {
 		if (updatedUser == null || updatedUser.getId() != userId || !updatedUser.check())
 			return Response.status(Status.BAD_REQUEST).build();
 
+		updatedUser.prepare();
 		User user = this.dao.getUser(userId);
 		if (user == null)
 			return Response.status(Status.NOT_FOUND).build();

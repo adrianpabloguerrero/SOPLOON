@@ -1,4 +1,4 @@
-package ar.edu.unicen.isistan.si.soploon.server.providers;
+package ar.edu.unicen.isistan.si.soploon.server.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

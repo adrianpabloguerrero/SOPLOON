@@ -12,7 +12,9 @@ public class AuthenticationDao {
 
 	private static final String TABLE_USER = "soploon.user";
 	private static final String CONDITION_NAME = " WHERE name = ? ";
-	private static final String SELECT_USER_PASSWORD_ROLE = "SELECT name, password, role FROM " + TABLE_USER + CONDITION_NAME;
+	private static final String CONDITION_ID = " WHERE id = ? ";
+	private static final String SELECT_USER_PASSWORD_ROLE_BY_NAME = "SELECT name, password, role FROM " + TABLE_USER + CONDITION_NAME;
+	private static final String SELECT_USER_PASSWORD_ROLE_BY_ID = "SELECT name, password, role FROM " + TABLE_USER + CONDITION_ID;
 
 	private Database database;
 
@@ -21,7 +23,7 @@ public class AuthenticationDao {
 	}
 	
 	public User getUser(String name) {
-		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE, name)) {
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE_BY_NAME, name)) {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				User user = new User();
@@ -38,7 +40,24 @@ public class AuthenticationDao {
 		}
 	}
 	
-	
+
+	public User getUser(Long userID) {
+		try (Connection connection = this.database.getConnection(); PreparedStatement statement = this.database.getStatement(connection, SELECT_USER_PASSWORD_ROLE_BY_ID, userID)) {
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				User user = new User();
+				user.setName(result.getString(1));
+				user.setPassword(result.getString(2));
+				user.setRole(Role.valueOf(result.getString(3)));
+				return user;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	
 }

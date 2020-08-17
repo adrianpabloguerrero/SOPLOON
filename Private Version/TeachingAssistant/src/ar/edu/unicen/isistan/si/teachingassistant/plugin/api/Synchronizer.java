@@ -24,6 +24,7 @@ public class Synchronizer {
 	private Synchronizer() {
 		this.storageManager = StorageManager.getInstance();
 		User user = this.storageManager.getData().getUser();
+		
 		if (user != null)
 			this.client = new SoploonClient(TeachingAssistant.BASE_HOST, user);
 		else

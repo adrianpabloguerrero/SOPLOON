@@ -36,14 +36,14 @@ public class CorrectionData {
 		this.project = project;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.project.setUserId(userId);
 		this.correction.setUserId(userId);
 		for (Error error: this.errors)
 			error.setUserId(userId);
 	}
 	
-	public void setProjectId(int projectId) {
+	public void setProjectId(long projectId) {
 		this.project.setId(projectId);
 		this.correction.setProjectId(projectId);
 		for (Error error: this.errors)

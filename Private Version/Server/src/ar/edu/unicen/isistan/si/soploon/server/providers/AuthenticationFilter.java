@@ -1,4 +1,5 @@
 package ar.edu.unicen.isistan.si.soploon.server.providers;
+
 import java.io.IOException;
 
 import javax.annotation.Priority;
@@ -23,8 +24,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
-        // Get the Authorization header from the request
+    	
+    	// Get the Authorization header from the request
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 

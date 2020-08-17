@@ -96,7 +96,7 @@ public class StorageManager {
 		if (correctionData.getDate() == 0)
 			correctionData.setDate(System.currentTimeMillis());
 		correctionData.setUserId(this.data.getUserId());
-		Integer projectId = this.data.getProjectId(correctionData.getProject());
+		Long projectId = this.data.getProjectId(correctionData.getProject());
 		if (projectId != null)
 			correctionData.setProjectId(projectId);	
 	}

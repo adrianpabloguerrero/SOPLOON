@@ -13,13 +13,13 @@ import ar.edu.unicen.isistan.si.soploon.server.providers.AuthenticationFilter;
 
 @ApplicationPath("/api")
 public class SoploonApplication extends ResourceConfig {
-	
-	 @Inject
-	    public SoploonApplication(ServiceLocator locator) {
-	        ServiceLocatorUtilities.enableImmediateScope(locator);
-	        this.register(CORSFilter.class);
-	        this.register(GsonServerProvider.class);
-	        this.register(AuthenticationFilter.class);    
-	        this.register(SoploonManager.class);    
-	    }
+
+	@Inject
+	public SoploonApplication(ServiceLocator locator) {
+		ServiceLocatorUtilities.enableImmediateScope(locator);
+		this.register(CORSFilter.class);
+		this.register(GsonServerProvider.class);
+		this.register(AuthenticationFilter.class);
+		this.register(SoploonManager.class);
+	}
 }

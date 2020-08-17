@@ -60,7 +60,7 @@ public class CorrectionResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		if (this.dao.insert(correction)) {
 			UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-			uriBuilder.path(Integer.toString(correction.getUserId())+Integer.toString(correction.getProjectId())+Long.toString(correction.getDate()));
+			uriBuilder.path(Long.toString(correction.getUserId())+Long.toString(correction.getProjectId())+Long.toString(correction.getDate()));
 			return Response.created(uriBuilder.build()).entity(correction).build();
 		} else {
 			return Response.status(Status.CONFLICT).build();

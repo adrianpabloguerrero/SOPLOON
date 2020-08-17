@@ -27,6 +27,7 @@ Bundle-ClassPath: .,
  libs/hk2-utils-2.5.0-b30.jar,
  libs/javax.annotation-api-1.2.jar
 Import-Package: 
+ javax.inject;version="1.0.0",
  org.eclipse.jdt.core,
  org.eclipse.jdt.core.dom
 Bundle-Vendor: Isistan

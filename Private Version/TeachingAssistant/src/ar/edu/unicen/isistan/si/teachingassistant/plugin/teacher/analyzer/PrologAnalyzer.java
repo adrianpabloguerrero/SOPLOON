@@ -72,6 +72,7 @@ public class PrologAnalyzer {
 			Vector<RuleRunnable> runnables = new Vector<RuleRunnable>();
 			monitor.beginTask(MONITOR_TITLE_PRE, cores);
 
+			
 			for (int i = 0; i < cores; i++) {
 				Prolog engine = new Prolog();
 				engine.addTheory(rule_theory);

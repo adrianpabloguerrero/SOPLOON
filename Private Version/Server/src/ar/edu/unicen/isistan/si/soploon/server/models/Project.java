@@ -5,9 +5,9 @@ import com.google.gson.annotations.Expose;
 public class Project {
 
 	@Expose
-	private int id;
+	private long id;
 	@Expose
-	private int userId;
+	private long userId;
 	@Expose
 	private String name;
 
@@ -15,11 +15,11 @@ public class Project {
 
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -31,11 +31,11 @@ public class Project {
 		this.name = name;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 

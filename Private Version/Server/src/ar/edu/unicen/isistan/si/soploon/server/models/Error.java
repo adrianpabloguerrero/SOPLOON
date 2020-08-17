@@ -9,9 +9,9 @@ public class Error {
 	@Expose
 	private int id;
 	@Expose
-	private int projectId;
+	private long projectId;
 	@Expose
-	private int userId;
+	private long userId;
 	@Expose
 	private long date;
 	@Expose
@@ -33,19 +33,19 @@ public class Error {
 		this.id = id;
 	}
 
-	public int getProjectId() {
+	public long getProjectId() {
 		return projectId;
 	}
 
-	public void setProjectId(int projectId) {
+	public void setProjectId(long projectId) {
 		this.projectId = projectId;
 	}
 
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 

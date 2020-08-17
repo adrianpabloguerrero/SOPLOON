@@ -8,18 +8,18 @@ import ar.edu.unicen.isistan.si.soploon.server.models.User;
 public class Data {
 	
 	private User user;
-	private HashMap<String, Integer> projects;
+	private HashMap<String, Long> projects;
 
 	public Data() {
 		this.user = null;
-		this.projects = new HashMap<String,Integer>();
+		this.projects = new HashMap<>();
 	}
 
 	public boolean hasUser() {
 		return this.user != null;
 	}
 	
-	public int getUserId() {
+	public long getUserId() {
 		return this.user != null ? this.user.getId() : 0;
 	}
 
@@ -31,11 +31,11 @@ public class Data {
 		return this.user;
 	}
 	
-	public void addProject(String projectName, int projectId) {
+	public void addProject(String projectName, long projectId) {
 		this.projects.put(projectName, projectId);
 	}
 
-	public Integer getProjectId(Project project) {
+	public Long getProjectId(Project project) {
 		return this.projects.get(project.getName());
 	}	
 	

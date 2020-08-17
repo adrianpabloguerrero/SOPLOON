@@ -20,7 +20,6 @@ import ar.edu.unicen.isistan.si.soploon.server.models.Project;
 import ar.edu.unicen.isistan.si.soploon.server.models.Rule;
 import ar.edu.unicen.isistan.si.soploon.server.models.User;
 import ar.edu.unicen.isistan.si.soploon.server.models.Error;
-import ar.edu.unicen.isistan.si.soploon.server.providers.GsonClientProvider;
 
 public class SoploonClient {
 
@@ -65,6 +64,7 @@ public class SoploonClient {
 			try {
 				WebTarget target = client.target(this.basePath).path(AUTH);
 				Form form = new Form();
+			    form.param("userId", String.valueOf(user.getId()));
 			    form.param("userName", user.getName());
 			    form.param("password", user.getPassword());
 				Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
@@ -144,7 +144,7 @@ public class SoploonClient {
 	 * @param userId ID del usuario en cuestion
 	 * @return Lista de proyectos
 	 */
-	public ArrayList<Project> getProjects(int userId) {
+	public ArrayList<Project> getProjects(long userId) {
 		try {
 			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS);
 			Response response = target.request(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer " + this.accessToken).get();
@@ -162,7 +162,7 @@ public class SoploonClient {
 	 * @param projectId ID del proyecto buscado
 	 * @return Proyecto
 	 */
-	public Project getProject(int userId, int projectId) {
+	public Project getProject(long userId, long projectId) {
 		try {
 			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId));
 			Response response = target.request(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer " + this.accessToken).get();
@@ -247,7 +247,7 @@ public class SoploonClient {
 	}
 	
 	
-	public ArrayList<Error> getErrors(int userId, int projectId, long time) {
+	public ArrayList<Error> getErrors(long userId, long projectId, long time) {
 		try {
 			WebTarget target = client.target(this.basePath).path(USERS).path(String.valueOf(userId)).path(PROJECTS).path(String.valueOf(projectId)).path(CORRECTIONS).path(String.valueOf(time)).path(ERRORS);
 			Response response = target.request(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer " + this.accessToken).get();
